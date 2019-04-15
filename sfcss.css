@@ -1,0 +1,30 @@
+* {
+    padding: 0;
+    margin: 0;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center center;
+    box-sizing: border-box;
+}
+
+#get_em {
+    position: fixed;
+    width: 1em;
+}
+
+#get_em_small {
+    position: fixed;
+
+    color: transparent;
+    visibility: hidden;
+}
+
+:root {
+    --emvh: 0;
+    --emvw: 0;
+    --emvin: 0;
+
+    --emvh_small: 0;
+    --emvw_small: 0;
+    --emvin_small: 0;
+}
