@@ -2,12 +2,12 @@
 It's a template for only me.
 This is a collection of Javascript functions I thought useful.
 
-##How use
+# How use
 0. Download this.
 1. Put and unzip downloaded folder into your folder you want use.
 2. Write `<script src="./Seifuncs/sfjs.js"></script>` to will be loaded before others JS files.
 
-###contents
+# contents
 0.Chara Contain
   Adjust the size so that the HTML text fits the element exactly.
   How use : Put class named `chara_contain` at element you want.
@@ -41,8 +41,8 @@ This is a collection of Javascript functions I thought useful.
 5.Rewindow
   make new window you want size.
   
-####license
+# license
 It is basically free only for redistribution and use other than commercial purpose use
 
-######Bug report
+# Bug report
 send e-mail or pullquest
