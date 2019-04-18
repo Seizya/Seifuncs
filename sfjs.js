@@ -93,8 +93,8 @@ function CSS(elements) {
                 return undefined;
             });
             if (errors.reduce(function (pv, cv) {
-                    return pv + (cv ? 1 : 0);
-                }, 0) == 0) return true;
+                return pv + (cv ? 1 : 0);
+            }, 0) == 0) return true;
             throw errors;
         }
     });
@@ -324,7 +324,11 @@ function keyud(ud) {
         } else if (ud == "down") {
             kc.push(ck);
         }
-        keycode();
+        try {
+            keycode();
+        } catch{
+            console.warn("There are not keycode()")
+        }
     }
     //console.log(ck)
 }
@@ -349,7 +353,11 @@ function keynumber(code) {
 
 //----mouse----------------------------
 window.addEventListener("load", () => {
-    mousecode()
+    try {
+        mousecode()
+    } catch{
+        console.warn("There are not mousecode()")
+    }
 })
 
 let mc = [];
