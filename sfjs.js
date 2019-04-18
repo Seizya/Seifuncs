@@ -274,7 +274,7 @@ function vp(value, point, unit) {
     //CSSIC("#get_em", "st").width = "1" + unit;
     if (unit == "em_small") {
         cr = value * Math.floor(point_R * 0.01 / parseFloat(CSSIC("#get_em_small").offsetWidth) * 100) / 100;
-    } else {
+    } else if (unit = "em") {
         cr = value * Math.floor(point_R * 0.01 / parseFloat(CSSIC("#get_em").clientWidth) * 100) / 100;
     }
     cr = Math.floor(cr * 100) / 100;
