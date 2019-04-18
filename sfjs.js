@@ -278,7 +278,7 @@ function vp(value, point, unit) {
         cr = value * Math.floor(point_R * 0.01 / parseFloat(CSSIC("#get_em").clientWidth) * 100) / 100;
     }
     cr = Math.floor(cr * 100) / 100;
-    //console.log(value, point, unit, point_R);
+    //console.log(value, point, unit, point_R);a
     return cr;
 }
 
