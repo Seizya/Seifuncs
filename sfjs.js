@@ -93,8 +93,8 @@ function CSS(elements) {
                 return undefined;
             });
             if (errors.reduce(function (pv, cv) {
-                return pv + (cv ? 1 : 0);
-            }, 0) == 0) return true;
+                    return pv + (cv ? 1 : 0);
+                }, 0) == 0) return true;
             throw errors;
         }
     });
@@ -326,7 +326,7 @@ function keyud(ud) {
         }
         try {
             keycode();
-        } catch{
+        } catch {
             console.warn("There are not keycode()")
         }
     }
@@ -355,7 +355,7 @@ function keynumber(code) {
 window.addEventListener("load", () => {
     try {
         mousecode()
-    } catch{
+    } catch {
         console.warn("There are not mousecode()")
     }
 })
@@ -404,25 +404,11 @@ function mouse(ud, query, name) {
 }
 
 /*---
-function keycode() {
-    //key("down", 16, "openshort");
-}
+//key("down", 16, "openshort");
 
-function mousecode() {
-    //mouse("down", "#A_menu", ["openmenu", "closeshort"])
-}
+//mouse("down", "#A_menu", ["openmenu", "closeshort"])
 
 let flag = {};
 
-function animation(Judgment) {
-    //---conversion---v---
-    //id:$;
-    //class:$c;
-    //---conversion---^---
-
-    eval(Judgment).call();
-
-    //function openshort() {}
-
-    //function down$A_play() {}
-} */
+//function openshort() {}
+//function down$A_play() {}
