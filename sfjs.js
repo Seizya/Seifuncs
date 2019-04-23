@@ -93,8 +93,8 @@ function CSS(elements) {
                 return undefined;
             });
             if (errors.reduce(function (pv, cv) {
-                    return pv + (cv ? 1 : 0);
-                }, 0) == 0) return true;
+                return pv + (cv ? 1 : 0);
+            }, 0) == 0) return true;
             throw errors;
         }
     });
@@ -306,51 +306,53 @@ function rewindow(toww, towh) {
         window.open("./index.html", null, "top=0,left=0,height=" + fromheight + ",width=" + fromwidth * toww / towh)
     }
 }
+
+function Array2Array(...args) {
+    //let Arg = Array.prototype.slice(arguments);
+    let Arg = args.map(elem => { if (!Array.isArray(elem)) { return [elem] } else { return elem } })
+    let Arr = [[]];
+
+    while (Arg.length > 0) {
+        let ArrD = [];
+        Arg[Arg.length - 1].forEach(elemG => {
+            Arr.forEach((element, index) => {
+                ArrD.push([elemG].concat(element))
+            })
+        })
+        Arr = ArrD;
+        ArrD = [];
+        Arg.pop();
+    }
+    return Arr;
+
+    /*
+    It's bug I can't understand.
+
+    return A2A(Arg,Arr)
+    function A2A(Arg, Arr) {
+        let ArrD = [];
+        Arg[Arg.length - 1].forEach(elemG => {
+            Arr.forEach((element, index) => {
+                ArrD.push([elemG].concat(element))
+            })
+        })
+        Arr = ArrD;
+        ArrD = [];
+        Arg.pop();
+        console.log(Arg.length)
+        if (Arg.length <= 0) { return Arr; } else { A2A(Arg, Arr) };
+    }*/
+}
 //---key-------------------------------
-document.addEventListener("keyup", () => keyud("up"));
-document.addEventListener("keydown", () => keyud("down"));
+document.addEventListener("keyup", () => key_summon("up"));
+document.addEventListener("keydown", () => key_summon("down"));
 
-let kc = [];
-let [keyud_recog, ckcode] = [undefined, undefined];
+let KeyEvent = [];
 
-//keypressに対応させる
-function keyud(ud) {
-    let ck = event.keyCode;
-    keyud_recog = ud;
-    ckcode = ck;
-    if (!event.repeat) {
-        if (ud == "up") {
-            kc.splice(kc.indexOf(ck), 1);
-        } else if (ud == "down") {
-            kc.push(ck);
-        }
-        try {
-            keycode();
-        } catch {
-            console.warn("There are not keycode()")
-        }
-    }
-    //console.log(ck)
+function KeyTask(UD, Code, Func) { }
+
+function key_summon(UD) {
 }
-
-function key(ud, number, name) {
-    if (keyud_recog == ud && ckcode == number) {
-        if (name == undefined) {
-            animation(String(ud + number));
-        } else if (typeof name == "string") {
-            animation(name)
-        } else if (Array.isArray(name)) {
-            name.forEach(element => {
-                animation(element);
-            });
-        }
-    }
-}
-
-function keynumber(code) {
-    return kc.indexOf(code) != -1 ? true : false;
-}
-
 //----mouse----------------------------
 window.addEventListener("load", () => {
     try {
@@ -370,7 +372,6 @@ function mouseud(ud, query) {
 }
 
 
-//ID名を持たない場合の対処
 function mouse(ud, query, name) {
     if (mc.indexOf(ud + "/" + query) == -1) {
         if (CSSIC(query).length > 1) {
@@ -404,11 +405,12 @@ function mouse(ud, query, name) {
 }
 
 /*---
-//key("down", 16, "openshort");
+//KeyTask("down", 16, "openshort");
 
 //mouse("down", "#A_menu", ["openmenu", "closeshort"])
 
 let flag = {};
 
 //function openshort() {}
-//function down$A_play() {}
+//function down$A_play(){}
+---*/
