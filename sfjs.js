@@ -1,3 +1,10 @@
+/**It's JavaScript Function Library.
+ * Seifuncs_List() : View Function List on console.
+ * 
+ * Made by Seizya.
+ * Special thanks : omasakun
+ */
+
 /* 訳
 このスクリプトは、どのスクリプトよりも早く読み込まれるようにしてください。
 
@@ -101,6 +108,23 @@ function CSS(elements) {
 }
 //document.querySelectorAll('script[src="index.js"]')
 
+function CSSICA(id, option) {
+    if (document.querySelectorAll(id).length >= 1) {
+        if (option == undefined) {
+            return document.querySelectorAll(id).length == 1 ? document.querySelectorAll(id)[0] : document.querySelectorAll(id);
+        } else if (option == "$class") {
+            try {
+                return ArrUnDup(Array.from(document.querySelectorAll(id)).map(element => { if (element.className != "") { return element.className.split(" ").map(elementC => { return Array.from(document.getElementsByClassName(elementC)) }) } }).flat().flat())
+            }
+            catch{ throw new Error("Unexpected error") }
+        } else if (option == "$style") {
+
+        } else { }
+    } else {
+        throw new Error(id + "is Undefied.")
+    }
+}
+
 function CSSIC(id, option) {
     let cr;
     if (typeof id == "string") {
@@ -133,7 +157,7 @@ window.addEventListener("load", () => {
     let sfcss = document.createElement('style');
     sfcss.setAttribute("id", "SeifuncCSS");
     sfcss.textContent = '@import "./Seifuncs/sfcss.css";';
-    CSSIC("script")[0].parentNode.insertBefore(sfcss, CSSIC("script")[0].nextSibling);
+    CSSIC("script").parentNode.insertBefore(sfcss, CSSIC("script").nextSibling);
     //document.querySelectorAll('script[src="index.js"]')
 
     CSSIC("#SeifuncCSS").addEventListener("load", () => {
@@ -314,39 +338,12 @@ function Array2Array(...args) {
 
 
     return (A2A = (Arg, Arr) => Arg.length > 0 ? A2A(Arg.slice(0, -1), Arg.slice(-1).flat().map(elemG => Arr.map(elem => [elemG, ...elem])).flat()) : Arr)(Arg, Arr)
-    {/*return A2A(Arg, Arr);
+}
 
-    function A2A(Arg, Arr) {
-        if (Arg.length > 0) {
-            return A2A(Arg.slice(0, - 1), Arg.slice(-1).flat().map(elemG => {
-                return Arr.map(elem => {
-                    return [elemG, ...elem];
-                })
-            }).flat());
-        } else { return Arr; }
-    }*/
-
-        /*while (Arg.length > 0) {
-        let ArrD = [];
-        Arg[Arg.length - 1].forEach(elemG => {
-            Arr.forEach((element, index) => {
-                ArrD.push([elemG].concat(element))
-            })
-        })
-        Arr = ArrD;
-        ArrD = [];
-        Arg.pop();
-        }
-        return Arr;*/
-
-        /*
-        const A2A = _ => {
-            const _A2A = Arr => Arr.length <= 1 ? Arr : _A2A(Arr.slice(1)).map(rest => Arr[0].map(first => [first, ...rest])).flat();
-            return _A2A([..._, []]);
-        }*/
-
-        /**const A2A = (Arg, Arr = [[]]) => Arg.length == 0 ? Arr.map(_ => _.reverse()) : A2A(Arg.slice(1), Arg[0].map(elemG => Arr.map(elem => [elemG].concat(elem))).flat()); */
-    }
+function ArrUnDup/**Duplicate */(array) {
+    return array.filter(function (x, i, self) {
+        return self.indexOf(x) === i;
+    });
 }
 //---key-------------------------------
 document.addEventListener("keyup", () => key_summon("up"));
@@ -419,3 +416,5 @@ let flag = {};
 //function openshort() {}
 //function down$A_play(){}
 ---*/
+
+console.log("Seifuncs ver.JS was completely loaded.")
