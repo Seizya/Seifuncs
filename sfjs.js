@@ -115,9 +115,8 @@ function CSSICA(id, option) {
         } else if (option == "$class") {
             try {
                 return ArrUnDup(Array.from(document.querySelectorAll(id)).map(element => { if (element.className != "") { return element.className.split(" ").map(elementC => { return Array.from(document.getElementsByClassName(elementC)) }) } }).flat().flat())
-            }
-            catch{ throw new Error("Unexpected error") }
-        } else if (option == "$style") {
+            } catch{ throw new Error("Unexpected error") }
+        } else if (option == "$tag") {
 
         } else { }
     } else {
