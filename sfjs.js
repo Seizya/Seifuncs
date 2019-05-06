@@ -108,17 +108,25 @@ function CSS(elements) {
 }
 //document.querySelectorAll('script[src="index.js"]')
 
-function CSSICA(id, option) {
+function CSSICS(id, option, exception) {
     if (document.querySelectorAll(id).length >= 1) {
         if (option == undefined) {
             return document.querySelectorAll(id).length == 1 ? document.querySelectorAll(id)[0] : document.querySelectorAll(id);
         } else if (option == "$class") {
             try {
-                return ArrUnDup(Array.from(document.querySelectorAll(id)).map(element => { if (element.className != "") { return element.className.split(" ").map(elementC => { return Array.from(document.getElementsByClassName(elementC)) }) } }).flat().flat())
-            } catch{ throw new Error("Unexpected error") }
-        } else if (option == "$tag") {
+                return ArrUnDup(Array.from(document.querySelectorAll(id)).map(element => { if (element.className != "") { return element.className.split(" ").map(elementC => { return Array.from(document.getElementsByClassName(elementC)) }) } }).flat().flat());
+            } catch (e) { throw new Error("Unexpected error") };
+        } else if (option == "$relatives") {
+            try {
+                return ArrUnDup(Array.from(document.getElementsByTagName(document.querySelectorAll(id))).filter(element => { return element.parentNode == document.querySelectorAll(id).parentNode }))
+            } catch (e) {
+                throw new Error("Unexpected error");
+            }
+        } else {
+            (function StyleProgeny(_elem) {
 
-        } else { }
+            })()
+        }
     } else {
         throw new Error(id + "is Undefied.")
     }
@@ -343,6 +351,13 @@ function ArrUnDup/**Duplicate */(array) {
     return array.filter(function (x, i, self) {
         return self.indexOf(x) === i;
     });
+}
+
+function FuncProgeny(element, func) {
+    try { let element = Array.isArray(element) ? element : Array.from(document.querySelectorAll(element)); }
+    catch{ throw new Error("Error / Undefined elements of " + element) }
+    element.forEach(_element => { eval(_element.func + "()") })
+    FuncProgeny(element.map(element.children), func);
 }
 //---key-------------------------------
 document.addEventListener("keyup", () => key_summon("up"));
