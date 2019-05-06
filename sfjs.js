@@ -118,14 +118,14 @@ function CSSICS(id, option, exception) {
             } catch (e) { throw new Error("Unexpected error") };
         } else if (option == "$relatives") {
             try {
-                return ArrUnDup(Array.from(document.getElementsByTagName(document.querySelectorAll(id))).filter(element => { return element.parentNode == document.querySelectorAll(id).parentNode }))
+                return ArrUnDup(/** */.filter(element => { return element.parentNode == document.querySelectorAll(id).parentNode }))
             } catch (e) {
                 throw new Error("Unexpected error");
             }
         } else {
-            (function StyleProgeny(_elem) {
-
-            })()
+            return ArrUnDup((function StyleProgeny(_elem, _spr) {
+                return StyleProgeny(_elem.filter(_E1 => { _E1.children.length != 0 }).map(_E2 => { _E2.children }), _spr.push(_elem.filter(_E3 => {/** */ })));
+            })(Array.from(document.getElementsByTagName("html")), []))
         }
     } else {
         throw new Error(id + "is Undefied.")
