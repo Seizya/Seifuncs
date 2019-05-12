@@ -111,21 +111,25 @@ function CSS(elements) {
 function CSSICS(id, option, exception) {
     if (document.querySelectorAll(id).length >= 1) {
         if (option == undefined) {
-            return document.querySelectorAll(id).length == 1 ? document.querySelectorAll(id)[0] : document.querySelectorAll(id);
+            return Array.from(document.querySelectorAll(id).length == 1 ? document.querySelectorAll(id)[0] : document.querySelectorAll(id));
         } else if (option == "$class") {
             try {
                 return ArrUnDup(Array.from(document.querySelectorAll(id)).map(element => { if (element.className != "") { return element.className.split(" ").map(elementC => { return Array.from(document.getElementsByClassName(elementC)) }) } }).flat().flat());
             } catch (e) { throw new Error("Unexpected error") };
         } else if (option == "$relatives") {
             try {
-                return ArrUnDup(/** */.filter(element => { return element.parentNode == document.querySelectorAll(id).parentNode }))
+                return ArrUnDup(Array.from(document.querySelectorAll(id)).map(element => { return document.getElementsByTagName(element.tagName) }).flat()).filter(_elem1 => { return Array.from(document.querySelectorAll(id)).some(_elem2 => { return _elem2.parentNode == _elem1.parentNode; }) })
+            } catch (e) {
+                throw new Error("Unexpected error");
+            }
+        } else if (option == "#tag") {
+            try {
+                return ArrUnDup(document.querySelectorAll(id).map(_E0 => { return Array.from(document.getElementsByTagName(_E0.tagName)).flat() }))
             } catch (e) {
                 throw new Error("Unexpected error");
             }
         } else {
-            return ArrUnDup((function StyleProgeny(_elem, _spr) {
-                return StyleProgeny(_elem.filter(_E1 => { _E1.children.length != 0 }).map(_E2 => { _E2.children }), _spr.push(_elem.filter(_E3 => {/** */ })));
-            })(Array.from(document.getElementsByTagName("html")), []))
+            
         }
     } else {
         throw new Error(id + "is Undefied.")
@@ -431,4 +435,4 @@ let flag = {};
 //function down$A_play(){}
 ---*/
 
-console.log("Seifuncs ver.JS was completely loaded.")
+console.log("Seifuncs ver.1.1.0 for JS was completely loaded.")
