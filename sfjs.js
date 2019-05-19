@@ -108,7 +108,7 @@ function CSS(elements) {
 }
 //document.querySelectorAll('script[src="index.js"]')
 
-function CSSICS(id, option, exception) {
+function CSSQS(id, option, exception) {
     if (document.querySelectorAll(id).length >= 1) {
         if (option == undefined) {
             return Array.from(document.querySelectorAll(id).length == 1 ? document.querySelectorAll(id)[0] : document.querySelectorAll(id));
@@ -129,7 +129,7 @@ function CSSICS(id, option, exception) {
                 throw new Error("Unexpected error");
             }
         } else {
-            
+
         }
     } else {
         throw new Error(id + "is Undefied.")
@@ -163,6 +163,7 @@ function CSSIC(id, option) {
     }
 }
 
+const SeCA = fn => (tmp = args => arg => arg ? tmp([...args, ...arg]) : fn(...args))([])
 //---add-elements----------------------
 window.addEventListener("load", () => {
     let sfcss = document.createElement('style');
@@ -357,11 +358,9 @@ function ArrUnDup/**Duplicate */(array) {
     });
 }
 
-function FuncProgeny(element, func) {
-    try { let element = Array.isArray(element) ? element : Array.from(document.querySelectorAll(element)); }
-    catch{ throw new Error("Error / Undefined elements of " + element) }
-    element.forEach(_element => { eval(_element.func + "()") })
-    FuncProgeny(element.map(element.children), func);
+function FuncProgeny(_E0, fn) {
+    (Array.isArray(_E0) ? _E0 : Array.from(_E0)).flatmap(_E1 => _E1 instanceof HTMLElement ? _E1 : (document.querySelectorAll(_E1).length == 0 ? undefined : Array.from(document.querySelectorAll(_E1)))).filter(_E1 => _E1 != undefined).forEach(_E1 => _E1.fn())
+    if (_E0.filter(_E0 => _E0.hasChildNodes()).map(_E0 => _E0.child).length != 0) FuncProgeny(_E0, fn)
 }
 //---key-------------------------------
 document.addEventListener("keyup", () => key_summon("up"));
