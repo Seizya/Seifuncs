@@ -151,7 +151,14 @@ function CSSIC(id, option) {
     }
 }
 
-const SeCA = fn => (tmp = args => arg => arg ? tmp([...args, ...arg]) : fn(...args))([])
+const SeCA = fn => (tmp = args => arg => arg ? tmp([...args, ...arg]) : fn(...args))([]);
+const MsCF = obj => fn => fn ? MsCF(fn(obj)) : obj;
+
+/**
+ * SeCA <Sei Chain Argument> SeCA(fn Name)(arg0)...(argn)() == fn(arg0,...,argn);
+ * MsCF <Msy Chain Function> MsCF(obj)(fn0)...(fnn) => arg(obj) ... argn(arg(obj));
+ */
+
 //---add-elements----------------------
 window.addEventListener("load", () => {
     let sfcss = document.createElement('style');
