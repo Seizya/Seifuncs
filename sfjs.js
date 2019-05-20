@@ -109,18 +109,21 @@ function CSS(elements) {
 //document.querySelectorAll('script[src="index.js"]')
 
 function CSSQS(id, option, exception, exc_op) {
-    if (document.querySelectorAll(id).length >= 1) {
-        if (option == undefined) {
-            return Array.from(document.querySelectorAll(id).length == 1 ? document.querySelectorAll(id)[0] : document.querySelectorAll(id));
-        } else if (option == "$class") {
-            return ArrUnDup(Array.from(document.querySelectorAll(id)).filter(_E0 => _E0.className != "").flatmap(_E0 => document.getElementsByClassName(_E0)));
-        } else if (option == "$relatives") {
-            return ArrUnDup(Array.from(document.querySelectorAll(id)).flatmap(_E0 => document.getElementsByTagName(_E0.tagName))).filter(_E0 => Array.from(document.querySelectorAll(id)).some(_E1 => _E0.parentNode == _E1.parentNode))
+    return CQgeny(id, option).filter(_E0 => !CQgeny(exception, exc_op).some(_E1 => _E0 == _E1))
+    function CQgeny(_id, _option) {
+        if (document.querySelectorAll(_id).length >= 1) {
+            if (_option == undefined) {
+                return Array.from(document.querySelectorAll(_id).length == 1 ? document.querySelectorAll(_id)[0] : document.querySelectorAll(_id));
+            } else if (_option == "$class") {
+                return ArrUnDup(Array.from(document.querySelectorAll(_id)).filter(_E0 => _E0.className != "").flatmap(_E0 => document.getElementsByClassName(_E0)));
+            } else if (_option == "$relatives") {
+                return ArrUnDup(Array.from(document.querySelectorAll(_id)).flatmap(_E0 => document.getElementsByTagName(_E0.tagName))).filter(_E0 => Array.from(document.querySelectorAll(_id)).some(_E1 => _E0.parentNode == _E1.parentNode))
+            } else {
+                return (function CQgeny(pare, arr) { [...arr, ...pare.slice().filter(_E0 => Array.from(document.querySelectorAll(_id)).some(_E1 => window.getComputedStyle(_E0).getPropertyValue(_option) == window.getComputedStyle(_E1).getPropertyValue(_option)))]; return pare.filter(_E0 => _E0.hasChildNodes()).flatmap(_E1 => _E1.child).length != 0 ? CQgeny(pare, arr) : ArrUnDup(arr) })(Array.from(document.getElementsByTagName("HTML")), [])
+            }
         } else {
-            return (function CQgeny(pare, arr) { [...arr, ...pare.slice().filter(_E0 => Array.from(document.querySelectorAll(id)).some(_E1 => window.getComputedStyle(_E0).getPropertyValue(option) == window.getComputedStyle(_E1).getPropertyValue(option)))]; return pare.filter(_E0 => _E0.hasChildNodes().flatmap(_E1 => _E1.child)).length != 0 ? CQgeny(pare, arr) : arr })(Array.from(document.getElementsByTagName("HTML")), [])
+            return undefined;
         }
-    } else {
-        return undefined;
     }
 }
 
@@ -348,9 +351,7 @@ function Array2Array(...args) {
 }
 
 function ArrUnDup/**Duplicate */(array) {
-    return array.filter(function (x, i, self) {
-        return self.indexOf(x) === i;
-    });
+    return array.filter((x, i, self) => self.indexOf(x) === i);
 }
 
 function FuncProgeny(_E0, fn) {
