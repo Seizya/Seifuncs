@@ -108,31 +108,19 @@ function CSS(elements) {
 }
 //document.querySelectorAll('script[src="index.js"]')
 
-function CSSQS(id, option, exception) {
+function CSSQS(id, option, exception, exc_op) {
     if (document.querySelectorAll(id).length >= 1) {
         if (option == undefined) {
             return Array.from(document.querySelectorAll(id).length == 1 ? document.querySelectorAll(id)[0] : document.querySelectorAll(id));
         } else if (option == "$class") {
-            try {
-                return ArrUnDup(Array.from(document.querySelectorAll(id)).map(element => { if (element.className != "") { return element.className.split(" ").map(elementC => { return Array.from(document.getElementsByClassName(elementC)) }) } }).flat().flat());
-            } catch (e) { throw new Error("Unexpected error") };
+            return ArrUnDup(Array.from(document.querySelectorAll(id)).filter(_E0 => _E0.className != "").flatmap(_E0 => document.getElementsByClassName(_E0)));
         } else if (option == "$relatives") {
-            try {
-                return ArrUnDup(Array.from(document.querySelectorAll(id)).map(element => { return document.getElementsByTagName(element.tagName) }).flat()).filter(_elem1 => { return Array.from(document.querySelectorAll(id)).some(_elem2 => { return _elem2.parentNode == _elem1.parentNode; }) })
-            } catch (e) {
-                throw new Error("Unexpected error");
-            }
-        } else if (option == "#tag") {
-            try {
-                return ArrUnDup(document.querySelectorAll(id).map(_E0 => { return Array.from(document.getElementsByTagName(_E0.tagName)).flat() }))
-            } catch (e) {
-                throw new Error("Unexpected error");
-            }
+            return ArrUnDup(Array.from(document.querySelectorAll(id)).flatmap(_E0 => document.getElementsByTagName(_E0.tagName))).filter(_E0 => Array.from(document.querySelectorAll(id)).some(_E1 => _E0.parentNode == _E1.parentNode))
         } else {
-
+            return (function CQgeny(pare, arr) { [...arr, ...pare.slice().filter(_E0 => Array.from(document.querySelectorAll(id)).some(_E1 => window.getComputedStyle(_E0).getPropertyValue(option) == window.getComputedStyle(_E1).getPropertyValue(option)))]; return pare.filter(_E0 => _E0.hasChildNodes().flatmap(_E1 => _E1.child)).length != 0 ? CQgeny(pare, arr) : arr })(Array.from(document.getElementsByTagName("HTML")), [])
         }
     } else {
-        throw new Error(id + "is Undefied.")
+        return undefined;
     }
 }
 
