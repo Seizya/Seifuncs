@@ -106,14 +106,13 @@ function CSS(elements) {
         }
     });
 }
-//document.querySelectorAll('script[src="index.js"]')
 
 function CSSQS(id, option, exception, exc_op) {
-    return CQgeny(id, option).filter(_E0 => !CQgeny(exception, exc_op).some(_E1 => _E0 == _E1))
+    return exception == undefined ? CQgeny(id, option) : CQgeny(id, option).filter(_E0 => !CQgeny(exception, exc_op).some(_E1 => _E0 == _E1))
     function CQgeny(_id, _option) {
         if (document.querySelectorAll(_id).length >= 1) {
             if (_option == undefined) {
-                return Array.from(document.querySelectorAll(_id).length == 1 ? document.querySelectorAll(_id)[0] : document.querySelectorAll(_id));
+                return Array.from(document.querySelectorAll(_id).length != 1 ? document.querySelectorAll(_id)[0] : document.querySelectorAll(_id));
             } else if (_option == "$class") {
                 return ArrUnDup(Array.from(document.querySelectorAll(_id)).filter(_E0 => _E0.className != "").flatmap(_E0 => document.getElementsByClassName(_E0)));
             } else if (_option == "$relatives") {
@@ -127,6 +126,11 @@ function CSSQS(id, option, exception, exc_op) {
     }
 }
 
+/**
+ * CSSIC 
+ *過去の遺産 / 仕様非推奨
+ *取得する要素が1つであることが確定な場合以外での使用は, Bugの原因になる恐れがあります
+ */
 function CSSIC(id, option) {
     let cr;
     if (typeof id == "string") {
@@ -167,37 +171,39 @@ window.addEventListener("load", () => {
     let sfcss = document.createElement('style');
     sfcss.setAttribute("id", "SeifuncCSS");
     sfcss.textContent = '@import "./Seifuncs/sfcss.css";';
-    CSSIC("script").parentNode.insertBefore(sfcss, CSSIC("script").nextSibling);
+    CSSQS("script")[0].parentNode.insertBefore(sfcss, CSSQS("script")[0].nextSibling);
     //document.querySelectorAll('script[src="index.js"]')
 
-    CSSIC("#SeifuncCSS").addEventListener("load", () => {
+    CSSQS("#SeifuncCSS")[0].addEventListener("load", () => {
         chara_contain("$start");
-        resize();
     })
 })
+
+function Gvp(point) {
+    if (point == "vmin") {
+        return window.innerHeight < window.innerWidth ? window.innerHeight : window.innerWidth;
+    } else if (point == "vmax") {
+        return window.innerHeight > window.innerWidth ? window.innerHeight : window.innerWidth;
+    } else if (point == "vh") {
+        return window.innerHeight;
+    } else if (point == "vw") {
+        return window.innerWidth;
+    } else if (point == "rem") {
+        return window.getComputedStyle(CSSQS("html")).getPropertyValue("font-size");
+    }
+}
 
 //---Calculation-----------------------
 //chara_contain("#D_s2t2s", 50);
 
 //将来的には "%" 以外でもサイズ調整できるようにしたい
 //縦方向文字にも対応したい
-//空白のカウント
 //数字はASCIIcode外 M
 //:before,::after 対応
 //オススメは 90% に縮小
 let CC_list = {};
 
 function chara_contain(query, parsent) {
-    if (CSSIC("#get_em") == null) {
-        let Gem = document.createElement('div');
-        Gem.setAttribute("id", "get_em");
-        CSSIC("body").insertBefore(Gem, CSSIC("body").firstChild);
-
-        let GemS = document.createElement('div');
-        GemS.setAttribute("id", "get_em_small")
-        GemS.textContent = 'a';
-        CSSIC("#get_em").parentNode.insertBefore(GemS, CSSIC("#get_em").nextSibling);
-    }
     if (typeof parsent == "number") {
         if (String(parsent).length - (parsent < 1 ? 1 : 0) > 3) {
             console.warn("Parsentage must be within 3 digits. / at chara_contain")
@@ -264,72 +270,22 @@ function chara_contain(query, parsent) {
     }
 }
 
-function zeroPadding(number, digit) {
-    if (String(digit).indexOf(".") == -1) {
-        R_number = String(number);
-        if (String(number).indexOf(".") != -1) {
-            if (String(number).length - 1 <= digit) {
-                for (let i = 0; digit - (String(number).length - 1) > i; i++) {
-                    R_number = "0" + R_number;
-                }
-                R_number = R_number.slice(0, -1 * String(number).split(".")[1].length) + String(number).split(".")[1];
-            } else {
-                console.log(number + " is " + digit + " digit or more / at zeroPading")
-                R_number = undefined;
-            }
+function zeroPadding(num, dig) {
+    const AddZero = (_num, _dig) => _num.length < (_num.indexOf(".") == -1 ? _dig : _dig + 1) ? AddZero("0" + _num, _dig) : _num;
+    if (String(dig).indexOf(".") == -1) {
+        if (String(num).length < (String(num).indexOf(".") == -1 ? dig : dig + 1)) {
+            return AddZero(String(num), (String(num).indexOf(".") == -1 ? dig : dig + 1));
         } else {
-            if (String(number).length <= digit) {
-                for (let i = 0; digit - String(number).length > i; i++) {
-                    R_number = "0" + R_number;
-                }
-            } else {
-                console.log(number + " is " + digit + " digit or more / at zeroPading")
-                R_number = undefined;
-            }
+            throw new Error("Digt must be bigger than digit of number")
         }
-    } else {
-        console.log(digit + " must be a natural number / at zeroPading")
-        R_number = undefined;
-    }
-    return R_number;
-}
-
-
-function vp(value, point, unit) {
-    let point_R;
-    if (point == "vmin") {
-        point_R = window.innerHeight < window.innerWidth ? window.innerHeight : window.innerWidth;
-    } else if (point == "vh") {
-        point_R = window.innerHeight;
-    } else {
-        point_R = window.innerWidth;
-    }
-    cr = value * 0.01 * point_R;
-    //CSSIC("#get_em", "st").width = "1" + unit;
-    if (unit == "em_small") {
-        cr = value * Math.floor(point_R * 0.01 / parseFloat(CSSIC("#get_em_small").offsetWidth) * 100) / 100;
-    } else if (unit == "em") {
-        cr = value * Math.floor(point_R * 0.01 / parseFloat(CSSIC("#get_em").clientWidth) * 100) / 100;
-    }
-    cr = Math.floor(cr * 100) / 100;
-    //console.log(value, point, unit, point_R);
-    return cr;
-}
-
-function resize() {
-    CSSIC(":root").style.setProperty('--emvmin', vp(1, "vmin", "em") + "em");
-    CSSIC(":root").style.setProperty('--emvh', vp(1, "vh", "em") + "em");
-    CSSIC(":root").style.setProperty('--emvw', vp(1, "vw", "em") + "em");
-    CSSIC(":root").style.setProperty('--emvmin_small', vp(1, "vmin", "em_small") + "em");
-    CSSIC(":root").style.setProperty('--emvh_small', vp(1, "vh", "em_small") + "em");
-    CSSIC(":root").style.setProperty('--emvw_small', vp(1, "vw", "em_small") + "em");
+    } else { throw new Error("Digit must be natural number") }
 }
 
 window.addEventListener("resize", function () {
-    resize();
     chara_contain("$start");
 });
 
+//Puppeteer
 function rewindow(toww, towh) {
     let fromheight = window.outerHeight;
     let fromwidth = window.outerWidth;
