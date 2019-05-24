@@ -107,18 +107,19 @@ function CSS(elements) {
     });
 }
 
-function CSSQS(id, option, exception, exc_op) {
-    return exception == undefined ? CQgeny(id, option) : CQgeny(id, option).filter(_E0 => !CQgeny(exception, exc_op).some(_E1 => _E0 == _E1))
+//Deel
+function DeriveElement(id, option) {
+    return [id].flat().flatMap(_E0 => _E0 instanceof HTMLElement ? _E0 : CQgeny(_E0, option))
     function CQgeny(_id, _option) {
         if (document.querySelectorAll(_id).length >= 1) {
             if (_option == undefined) {
-                return Array.from(document.querySelectorAll(_id).length != 1 ? document.querySelectorAll(_id)[0] : document.querySelectorAll(_id));
+                return Array.from(document.querySelectorAll(_id));
             } else if (_option == "$class") {
-                return ArrUnDup(Array.from(document.querySelectorAll(_id)).filter(_E0 => _E0.className != "").flatmap(_E0 => document.getElementsByClassName(_E0)));
+                return ArrUnDup(Array.from(document.querySelectorAll(_id)).filter(_E0 => _E0.className != "").flatMap(_E0 => document.getElementsByClassName(_E0)));
             } else if (_option == "$relatives") {
-                return ArrUnDup(Array.from(document.querySelectorAll(_id)).flatmap(_E0 => document.getElementsByTagName(_E0.tagName))).filter(_E0 => Array.from(document.querySelectorAll(_id)).some(_E1 => _E0.parentNode == _E1.parentNode))
+                return ArrUnDup(Array.from(document.querySelectorAll(_id)).flatMap(_E0 => document.getElementsByTagName(_E0.tagName))).filter(_E0 => Array.from(document.querySelectorAll(_id)).some(_E1 => _E0.parentNode == _E1.parentNode))
             } else {
-                return (function CQgeny(pare, arr) { [...arr, ...pare.slice().filter(_E0 => Array.from(document.querySelectorAll(_id)).some(_E1 => window.getComputedStyle(_E0).getPropertyValue(_option) == window.getComputedStyle(_E1).getPropertyValue(_option)))]; return pare.filter(_E0 => _E0.hasChildNodes()).flatmap(_E1 => _E1.child).length != 0 ? CQgeny(pare, arr) : ArrUnDup(arr) })(Array.from(document.getElementsByTagName("HTML")), [])
+                return (function CQgeny(pare, arr) { [...arr, ...pare.slice().filter(_E0 => Array.from(document.querySelectorAll(_id)).some(_E1 => window.getComputedStyle(_E0).getPropertyValue(_option) == window.getComputedStyle(_E1).getPropertyValue(_option)))]; return pare.filter(_E0 => _E0.hasChildNodes()).flatMap(_E1 => _E1.child).length != 0 ? CQgeny(pare, arr) : ArrUnDup(arr) })(Array.from(document.getElementsByTagName("HTML")), [])
             }
         } else {
             return undefined;
@@ -158,28 +159,33 @@ function CSSIC(id, option) {
     }
 }
 
-const SeCA = fn => (tmp = args => arg => arg ? tmp([...args, ...arg]) : fn(...args))([]);
-const MsCF = obj => fn => fn ? MsCF(fn(obj)) : obj;
-
+function SeCA(fn) { (tmp = args => arg => arg ? tmp([...args, ...arg]) : fn(...args))([]) }
+function MsCF(obj) { fn => fn ? MsCF(fn(obj)) : obj }
+/**
+ * const SeCA = fn => (tmp = args => arg => arg ? tmp([...args, ...arg]) : fn(...args))([]);
+ * const MsCF = obj => fn => fn ? MsCF(fn(obj)) : obj; 
+ */
 /**
  * SeCA <Sei Chain Argument> SeCA(fn Name)(arg0)...(argn)() == fn(arg0,...,argn);
  * MsCF <Msy Chain Function> MsCF(obj)(fn0)...(fnn) => arg(obj) ... argn(arg(obj));
  */
+
+
 
 //---add-elements----------------------
 window.addEventListener("load", () => {
     let sfcss = document.createElement('style');
     sfcss.setAttribute("id", "SeifuncCSS");
     sfcss.textContent = '@import "./Seifuncs/sfcss.css";';
-    CSSQS("script")[0].parentNode.insertBefore(sfcss, CSSQS("script")[0].nextSibling);
+    DeriveElement("script")[0].parentNode.insertBefore(sfcss, DeriveElement("script")[0].nextSibling);
     //document.querySelectorAll('script[src="index.js"]')
 
-    CSSQS("#SeifuncCSS")[0].addEventListener("load", () => {
+    DeriveElement("#SeifuncCSS")[0].addEventListener("load", () => {
         chara_contain("$start");
     })
 })
 
-function Gvp(point) {
+function GetViewPoint(point) {
     if (point == "vmin") {
         return window.innerHeight < window.innerWidth ? window.innerHeight : window.innerWidth;
     } else if (point == "vmax") {
@@ -189,8 +195,29 @@ function Gvp(point) {
     } else if (point == "vw") {
         return window.innerWidth;
     } else if (point == "rem") {
-        return window.getComputedStyle(CSSQS("html")).getPropertyValue("font-size");
+        return window.getComputedStyle(DeriveElement("html")).getPropertyValue("font-size");
     }
+}
+
+
+function ElementViewMin(elem) {
+    elem = DeriveElement(elem);
+    return elem.map(_E0 => {
+        let width = _E0.clientWidth - (_E0.style.paddingLeft + _E0.style.paddingRight);
+        let height = _E0.clientHeight - (_E0.style.paddingTop + _E0.style.paddingBottom);
+
+        return width < height ? width : height;
+    })
+}
+
+function ElementViewMax(elem) {
+    elem = DeriveElement(elem);
+    return elem.map(_E0 => {
+        let width = _E0.clientWidth - (_E0.style.paddingLeft + _E0.style.paddingRight);
+        let height = _E0.clientHeight - (_E0.style.paddingTop + _E0.style.paddingBottom);
+
+        return width < height ? height : width;
+    })
 }
 
 //---Calculation-----------------------
@@ -298,12 +325,7 @@ function rewindow(toww, towh) {
 }
 
 function Array2Array(...args) {
-    //let Arg = Array.prototype.slice(arguments);
-    let Arg = args.map(elem => { if (!Array.isArray(elem)) { return [elem] } else { return elem } })
-    let Arr = [[]];
-
-
-    return (A2A = (Arg, Arr) => Arg.length > 0 ? A2A(Arg.slice(0, -1), Arg.slice(-1).flat().map(elemG => Arr.map(elem => [elemG, ...elem])).flat()) : Arr)(Arg, Arr)
+    return (A2A = (Arg, Arr) => Arg.length > 0 ? A2A(Arg.slice(0, -1), Arg.slice(-1).flat().flatMap(elemG => Arr.map(elem => [elemG, ...elemG]))) : Arr)(args.map(_E0 => Array.isArray(_E0) ? _E0 : [_E0]), [[]])
 }
 
 function ArrUnDup/**Duplicate */(array) {
@@ -311,9 +333,10 @@ function ArrUnDup/**Duplicate */(array) {
 }
 
 function FuncProgeny(_E0, fn) {
-    (Array.isArray(_E0) ? _E0 : Array.from(_E0)).flatmap(_E1 => _E1 instanceof HTMLElement ? _E1 : (document.querySelectorAll(_E1).length == 0 ? undefined : Array.from(document.querySelectorAll(_E1)))).filter(_E1 => _E1 != undefined).forEach(_E1 => _E1.fn())
+    (Array.isArray(_E0) ? _E0 : Array.from(_E0)).flatMap(_E1 => _E1 instanceof HTMLElement ? _E1 : (document.querySelectorAll(_E1).length == 0 ? undefined : Array.from(document.querySelectorAll(_E1)))).filter(_E1 => _E1 != undefined).forEach(_E1 => _E1.fn())
     if (_E0.filter(_E0 => _E0.hasChildNodes()).map(_E0 => _E0.child).length != 0) FuncProgeny(_E0, fn)
 }
+
 //---key-------------------------------
 document.addEventListener("keyup", () => key_summon("up"));
 document.addEventListener("keydown", () => key_summon("down"));
@@ -386,4 +409,4 @@ let flag = {};
 //function down$A_play(){}
 ---*/
 
-console.log("Seifuncs ver.1.1.0 for JS was completely loaded.")
+console.log("Seifuncs ver.1.1.1 for JS was completely loaded. \n e-mail : Yakumo.Seizya@gmail.com \n Github : https://github.com/Seizya")
