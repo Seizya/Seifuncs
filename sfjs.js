@@ -172,43 +172,36 @@ function MsCF(obj) { return fn => fn ? MsCF(fn(obj)) : obj }
 
 let SeList = {};
 function OwnLists(name, ud, ...arg) {
+    [name, ud, ...arg] = [String(name), String(ud), ...arg.map(_E0 => String(_E0))]
     if (ud == "admit" && SeList[name] == undefined) {
         if (arg[0] == "$array") {
             SeList[name] = [];
-            window.name = ReturnArray(name);
+            window[name] = () => SeList[name];
         } else {
             SeList[name] = {};
-            window.name = (_name, _ud, ..._arg) => {
-                if (_ud == undefined) {
-                    return SeList[name];
-                } else if (_ud == "add") {
-                    if (arg != undefined) {
-                        return ControlObject(name, _name, _ud, _arg[0])
+            window[name] = (_name, _ud, ..._arg) => {
+                [_name, _ud, ..._arg] = [String(_name), String(_ud), ..._arg]
+                if (_ud == ("add" || "excadd")) {
+                    if (arg[0] == undefined || _ud == "excadd") {
+                        SeList[name][_name] = _arg[0]
                     } else {
-                        let tmp = {};
-                        for (; i < arg.length; i++) {
-                            tmp[arg[i]] = _arg[i];
+                        let tmp0 = {}
+                        for (i = 0; i < arg.length; i++) {
+                            tmp0[arg[i]] = _arg[i]
                         }
-                        return ControlObject(name, _name, _ud, tmp)
+                        SeList[name][_name] = tmp0;
                     }
-                } else if (_ud = "remove") {
-                    delete SeList[name];
+                } else if (_ud == "remove") {
+                    delete SeList[name][_name];
+                } else {
+                    return SeList[name][_name];
                 }
             }
         }
-    } else if (ud = "expel") { } else { }
-}
-
-function ReturnArray(ListN) {
-    return SeList[ListN];
-}
-function ControlObject(ListN, name, ud, arg) {
-    if (ud = "add") {
-        SeList[ListN][name] = arg;
-    } else if (ud = "remove") {
-        SeList[ListN][name] = "";
+    } else if (ud = "expel") {
+        delete SeList[name]
     } else {
-        return SeList[ListN][name];
+        return Selist[name]
     }
 }
 
