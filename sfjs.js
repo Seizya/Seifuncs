@@ -200,9 +200,7 @@ function OwnLists(name, ud, ...arg) {
         }
     } else if (ud = "expel") {
         delete SeList[name]
-    } else {
-        return Selist[name]
-    }
+    } else if (name != undefined) { return SeList[name] } else { return SeList }
 }
 
 function isObject(o) { return (o instanceof Object && !(o instanceof Array)) ? true : false; };
