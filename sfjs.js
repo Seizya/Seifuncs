@@ -159,8 +159,6 @@ function CSSIC(id, option) {
     }
 }
 
-function SeCA(fn) { return (tmp = args => arg => arg ? tmp([...args, ...arg]) : fn(...args))([]) }
-function MsCF(obj) { return fn => fn ? MsCF(fn(obj)) : obj }
 /**
  * const SeCA = fn => (tmp = args => arg => arg ? tmp([...args, ...arg]) : fn(...args))([]);
  * const MsCF = obj => fn => fn ? MsCF(fn(obj)) : obj; 
@@ -169,38 +167,67 @@ function MsCF(obj) { return fn => fn ? MsCF(fn(obj)) : obj }
  * SeCA <Sei Chain Argument> SeCA(fn Name)(arg0)...(argn)() == fn(arg0,...,argn);
  * MsCF <Msy Chain Function> MsCF(obj)(fn0)...(fnn) => arg(obj) ... argn(arg(obj));
  */
+function SeCA(fn) { return (tmp = args => arg => arg ? tmp([...args, ...arg]) : fn(...args))([]) }
+function MsCF(obj) { return fn => fn ? MsCF(fn(obj)) : obj }
 
+
+/**
+ * こちらは, 眠気と疲労により頭が回らない人が書いた関数です。
+ * 現に,この文章も何回か書き直しています。
+ * 
+ * 一応動くので, 書き直しは後回しです。
+ * あと, この関数は私の頭の思考回路と相性が悪いらしく, 十分な能力を発揮できないのです。
+ */
 let SeList = {};
 function OwnLists(name, ud, ...arg) {
     [name, ud, ...arg] = [String(name), String(ud), ...arg.map(_E0 => String(_E0))]
     if (ud == "admit" && SeList[name] == undefined) {
-        if (arg[0] == "$array") {
-            SeList[name] = [];
-            window[name] = () => SeList[name];
-        } else {
-            SeList[name] = {};
-            window[name] = (_name, _ud, ..._arg) => {
-                [_name, _ud, ..._arg] = [String(_name), String(_ud), ..._arg]
-                if (_ud == ("add" || "excadd")) {
-                    if (arg[0] == undefined || _ud == "excadd") {
-                        SeList[name][_name] = _arg[0]
-                    } else {
-                        let tmp0 = {}
-                        for (i = 0; i < arg.length; i++) {
-                            tmp0[arg[i]] = _arg[i]
-                        }
-                        SeList[name][_name] = tmp0;
-                    }
-                } else if (_ud == "remove") {
-                    delete SeList[name][_name];
+        SeList[name] = {};
+        window[name] = (_name, _ud, ..._arg) => {
+            if (_ud == ("add" || "excadd")) {
+                if (arg[0] == undefined || _ud == "excadd") {
+                    SeList[name][_name] = _arg[0];
                 } else {
-                    return SeList[name][_name];
+                    let tmp0 = {};
+                    for (i = 0; i < arg.length; i++) {
+                        tmp0[arg[i]] = _arg[i];
+                    }
+                    SeList[name][_name] = tmp0;
                 }
+                //{name : {_name:{_arg:arg,arg1:_arg1},_name1..}}
+            } else if (_ud == "remove") {
+                _arg.forEach(_E1 => SeList.filter(_E0 => _E0 != _E1))
+            } else {
+                return SeList[name];
+            }
+        }
+    } else if (ud == "Arradmit" && SeList[name] == undefined) {
+        SeList[name] = [];
+        window[name] = (_ud, ..._arg) => {
+            if (_ud == ("add" || "excadd")) {
+                if (arg[0] == undefined || _ud == "excadd") {
+                    SeList[name].push(_arg[0]);
+                } else {
+                    let tmp0 = {};
+                    for (i = 0; i < arg.length; i++) {
+                        tmp0[arg[i]] = _arg[i];
+                    }
+                    SeList[name].push(tmp0);
+                }
+                //[arg,arg1,{arg2:arg3}]
+            } else if (_ud == "remove") {
+                _arg.forEach(_E1 => SeList.filter(_E0 => _E0 != _E1))
+            } else {
+                return SeList[name];
             }
         }
     } else if (ud = "expel") {
         delete SeList[name]
-    } else if (name != undefined) { return SeList[name] } else { return SeList }
+    } else if (name != undefined) {
+        return SeList[name]
+    } else {
+        return SeList
+    }
 }
 
 function isObject(o) { return (o instanceof Object && !(o instanceof Array)) ? true : false; };
@@ -232,7 +259,6 @@ function GetViewPoint(point) {
     }
 }
 
-
 function ElementViewMin(elem) {
     elem = DeriveElement(elem);
     return elem.map(_E0 => {
@@ -252,6 +278,11 @@ function ElementViewMax(elem) {
         return width < height ? height : width;
     })
 }
+/*
+OwnLists("OmitFn", "admit", "base", "abbr");
+function OmitFunctionName(base, abbr) {//abbreviation
+    OmitFn(base, "add", abbr);
+}*/
 
 //---Calculation-----------------------
 //chara_contain("#D_s2t2s", 50);
@@ -378,8 +409,7 @@ let KeyEvent = [];
 
 function KeyTask(UD, Code, Func) { }
 
-function key_summon(UD) {
-}
+function key_summon(UD) { }
 //----mouse----------------------------
 window.addEventListener("load", () => {
     try {
