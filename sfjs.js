@@ -159,8 +159,8 @@ function CSSIC(id, option) {
     }
 }
 
-function SeCA(fn) { (tmp = args => arg => arg ? tmp([...args, ...arg]) : fn(...args))([]) }
-function MsCF(obj) { fn => fn ? MsCF(fn(obj)) : obj }
+function SeCA(fn) { return (tmp = args => arg => arg ? tmp([...args, ...arg]) : fn(...args))([]) }
+function MsCF(obj) { return fn => fn ? MsCF(fn(obj)) : obj }
 /**
  * const SeCA = fn => (tmp = args => arg => arg ? tmp([...args, ...arg]) : fn(...args))([]);
  * const MsCF = obj => fn => fn ? MsCF(fn(obj)) : obj; 
@@ -170,7 +170,49 @@ function MsCF(obj) { fn => fn ? MsCF(fn(obj)) : obj }
  * MsCF <Msy Chain Function> MsCF(obj)(fn0)...(fnn) => arg(obj) ... argn(arg(obj));
  */
 
+let SeList = {};
+function OwnLists(name, ud, ...arg) {
+    if (ud == "admit" && SeList[name] == undefined) {
+        if (arg[0] == "$array") {
+            SeList[name] = [];
+            window.name = ReturnArray(name);
+        } else {
+            SeList[name] = {};
+            window.name = (_name, _ud, ..._arg) => {
+                if (_ud == undefined) {
+                    return SeList[name];
+                } else if (_ud == "add") {
+                    if (arg != undefined) {
+                        return ControlObject(name, _name, _ud, _arg[0])
+                    } else {
+                        let tmp = {};
+                        for (; i < arg.length; i++) {
+                            tmp[arg[i]] = _arg[i];
+                        }
+                        return ControlObject(name, _name, _ud, tmp)
+                    }
+                } else if (_ud = "remove") {
+                    delete SeList[name];
+                }
+            }
+        }
+    } else if (ud = "expel") { } else { }
+}
 
+function ReturnArray(ListN) {
+    return SeList[ListN];
+}
+function ControlObject(ListN, name, ud, arg) {
+    if (ud = "add") {
+        SeList[ListN][name] = arg;
+    } else if (ud = "remove") {
+        SeList[ListN][name] = "";
+    } else {
+        return SeList[ListN][name];
+    }
+}
+
+function isObject(o) { return (o instanceof Object && !(o instanceof Array)) ? true : false; };
 
 //---add-elements----------------------
 window.addEventListener("load", () => {
