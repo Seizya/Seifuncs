@@ -278,11 +278,13 @@ function ElementViewMax(elem) {
         return width < height ? height : width;
     })
 }
-/*
-OwnLists("OmitFn", "admit", "base", "abbr");
+
+OwnLists("ShortenFn", "Arradmit", "Base", "Abbr");
+OmitFunctionName("OmitFunctionName", "omitfn")
 function OmitFunctionName(base, abbr) {//abbreviation
-    OmitFn(base, "add", abbr);
-}*/
+    window[abbr] = (...arg) => eval(base + "(...arg)")
+    ShortenFn("add", base, abbr);
+}
 
 //---Calculation-----------------------
 //chara_contain("#D_s2t2s", 50);
