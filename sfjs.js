@@ -1,4 +1,4 @@
-/**It's JavaScript Function Library.
+﻿/**It's JavaScript Function Library.
  * Seifuncs_List() : View Function List on console.
  * 
  * Made by Seizya.
@@ -183,7 +183,7 @@ function OwnLists(name, ud, ...arg) {
     [name, ud, ...arg] = [String(name), String(ud), ...arg.map(_E0 => String(_E0))]
     if (ud == "admit" && SeList[name] == undefined) {
         SeList[name] = {};
-        window[name] = (_name, _ud, ..._arg) => {
+        window["cr"+name] = (_name, _ud, ..._arg) => {
             if (_ud == ("add" || "excadd")) {
                 if (arg[0] == undefined || _ud == "excadd") {
                     SeList[name][_name] = _arg[0];
@@ -203,7 +203,7 @@ function OwnLists(name, ud, ...arg) {
         }
     } else if (ud == "Arradmit" && SeList[name] == undefined) {
         SeList[name] = [];
-        window[name] = (_ud, ..._arg) => {
+        window["cr"+name] = (_ud, ..._arg) => {
             if (_ud == ("add" || "excadd")) {
                 if (arg[0] == undefined || _ud == "excadd") {
                     SeList[name].push(_arg[0]);
