@@ -167,8 +167,8 @@ function CSSIC(id, option) {
  * SeCA <Sei Chain Argument> SeCA(fn Name)(arg0)...(argn)() == fn(arg0,...,argn);
  * MsCF <Msy Chain Function> MsCF(obj)(fn0)...(fnn) => arg(obj) ... argn(arg(obj));
  */
-function SeCA(fn) { return (tmp = args => arg => arg ? tmp([...args, ...arg]) : fn(...args))([]) }
-function MsCF(obj) { return fn => fn ? MsCF(fn(obj)) : obj }
+function SeChainArgument(fn) { return (tmp = args => arg => arg ? tmp([...args, ...arg]) : fn(...args))([]) }
+function MsChainFundtion(obj) { return fn => fn ? MsCF(fn(obj)) : obj }
 
 
 /**
@@ -183,7 +183,7 @@ function OwnLists(name, ud, ...arg) {
     [name, ud, ...arg] = [String(name), String(ud), ...arg.map(_E0 => String(_E0))]
     if (ud == "admit" && SeList[name] == undefined) {
         SeList[name] = {};
-        window["cr"+name] = (_name, _ud, ..._arg) => {
+        window["cr" + name] = (_name, _ud, ..._arg) => {
             if (_ud == ("add" || "excadd")) {
                 if (arg[0] == undefined || _ud == "excadd") {
                     SeList[name][_name] = _arg[0];
@@ -203,7 +203,7 @@ function OwnLists(name, ud, ...arg) {
         }
     } else if (ud == "Arradmit" && SeList[name] == undefined) {
         SeList[name] = [];
-        window["cr"+name] = (_ud, ..._arg) => {
+        window["cr" + name] = (_ud, ..._arg) => {
             if (_ud == ("add" || "excadd")) {
                 if (arg[0] == undefined || _ud == "excadd") {
                     SeList[name].push(_arg[0]);
@@ -279,11 +279,23 @@ function ElementViewMax(elem) {
     })
 }
 
-OwnLists("ShortenFn", "Arradmit", "Base", "Abbr");
+//作業領域
+OwnLists("OmitFn", "Arradmit", "Base", "Abbr");
 OmitFunctionName("OmitFunctionName", "omitfn")
+omitfn("DeriveFunctionName", "Derie")
+omitfn("SeChainArgument", "Seca")
+omitfn("MsChainFunction", "Mscf")
+
 function OmitFunctionName(base, abbr) {//abbreviation
+    crOmitFn("add", base, abbr);
+    //window[abbr] = (..._arg) => eval(_OLFindBase(base))(..._arg);
+    //window[abbr] = (...arg) => eval('crOmitFn().filter(_E0 => _E0["Base"] == base)[0]["Abbr"]+(...arg)')
     window[abbr] = (...arg) => eval(base + "(...arg)")
-    ShortenFn("add", base, abbr);
+    //console.log(_OLFindBase(base))
+}
+
+function _OLFindBase(base) {
+    return crOmitFn().filter(_E0 => _E0["Base"] == String(base))[0]["Base"]
 }
 
 //---Calculation-----------------------
