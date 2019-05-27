@@ -286,7 +286,7 @@ omitfn("DeriveFunctionName", "Derie")
 omitfn("SeChainArgument", "Seca")
 omitfn("MsChainFunction", "Mscf")
 
-function OmitFunctionName(base, abbr) {//abbreviation
+function OmitFunctionName(base, abbr) { //abbreviation
     crOmitFn("add", base, abbr);
     //window[abbr] = (..._arg) => eval(_OLFindBase(base))(..._arg);
     //window[abbr] = (...arg) => eval('crOmitFn().filter(_E0 => _E0["Base"] == base)[0]["Abbr"]+(...arg)')
