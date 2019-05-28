@@ -282,7 +282,7 @@ function ElementViewMax(elem) {
 //作業領域
 OwnLists("OmitFn", "Arradmit", "Base", "Abbr");
 OmitFunctionName("OmitFunctionName", "omitfn")
-omitfn("DeriveFunctionName", "Derie")
+omitfn("DeriveElement", "Derie")
 omitfn("SeChainArgument", "Seca")
 omitfn("MsChainFunction", "Mscf")
 
@@ -306,72 +306,18 @@ function _OLFindBase(base) {
 //数字はASCIIcode外 M
 //:before,::after 対応
 //オススメは 90% に縮小
-let CC_list = {};
 
-function chara_contain(query, parsent) {
-    if (typeof parsent == "number") {
-        if (String(parsent).length - (parsent < 1 ? 1 : 0) > 3) {
-            console.warn("Parsentage must be within 3 digits. / at chara_contain")
-        } else {
-            CC_list[query] = zeroPadding(parsent, 3);
-            chara_contain(query);
-        }
-    } else if (query == "$start") {
-        document.querySelectorAll(".chara_contain").forEach(function (value) {
-            //CSSIC("#" + value.id).addEventListener("resize", chara_contain("#" + value.id));
-            chara_contain("#" + value.id)
+function chara_contain(option, elem) {
+    if (option == "$start") {
+        let elems = Derie(".chara_contain");
+        elems.forEach(_E0 => {
+            //_E0.addEventListener("resize", () => {
+            /*let con_width = windowwindow.getComputedStyle($('.pseudo')[0], '::before').getPropertyValue('content');
+            let con_height
+            let width = _E0.clientWidth - (_E0.style.paddingLeft + _E0.style.paddingRight);
+            let height = _E0.clientHeight - (_E0.style.paddingTop + _E0.style.paddingBottom);*/
+            //})
         })
-    } else {
-        let small_chara = 0;
-        for (i = 0; i < CSSIC(query).innerHTML.length; i++) {
-            if (97 <= CSSIC(query).innerHTML.charCodeAt(i) && CSSIC(query).innerHTML.charCodeAt(i) <= 122) {
-                small_chara++;
-            }
-        }
-
-        let width = CSSIC(query).clientWidth - (CSSIC(query, "st").paddingLeft + CSSIC(query, "st").paddingRight);
-        let height = CSSIC(query).clientHeight - (CSSIC(query, "st").paddingTop + CSSIC(query, "st").paddingBottom);
-        let sentence_width = (CSSIC(query).innerHTML.length - small_chara) * CSSIC("#get_em").clientWidth + small_chara * CSSIC("#get_em_small").clientWidth;
-        let sentence_Height = CSSIC("#get_em").clientWidth;
-
-        //CSSIC(query, "st").lineHeight = height + "px";
-        //CSSIC(query, "st").textAlign = "center";
-
-        if (height < sentence_Height) {
-            if (width < sentence_width) {
-                if (sentence_Height - height > sentence_width - width) {
-                    CC_height(query);
-                } else {
-                    CC_width(query);
-                }
-            } else {
-                CC_height(query);
-            }
-        } else if (height == sentence_Height) {
-            if (width <= sentence_width) {
-                CC_width(query);
-            } else {
-                CC_height(query);
-            }
-        } else {
-            CC_width(query);
-        }
-
-        function CC_height(query) {
-            if (query in CC_list) {
-                CSSIC(query, "st").fontSize = height * Number(CC_list[query]) / 100 + "px";
-            } else {
-                CSSIC(query, "st").fontSize = height + "px";
-            }
-        }
-
-        function CC_width(query) {
-            if (query in CC_list) {
-                CSSIC(query, "st").fontSize = width / (CSSIC(query).innerHTML.length - small_chara + small_chara * CSSIC("#get_em_small").clientWidth / CSSIC("#get_em").clientWidth) * Number(CC_list[query]) / 100 + "px";
-            } else {
-                CSSIC(query, "st").fontSize = width / (CSSIC(query).innerHTML.length - small_chara + small_chara * CSSIC("#get_em_small").clientWidth / CSSIC("#get_em").clientWidth) + "px";
-            }
-        }
     }
 }
 
@@ -385,10 +331,6 @@ function zeroPadding(num, dig) {
         }
     } else { throw new Error("Digit must be natural number") }
 }
-
-window.addEventListener("resize", function () {
-    chara_contain("$start");
-});
 
 //Puppeteer
 function rewindow(toww, towh) {
