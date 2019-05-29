@@ -181,49 +181,60 @@ function MsChainFundtion(obj) { return fn => fn ? MsCF(fn(obj)) : obj }
 let SeList = {};
 function OwnLists(name, ud, ...arg) {
     [name, ud, ...arg] = [String(name), String(ud), ...arg.map(_E0 => String(_E0))]
-    if (ud == "admit" && SeList[name] == undefined) {
-        SeList[name] = {};
-        window["cr" + name] = (_name, _ud, ..._arg) => {
-            if (_ud == ("add" || "excadd")) {
-                if (arg[0] == undefined || _ud == "excadd") {
-                    SeList[name][_name] = _arg[0];
-                } else {
-                    let tmp0 = {};
-                    for (i = 0; i < arg.length; i++) {
-                        tmp0[arg[i]] = _arg[i];
+    if (!ud) {
+        if (ud == "expel") {
+            delete SeList[name];
+        } else if (!SeList[name]) {
+            if (ud == "admit") {
+                window["cr" + name] = (_name, _ud, ..._arg) => {
+                    if (Optionalys(_ud, "add")) {
+                        if (arg[0] == undefined || _ud == "excadd") {
+                            SeList[name][_name] = _arg[0];
+                        } else {
+                            let tmp0 = {};
+                            for (i = 0; i < arg.length; i++) {
+                                tmp0[arg[i]] = _arg[i];
+                            }
+                            SeList[name][_name] = tmp0;
+                        }
+                        //{name : {_name:{_arg:arg,arg1:_arg1},_name1..}}
+                    } else if (_ud == "remove") {
+                        _arg.forEach(_E1 => SeList.filter(_E0 => _E0 != _E1))
+                    } else {
+                        return SeList[name];
                     }
-                    SeList[name][_name] = tmp0;
                 }
-                //{name : {_name:{_arg:arg,arg1:_arg1},_name1..}}
-            } else if (_ud == "remove") {
-                _arg.forEach(_E1 => SeList.filter(_E0 => _E0 != _E1))
-            } else {
-                return SeList[name];
+            } else if (ud == "Arradmit") {
+                SeList[name] = [];
+                window["cr" + name] = (_ud, ..._arg) => {
+                    if (Optionalys(_ud, "add")) {
+                        if (arg[0] == undefined || Optionalys(_ud, "exc")) {
+                            if (Optionalys(_ud, "ud")) {
+                                if (!SeList[name].includes(_arg[0])) SeList[name].push(_arg[0]);
+                            } else {
+                                SeList[name].push(_arg[0]);
+                            }
+                        } else {
+                            let tmp0 = {};
+                            for (i = 0; i < arg.length; i++) {
+                                tmp0[arg[i]] = _arg[i];
+                            }
+                            if (Optionalys(_ud, "ud")) {
+                                if (!SeList[name].includes(_arg[0])) SeList[name].push(_arg[0]);
+                            } else {
+                                SeList[name].push(_arg[0]);
+                            }
+                        }
+                        //[arg,arg1,{arg2:arg3}]
+                    } else if (_ud == "remove") {
+                        _arg.forEach(_E1 => SeList.filter(_E0 => _E0 != _E1))
+                    } else {
+                        return SeList[name];
+                    }
+                }
             }
         }
-    } else if (ud == "Arradmit" && SeList[name] == undefined) {
-        SeList[name] = [];
-        window["cr" + name] = (_ud, ..._arg) => {
-            if (_ud == ("add" || "excadd")) {
-                if (arg[0] == undefined || _ud == "excadd") {
-                    SeList[name].push(_arg[0]);
-                } else {
-                    let tmp0 = {};
-                    for (i = 0; i < arg.length; i++) {
-                        tmp0[arg[i]] = _arg[i];
-                    }
-                    SeList[name].push(tmp0);
-                }
-                //[arg,arg1,{arg2:arg3}]
-            } else if (_ud == "remove") {
-                _arg.forEach(_E1 => SeList.filter(_E0 => _E0 != _E1))
-            } else {
-                return SeList[name];
-            }
-        }
-    } else if (ud = "expel") {
-        delete SeList[name]
-    } else if (name != undefined) {
+    } else if (!name) {
         return SeList[name]
     } else {
         return SeList
@@ -231,6 +242,17 @@ function OwnLists(name, ud, ...arg) {
 }
 
 function isObject(o) { return (o instanceof Object && !(o instanceof Array)) ? true : false; };
+function Optionalys(uds, sear) {
+    if (uds == "remove") {
+        return [uds]
+    } else {
+        let tmp = [];
+        if (~uds.indexOf("add")) tmp.push("add")
+        if (~uds.indexOf("exc")) tmp.push("exc")
+        if (~uds.indexOf("ud")) tmp.push("ud")
+        return sear ? tmp.includes(sear) : tmp;
+    }
+}
 
 //---add-elements----------------------
 window.addEventListener("load", () => {
@@ -348,84 +370,13 @@ function Array2Array(...args) {
     return (A2A = (Arg, Arr) => Arg.length > 0 ? A2A(Arg.slice(0, -1), Arg.slice(-1).flat().flatMap(elemG => Arr.map(elem => [elemG, ...elemG]))) : Arr)(args.map(_E0 => Array.isArray(_E0) ? _E0 : [_E0]), [[]])
 }
 
-function ArrUnDup/**Duplicate */(array) {
-    return array.filter((x, i, self) => self.indexOf(x) === i);
+function ArrUnDup/**Duplicate */(array, back) {
+    return array.filter((x, i, self) => (back ? self.lastIndexOf(x) : self.indexOf(x)) === i);
 }
 
 function FuncProgeny(_E0, fn) {
     (Array.isArray(_E0) ? _E0 : Array.from(_E0)).flatMap(_E1 => _E1 instanceof HTMLElement ? _E1 : (document.querySelectorAll(_E1).length == 0 ? undefined : Array.from(document.querySelectorAll(_E1)))).filter(_E1 => _E1 != undefined).forEach(_E1 => _E1.fn())
     if (_E0.filter(_E0 => _E0.hasChildNodes()).map(_E0 => _E0.child).length != 0) FuncProgeny(_E0, fn)
 }
-
-//---key-------------------------------
-document.addEventListener("keyup", () => key_summon("up"));
-document.addEventListener("keydown", () => key_summon("down"));
-
-let KeyEvent = [];
-
-function KeyTask(UD, Code, Func) { }
-
-function key_summon(UD) { }
-//----mouse----------------------------
-window.addEventListener("load", () => {
-    try {
-        mousecode()
-    } catch {
-        console.warn("There are not mousecode()")
-    }
-})
-
-let mc = [];
-let [mouseud_recog, mousequery] = [undefined, undefined];
-
-function mouseud(ud, query) {
-    mouseud_recog = ud;
-    mousequery = query;
-    mousecode();
-}
-
-
-function mouse(ud, query, name) {
-    if (mc.indexOf(ud + "/" + query) == -1) {
-        if (CSSIC(query).length > 1) {
-            CSSIC(query).forEach(function (value) {
-                CSSIC("#" + value.id).addEventListener("mouse" + ud, () => {
-                    mouseud(ud, query);
-                });
-            })
-        } else {
-            CSSIC(query).addEventListener("mouse" + ud, () => {
-                mouseud(ud, query);
-            });
-        }
-        mc.push(ud + "/" + query);
-    } else {
-        if (mouseud_recog == ud && mousequery == query) {
-            if (name == undefined) {
-                while (query.indexOf(".") != -1) {
-                    query = query.replace(".", "$c");
-                }
-                animation(ud + query.replace(/#/g, "$"));
-            } else if (typeof name == "string") {
-                animation(name)
-            } else if (Array.isArray(name)) {
-                name.forEach(element => {
-                    animation(element);
-                });
-            }
-        }
-    }
-}
-
-/*---
-//KeyTask("down", 16, "openshort");
-
-//mouse("down", "#A_menu", ["openmenu", "closeshort"])
-
-let flag = {};
-
-//function openshort() {}
-//function down$A_play(){}
----*/
 
 console.log("Seifuncs ver.1.1.1 for JS was completely loaded. \n e-mail : Yakumo.Seizya@gmail.com \n Github : https://github.com/Seizya")
