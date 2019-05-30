@@ -181,14 +181,15 @@ function MsChainFundtion(obj) { return fn => fn ? MsCF(fn(obj)) : obj }
 let SeList = {};
 function OwnLists(name, ud, ...arg) {
     [name, ud, ...arg] = [String(name), String(ud), ...arg.map(_E0 => String(_E0))]
-    if (!ud) {
+    if (ud) {
         if (ud == "expel") {
             delete SeList[name];
         } else if (!SeList[name]) {
             if (ud == "admit") {
+                SeList[name] = {};
                 window["cr" + name] = (_name, _ud, ..._arg) => {
                     if (Optionalys(_ud, "add")) {
-                        if (arg[0] == undefined || _ud == "excadd") {
+                        if (!arg[0] || _ud == "excadd") {
                             SeList[name][_name] = _arg[0];
                         } else {
                             let tmp0 = {};
@@ -199,7 +200,11 @@ function OwnLists(name, ud, ...arg) {
                         }
                         //{name : {_name:{_arg:arg,arg1:_arg1},_name1..}}
                     } else if (_ud == "remove") {
-                        _arg.forEach(_E1 => SeList.filter(_E0 => _E0 != _E1))
+                        delete SeList[name][_name]
+                    } else if (_ud == "filter") {
+                        return Selist[name][_name];
+                    } else if (_ud == "clear") {
+                        SeList[name] = {};
                     } else {
                         return SeList[name];
                     }
@@ -208,7 +213,7 @@ function OwnLists(name, ud, ...arg) {
                 SeList[name] = [];
                 window["cr" + name] = (_ud, ..._arg) => {
                     if (Optionalys(_ud, "add")) {
-                        if (arg[0] == undefined || Optionalys(_ud, "exc")) {
+                        if (!arg[0] || Optionalys(_ud, "exc")) {
                             if (Optionalys(_ud, "ud")) {
                                 if (!SeList[name].includes(_arg[0])) SeList[name].push(_arg[0]);
                             } else {
@@ -220,14 +225,34 @@ function OwnLists(name, ud, ...arg) {
                                 tmp0[arg[i]] = _arg[i];
                             }
                             if (Optionalys(_ud, "ud")) {
-                                if (!SeList[name].includes(_arg[0])) SeList[name].push(_arg[0]);
+                                if (!SeList[name].includes(_arg[0])) SeList[name].push(tmp0);
                             } else {
-                                SeList[name].push(_arg[0]);
+                                SeList[name].push(tmp0);
                             }
                         }
                         //[arg,arg1,{arg2:arg3}]
                     } else if (_ud == "remove") {
-                        _arg.forEach(_E1 => SeList.filter(_E0 => _E0 != _E1))
+                        if (!arg[0]) {
+                            SeList[name].filter(_E0 => _arg.every(_E1 => _E0 != _E1));
+                        } else {
+                            let tmp0 = {};
+                            for (i = 0; i < arg.length; i++) {
+                                tmp0[arg[i]] = _arg[i];
+                            }
+                            SeList[name].slice().filter(_E0 => Object.key(_E0).filter(_E1 => _E1.some(_E1 == Object.key(tmp0))).some(_E1 => _E0[_E1] != tmp0[_E1]));
+                        }
+                    } else if (_ud == "filter") {
+                        if (!arg[0]) {
+                            return SeList[name].slice().filter(_E0 => _E0_arg[0]);
+                        } else {
+                            let tmp0 = {};
+                            for (i = 0; i < arg.length; i++) {
+                                tmp0[arg[i]] = _arg[i];
+                            }
+                            SeList[name].slice().filter(_E0 => Object.key(_E0).filter(_E1 => _E1.some(_E1 == Object.key(tmp0))).every(_E1 => _E0[_E1] == tmp0[_E1]));
+                        }
+                    } else if (_ud == "clear") {
+                        SeList[name] = [];
                     } else {
                         return SeList[name];
                     }
