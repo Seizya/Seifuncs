@@ -260,7 +260,7 @@ function OwnLists(name, ud, ...arg) {
             }
         }
     } else if (!name) {
-        return SeList[name]
+        return SeList[name];
     } else {
         return SeList
     }
