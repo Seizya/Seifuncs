@@ -108,23 +108,27 @@ function CSS(elements) {
 }
 
 //Deel
-function DeriveElement(id, option) {
-    return [id].flat().flatMap(_E0 => _E0 instanceof HTMLElement ? _E0 : CQgeny(_E0, option))
-    function CQgeny(_id, _option) {
+function DeriveElement(id, option, property) {
+    return [id].flat().flatMap(_E0 => _E0 instanceof HTMLElement ? _E0 : CQgeny(_E0)).filter(_E0 => _E0)
+    function CQgeny(_id) {
         if (document.querySelectorAll(_id).length >= 1) {
-            if (_option == undefined) {
+            if (option == undefined) {
                 return Array.from(document.querySelectorAll(_id));
-            } else if (_option == "$class") {
+            } else if (option == "$class") {
                 return ArrUnDup(Array.from(document.querySelectorAll(_id)).filter(_E0 => _E0.className != "").flatMap(_E0 => document.getElementsByClassName(_E0)));
-            } else if (_option == "$relatives") {
+            } else if (option == "$relatives") {
                 return ArrUnDup(Array.from(document.querySelectorAll(_id)).flatMap(_E0 => document.getElementsByTagName(_E0.tagName))).filter(_E0 => Array.from(document.querySelectorAll(_id)).some(_E1 => _E0.parentNode == _E1.parentNode))
             } else {
-                return (function CQgeny(pare, arr) { [...arr, ...pare.slice().filter(_E0 => Array.from(document.querySelectorAll(_id)).some(_E1 => window.getComputedStyle(_E0).getPropertyValue(_option) == window.getComputedStyle(_E1).getPropertyValue(_option)))]; return pare.filter(_E0 => _E0.hasChildNodes()).flatMap(_E1 => _E1.child).length != 0 ? CQgeny(pare, arr) : ArrUnDup(arr) })(Array.from(document.getElementsByTagName("HTML")), [])
+                return (function CQgeny(pare, arr) { [...arr, ...pare.slice().filter(_E0 => Array.from(document.querySelectorAll(_id)).some(_E1 => window.getComputedStyle(_E0).getPropertyValue(option) == window.getComputedStyle(_E1).getPropertyValue(option)))]; return pare.filter(_E0 => _E0.hasChildNodes()).flatMap(_E1 => _E1.child).length != 0 ? CQgeny(pare, arr) : ArrUnDup(arr) })(Array.from(document.getElementsByTagName("HTML")), [])
             }
         } else {
             return undefined;
         }
     }
+}
+
+function GetElementStyle(elem, pro0, pro1) {
+    return ArrUnDup([elem].flat().flatMap(_E0 => _E0 instanceof HTMLElement ? _E0 : Derie(_E0))).map(_E0 => !pro0 ? window.getComputedStyle(_E0) : (!~pro0.indexOf(":") ? window.getComputedStyle(_E0).getPropertyValue(pro0) : window.getComputedStyle(_E0, pro0).getPropertyValue(pro1)));
 }
 
 /**
@@ -330,8 +334,9 @@ function ElementViewMax(elem) {
 OwnLists("OmitFn", "Arradmit", "Base", "Abbr");
 OmitFunctionName("OmitFunctionName", "omitfn")
 omitfn("DeriveElement", "Derie")
-omitfn("SeChainArgument", "Seca")
-omitfn("MsChainFunction", "Mscf")
+omitfn("GetElementStyle", "Getsy")
+omitfn("SeChainArgument", "Sa")
+omitfn("MsChainFunction", "Mf")
 
 function OmitFunctionName(base, abbr) { //abbreviation
     crOmitFn("add", base, abbr);
@@ -356,15 +361,16 @@ function _OLFindBase(base) {
 
 function chara_contain(option, elem) {
     if (option == "$start") {
-        let elems = Derie(".chara_contain");
-        elems.forEach(_E0 => {
-            //_E0.addEventListener("resize", () => {
-            /*let con_width = windowwindow.getComputedStyle($('.pseudo')[0], '::before').getPropertyValue('content');
-            let con_height
-            let width = _E0.clientWidth - (_E0.style.paddingLeft + _E0.style.paddingRight);
-            let height = _E0.clientHeight - (_E0.style.paddingTop + _E0.style.paddingBottom);*/
-            //})
-        })
+        let elems = Derie("script");
+        if (elems[0]) {
+            elems.forEach(_E0 => {
+                _E0.addEventListener('resize', () => {
+                    let width = _E0.clientWidth - (_E0.style.paddingLeft + _E0.style.paddingRight);
+                    let height = _E0.clientHeight - (_E0.style.paddingTop + _E0.style.paddingBottom);
+                    if (Getsy(_E0, "writing-mdoe")[0] == "horizontal-tb") { }
+                })
+            })
+        }
     }
 }
 
