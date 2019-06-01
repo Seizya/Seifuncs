@@ -7,14 +7,10 @@
     box-sizing: border-box;
 }
 
-#get_em {
-    position: fixed;
-    width: 1em;
-}
-
-#get_em_small {
+#get_small_rem {
     position: fixed;
 
+font-size:1rem;
     color: transparent;
     visibility: hidden;
 }
