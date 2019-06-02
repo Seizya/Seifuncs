@@ -459,9 +459,28 @@ function Tasks(ar, equa, fn, id) {
 function Tasksstart() { didTaskswork = true; }
 function Tasksstop() { didTaskswork = false; }
 
+<<<<<<< HEAD
 function Taskscall() {
     // crTasks().forEach(_E0 => if (_E0["If"]) { _E0["Fn"]() })
     if (didTadwork)
+=======
+function Taskscall(){
+	crTasks().forEach(_E0=>{if(_E0["If"])_E0["Fn"]()}>)
+if(didTadwork) requestAnimationFrame(arguments.callee);
+}
+
+OwnList("KeyTasks","Arradmit","Ud","Elem","Fn","Id")
+function KeyTasks(ar,ud,elem,fn,id){
+if(Optionalys(ar,"add")){
+if(!Optionalys(ar,"id")){
+crKeyTasks(ud,elem,fn)
+}else{
+crKeyTasks(ud,elem,fn,id)
+}
+}else if(ar=="remove"){
+
+}
+>>>>>>> 7d4b9e596faa5383d7d0b4358af624b73d6206ab
 }
 
 console.log("Seifuncs ver.1.1.1 for JS was completely loaded. \n e-mail : Yakumo.Seizya@gmail.com \n Github : https://github.com/Seizya")
