@@ -239,11 +239,7 @@ function OwnLists(name, ud, ...arg) {
                         if (!arg[0]) {
                             SeList[name].filter(_E0 => _arg.every(_E1 => _E0 != _E1));
                         } else {
-                            let tmp0 = {};
-                            for (i = 0; i < arg.length; i++) {
-                                tmp0[arg[i]] = _arg[i];
-                            }
-                            SeList[name].slice().filter(_E0 => Object.key(_E0).filter(_E1 => _E1.some(_E1 == Object.key(tmp0))).some(_E1 => _E0[_E1] != tmp0[_E1]));
+                            SeList[name].slice().filter(_E0 => Object.key(_E0).filter(_E1 => _E1.some(_E1 == Object.key(_arg[0]))).some(_E1 => _E0[_E1] != _arg[0][_E1]));
                         }
                     } else if (_ud == "filter") {
                         if (!arg[0]) {
@@ -464,7 +460,18 @@ function Taskscall() {
     if (didTadwork) requestAnimationFrame(arguments.callee);
 }
 
-OwnList("KeyTasks", "Arradmit", "Ud", "Elem", "Fn", "Id")
+/**
+ * 製作意欲の低迷により, 開発の一時停止をします。
+ * 恐らく, 近日中に再開するかもしれませんし, 開発難易度の高さからこのまま挫折するかもしれません。
+ * 未来は, 私のみぞ知るものです。
+ * 
+ * I will stop development as my willingness to make is on a journey.
+ * Perhaps, it may be reopened in the near future, and I may meet the end because of the high level of development difficulty ...
+ *The future is something I only know.
+ * Transformed with Mr.Google
+ */
+
+/*OwnList("KeyTasks", "Arradmit", "Ud", "Elem", "Fn", "Id")
 function KeyTasks(ar, ud, elem, fn, id) {
     if (Optionalys(ar, "add")) {
         if (!Optionalys(ar, "id")) {
@@ -473,8 +480,29 @@ function KeyTasks(ar, ud, elem, fn, id) {
             crKeyTasks(ud, elem, fn, id)
         }
     } else if (ar == "remove") {
-
+        crKeyTasks("remove", { Id: id })
     }
 }
+
+window.addEventListener("mouseup", mousecall)
+window.addEventListener("mousedown", mousecall)
+window.addEventListener("mousemove", mousecall)
+window.addEventListener("mouseover", mousecall)
+window.addEventListener("mouseout", mousecall)
+
+function mousecall()
+
+OwnList("MouseTasks", "Arradmit", "Ud", "Elem", "Fn", "Id")
+function MouseTasks(ar, ud, elem, fn, id) {
+    if (Optionalys(ar, "add")) {
+        if (!Optionalys(ar, "id")) {
+            crMouseTasks(ud, elem, fn)
+        } else {
+            crKeyTasks(ud, elem, fn, id)
+        }
+    } else if (ar == "remove") {
+        crMouseTasks("remove", { Id: id })
+    }
+}*/
 
 console.log("Seifuncs ver.1.1.1 for JS was completely loaded. \n e-mail : Yakumo.Seizya@gmail.com \n Github : https://github.com/Seizya")
