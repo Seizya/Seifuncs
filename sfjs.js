@@ -1,9 +1,9 @@
- ﻿/**It's JavaScript Function Library.
- * Seifuncs_List() : View Function List on console.
- * 
- * Made by Seizya.
- * Special thanks : omasakun
- */
+﻿/**It's JavaScript Function Library.
+* Seifuncs_List() : View Function List on console.
+* 
+* Made by Seizya.
+* Special thanks : omasakun
+*/
 
 /* 訳
 このスクリプトは、どのスクリプトよりも早く読み込まれるようにしてください。
@@ -279,7 +279,7 @@ function Optionalys(uds, sear) {
         if (~uds.indexOf("add")) tmp.push("add")
         if (~uds.indexOf("exc")) tmp.push("exc")
         if (~uds.indexOf("ud")) tmp.push("ud")
-if (~uds.indexOf("id")) tmp.push("id")
+        if (~uds.indexOf("id")) tmp.push("id")
         return sear ? tmp.includes(sear) : tmp;
     }
 }
@@ -292,10 +292,10 @@ window.addEventListener("load", () => {
     Derie("script")[0].parentNode.insertBefore(sfcss, Derie("script")[0].nextSibling);
     //document.querySelectorAll('script[src="index.js"]')
 
-let rems =
-document.createElement('div');
+    let rems =
+        document.createElement('div');
     sfcss.setAttribute("id", "get_small_rem");
-   rems.textContent = "m";
+    rems.textContent = "m";
     Derie("#SeifuncCSS")[0].parentNode.insertBefore(rems, Derie("#SeifuncsCSS")[0].nextSibling);
     Derie("#SeifuncCSS")[0].addEventListener("load", () => {
         chara_contain("$start");
@@ -313,9 +313,9 @@ function GetViewPoint(point) {
         return window.innerWidth;
     } else if (point == "rem") {
         return window.getComputedStyle(Derie("html")).getPropertyValue("font-size");
-    }else if(point=="small_rem"){
-return Derie("#get_small_rem").innerWidth;
-}
+    } else if (point == "small_rem") {
+        return Derie("#get_small_rem").innerWidth;
+    }
 }
 
 function ElementViewMin(elem) {
@@ -345,7 +345,7 @@ omitfn("DeriveElement", "Derie")
 omitfn("GetElementStyle", "Getsy")
 omitfn("SeChainArgument", "Sa")
 omitfn("MsChainFunction", "Mf")
-omitfn("GetViewPoInt","GVP")
+omitfn("GetViewPoInt", "GVP")
 
 function OmitFunctionName(base, abbr) { //abbreviation
     crOmitFn("add", base, abbr);
@@ -377,32 +377,32 @@ function chara_contain(option, elem) {
                     let width = _E0.clientWidth - (_E0.style.paddingLeft + _E0.style.paddingRight);
                     let height = _E0.clientHeight - (_E0.style.paddingTop + _E0.style.paddingBottom);
                     if (Getsy(_E0, "writing-mdoe")[0] == "horizontal-tb") {
-let con_width=Nomall(_E0.clientWidth - (_E0.style.paddingLeft + _E0.style.paddingRight));
-let con_height=GVP("rem")
- }else{
-let con_height = Nomall(_E0.clientHeight - (_E0.style.paddingTop + _E0.style.paddingBottom));
-let=con_width=GVP("rem")
-}
-if(con_width/width>=con_height){
-//-----------
-}
+                        let con_width = Nomall(_E0.clientWidth - (_E0.style.paddingLeft + _E0.style.paddingRight));
+                        let con_height = GVP("rem")
+                    } else {
+                        let con_height = Nomall(_E0.clientHeight - (_E0.style.paddingTop + _E0.style.paddingBottom));
+                        let = con_width = GVP("rem")
+                    }
+                    if (con_width / width >= con_height) {
+                        //-----------
+                    }
                 })
             })
         }
     }
 }
 
-function px2rem(pix){
-return pix/GVP("rem")
+function px2rem(pix) {
+    return pix / GVP("rem")
 }
 
-function rem2px(rem){
-return rem*GVP(rem==)
+function rem2px(rem) {
+    return rem * GVP(rem)
 }
 
-function Nomall(str){
-let tmp = Array.from(str).slice().filter(_E0=>_E0==((0||1||2||3||4||5||6||7||8||9)|| _E0.charCodeAt(0)<=122 )).length
-return tmp*GVP(small_rem)+(str.length-tmp)*GVP(rem)
+function Nomall(str) {
+    let tmp = Array.from(str).slice().filter(_E0 => _E0 == ((0 || 1 || 2 || 3 || 4 || 5 || 6 || 7 || 8 || 9) || _E0.charCodeAt(0) <= 122)).length
+    return tmp * GVP(small_rem) + (str.length - tmp) * GVP(rem)
 }
 
 
@@ -442,26 +442,26 @@ function FuncProgeny(_E0, fn) {
     if (_E0.filter(_E0 => _E0.hasChildNodes()).map(_E0 => _E0.child).length != 0) FuncProgeny(_E0, fn)
 }
 
-let didTaskswork=true;
-OwnList("Tasks","Arradmit","If","Fn","Id")
-function Tasks(ar,equa,fn,id){
-if(Optionalys(ar,"add")){
-if(Optionalys(ar,"id"){
-	crTasks("add",equa,fn,id)
-}else{
-crTasks("add",equa,fn)
-}
-}else if(ar=="remove"){
-	SeList["Tasks"].filter(_E0=>_E0["id"]!=id)
-}
+let didTaskswork = true;
+OwnList("Tasks", "Arradmit", "If", "Fn", "Id")
+function Tasks(ar, equa, fn, id) {
+    if (Optionalys(ar, "add")) {
+        if (Optionalys(ar, "id")) {
+            crTasks("add", equa, fn, id)
+        } else {
+            crTasks("add", equa, fn)
+        }
+    } else if (ar == "remove") {
+        SeList["Tasks"].filter(_E0 => _E0["id"] != id)
+    }
 }
 
-function Tasksstart(){didTaskswork=true;}
-function Tasksstop(){didTaskswork=false;}
+function Tasksstart() { didTaskswork = true; }
+function Tasksstop() { didTaskswork = false; }
 
-function Taskscall(){
-	crTasks().forEach(_E0=>if(_E0["If"])_E0["Fn"]())
-if(didTadwork)
+function Taskscall() {
+    // crTasks().forEach(_E0 => if (_E0["If"]) { _E0["Fn"]() })
+    if (didTadwork)
 }
 
 console.log("Seifuncs ver.1.1.1 for JS was completely loaded. \n e-mail : Yakumo.Seizya@gmail.com \n Github : https://github.com/Seizya")
