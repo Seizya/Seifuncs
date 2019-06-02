@@ -108,7 +108,7 @@ function CSS(elements) {
 }
 
 //Deel
-function Derie(id, option, property) {
+function DeriveElement(id, option) {
     return [id].flat().flatMap(_E0 => _E0 instanceof HTMLElement ? _E0 : CQgeny(_E0)).filter(_E0 => _E0)
     function CQgeny(_id) {
         if (document.querySelectorAll(_id).length >= 1) {
@@ -127,40 +127,10 @@ function Derie(id, option, property) {
     }
 }
 
+//Getsy(elem,prpperty)
+//Getsy(elem,:~ ,Property)
 function GetElementStyle(elem, pro0, pro1) {
     return ArrUnDup([elem].flat().flatMap(_E0 => _E0 instanceof HTMLElement ? _E0 : Derie(_E0))).map(_E0 => !pro0 ? window.getComputedStyle(_E0) : (!~pro0.indexOf(":") ? window.getComputedStyle(_E0).getPropertyValue(pro0) : window.getComputedStyle(_E0, pro0).getPropertyValue(pro1)));
-}
-
-/**
- * CSSIC 
- *過去の遺産 / 仕様非推奨
- *取得する要素が1つであることが確定な場合以外での使用は, Bugの原因になる恐れがあります
- */
-function CSSIC(id, option) {
-    let cr;
-    if (typeof id == "string") {
-        if (document.querySelectorAll(id).length == 1) {
-            if (document.querySelector(id) != undefined) {
-                id = document.querySelector(id);
-                if (option == "st") {
-                    cr = id.style;
-                } else if (option == "cl") {
-                    cr = id.classList;
-                } else {
-                    cr = id;
-                }
-                return cr;
-            } else {
-                document.querySelectorAll(id)
-            }
-        } else if (document.querySelectorAll(id).length >= 2) {
-            return document.querySelectorAll(id);
-        } else {
-            console.warn(id + " is a nonexistent element / at CSSIC");
-        }
-    } else {
-        console.warn(id + " is not a string. / at CSSIC");
-    }
 }
 
 /**
@@ -245,11 +215,7 @@ function OwnLists(name, ud, ...arg) {
                         if (!arg[0]) {
                             return SeList[name].slice().filter(_E0 => _E0_arg[0]);
                         } else {
-                            let tmp0 = {};
-                            for (i = 0; i < arg.length; i++) {
-                                tmp0[arg[i]] = _arg[i];
-                            }
-                            SeList[name].slice().filter(_E0 => Object.key(_E0).filter(_E1 => _E1.some(_E1 == Object.key(tmp0))).every(_E1 => _E0[_E1] == tmp0[_E1]));
+                            SeList[name].slice().filter(_E0 => Object.key(_E0).filter(_E1 => _E1.some(_E1 == Object.key(_arg[0]))).every(_E1 => _E0[_E1] == _arg[0][_E1]));
                         }
                     } else if (_ud == "clear") {
                         SeList[name] = [];
@@ -288,12 +254,12 @@ window.addEventListener("load", () => {
     Derie("script")[0].parentNode.insertBefore(sfcss, Derie("script")[0].nextSibling);
     //document.querySelectorAll('script[src="index.js"]')
 
-    let rems =
-        document.createElement('div');
-    sfcss.setAttribute("id", "get_small_rem");
-    rems.textContent = "m";
-    Derie("#SeifuncCSS")[0].parentNode.insertBefore(rems, Derie("#SeifuncsCSS")[0].nextSibling);
     Derie("#SeifuncCSS")[0].addEventListener("load", () => {
+        let rems = document.createElement('div');
+        rems.setAttribute("id", "get_small_rem");
+        rems.textContent = "m";
+        Derie("#SeifuncCSS")[0].parentNode.insertBefore(rems, Derie("#SeifuncCSS")[0].nextSibling);
+
         chara_contain("$start");
     })
 })
@@ -342,6 +308,7 @@ omitfn("GetElementStyle", "Getsy")
 omitfn("SeChainArgument", "Sa")
 omitfn("MsChainFunction", "Mf")
 omitfn("GetViewPoInt", "GVP")
+omitfn("chara_contain", "characon")
 
 function OmitFunctionName(base, abbr) { //abbreviation
     crOmitFn("add", base, abbr);
@@ -356,19 +323,15 @@ function _OLFindBase(base) {
 }
 
 //---Calculation-----------------------
-//chara_contain("#D_s2t2s", 50);
-
-//将来的には "%" 以外でもサイズ調整できるようにしたい
-//縦方向文字にも対応したい
-//数字はASCIIcode外 M
-//:before,::after 対応
-//オススメは 90% に縮小
-
+//chara_contain(elem, 50);
+//動作未確認
+OwnLists("Characon", "Arradmit", "Elem", "Parse")
 function chara_contain(option, elem) {
     if (option == "$start") {
-        let elems = Derie("script");
+        let elems = Derie(".chara_contain");
         if (elems[0]) {
             elems.forEach(_E0 => {
+                crCharacon("udadd", _E0, 100)
                 _E0.addEventListener('resize', () => {
                     let width = _E0.clientWidth - (_E0.style.paddingLeft + _E0.style.paddingRight);
                     let height = _E0.clientHeight - (_E0.style.paddingTop + _E0.style.paddingBottom);
@@ -380,11 +343,13 @@ function chara_contain(option, elem) {
                         let = con_width = GVP("rem")
                     }
                     if (con_width / width >= con_height) {
-                        //-----------
+                        Derie(_E0)[0].style.fontSize = px2rem(parseInt(Getsy(_E0, "font-size")) * wide / con_wide * crCharacon("filter", { Elem: _E0 })[0][Parse] * 0.01) + "rem"
                     }
                 })
             })
         }
+    } else if (typeof option == "number") {
+        crCharacon("udadd", elem, option);
     }
 }
 
@@ -393,7 +358,7 @@ function px2rem(pix) {
 }
 
 function rem2px(rem) {
-    return rem * GVP(rem)
+    return rem * GVP("rem")
 }
 
 function Nomall(str) {
@@ -439,7 +404,7 @@ function FuncProgeny(_E0, fn) {
 }
 
 let didTaskswork = true;
-OwnList("Tasks", "Arradmit", "If", "Fn", "Id")
+OwnLists("Tasks", "Arradmit", "If", "Fn", "Id")
 function Tasks(ar, equa, fn, id) {
     if (Optionalys(ar, "add")) {
         if (Optionalys(ar, "id")) {
