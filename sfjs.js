@@ -207,15 +207,15 @@ function OwnLists(name, ud, ...arg) {
                         //[arg,arg1,{arg2:arg3}]
                     } else if (_ud == "remove") {
                         if (!arg[0]) {
-                            SeList[name].filter(_E0 => _arg.every(_E1 => _E0 != _E1));
+                            SeList[name] = SeList[name].filter(_E0 => !_arg.some(_E1 => _E0 === _E1));
                         } else {
-                            SeList[name].slice().filter(_E0 => Object.key(_E0).filter(_E1 => _E1.some(_E1 == Object.key(_arg[0]))).some(_E1 => _E0[_E1] != _arg[0][_E1]));
+                            SeList[name] = SeList[name].filter(_E0 => Object.key(_E0).filter(_E1 => _E1.some(_E1 == Object.key(_arg[0]))).some(_E1 => _E0[_E1] != _arg[0][_E1]));
                         }
                     } else if (_ud == "filter") {
                         if (!arg[0]) {
-                            return SeList[name].slice().filter(_E0 => _E0_arg[0]);
+                            return SeList[name].filter(_E0 => _E0_arg[0]);
                         } else {
-                            SeList[name].slice().filter(_E0 => Object.key(_E0).filter(_E1 => _E1.some(_E1 == Object.key(_arg[0]))).every(_E1 => _E0[_E1] == _arg[0][_E1]));
+                            SeList[name].filter(_E0 => Object.key(_E0).filter(_E1 => _E1.some(_E1 == Object.key(_arg[0]))).every(_E1 => _E0[_E1] == _arg[0][_E1]));
                         }
                     } else if (_ud == "clear") {
                         SeList[name] = [];
@@ -234,8 +234,8 @@ function OwnLists(name, ud, ...arg) {
 
 function isObject(o) { return (o instanceof Object && !(o instanceof Array)) ? true : false; };
 function Optionalys(uds, sear) {
-    if (uds == "remove") {
-        return [uds]
+    if (!uds) {
+        return false
     } else {
         let tmp = [];
         if (~uds.indexOf("add")) tmp.push("add")
@@ -307,7 +307,7 @@ omitfn("DeriveElement", "Derie")
 omitfn("GetElementStyle", "Getsy")
 omitfn("SeChainArgument", "Sa")
 omitfn("MsChainFunction", "Mf")
-omitfn("GetViewPoInt", "GVP")
+omitfn("GetViewPoint", "GVP")
 omitfn("chara_contain", "characon")
 
 function OmitFunctionName(base, abbr) { //abbreviation
@@ -470,4 +470,16 @@ function MouseTasks(ar, ud, elem, fn, id) {
     }
 }*/
 
-console.log("Seifuncs ver.1.1.1 for JS was completely loaded. \n e-mail : Yakumo.Seizya@gmail.com \n Github : https://github.com/Seizya")
+OwnLists("KeyMemo", "Arradmit");
+const keymemoDown = (event) => crKeyMemo("udadd", event.keyCode);
+const keymemoUp = (event) => crKeyMemo("remove", event.keyCode)
+window.addEventListener("keydown", keymemoDown)
+window.addEventListener("keyup", keymemoUp)
+// window.addEventListener("keydown", () => Keys("$ilst"))
+// window.addEventListener("keyup", () => Keys("$ilst"))
+
+function Keys(code) {
+    return code == "$list" ? crKeyMemo() : Boolean(crKeyMemo("filter", code))
+}
+
+console.log("Seifuncs ver.1.2.1 for JS was completely loaded. \n e-mail : Yakumo.Seizya@gmail.com \n Github : https://github.com/Seizya")
