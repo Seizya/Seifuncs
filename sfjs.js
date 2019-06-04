@@ -213,9 +213,9 @@ function OwnLists(name, ud, ...arg) {
                         }
                     } else if (_ud == "filter") {
                         if (!arg[0]) {
-                            return SeList[name].filter(_E0 => _E0_arg[0]);
+                            return SeList[name].filter(_E0 => _arg.some(_E1 => _E0 == _E1));
                         } else {
-                            SeList[name].filter(_E0 => Object.key(_E0).filter(_E1 => _E1.some(_E1 == Object.key(_arg[0]))).every(_E1 => _E0[_E1] == _arg[0][_E1]));
+                            return SeList[name].filter(_E0 => Object.key(_E0).filter(_E1 => _E1.some(_E1 == Object.key(_arg[0]))).every(_E1 => _E0[_E1] == _arg[0][_E1]));
                         }
                     } else if (_ud == "clear") {
                         SeList[name] = [];
@@ -237,7 +237,7 @@ function isObject(o) { return (o instanceof Object && !(o instanceof Array)) ? t
 function ObjectforEach(obj, fn) {
     Object.keys(obj).forEach(key => {
         let val = this[key];
-        fn(key);
+        fn(val);
     }, obj)
 }
 
@@ -488,7 +488,7 @@ window.addEventListener("keyup", keymemoUp)
 // window.addEventListener("keyup", () => Keys("$ilst"))
 
 function Keys(code) {
-    return code == "$list" ? crKeyMemo() : Boolean(crKeyMemo("filter", code))
+    return code == "$list" ? crKeyMemo() : Boolean(crKeyMemo("filter", code)[0])
 }
 
 console.log("Seifuncs ver.1.2.1 for JS was completely loaded. \n e-mail : Yakumo.Seizya@gmail.com \n Github : https://github.com/Seizya")
