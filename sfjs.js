@@ -482,8 +482,8 @@ function MouseTasks(ar, ud, elem, fn, id) {
 OwnLists("KeyMemo", "Arradmit");
 const keymemoDown = (event) => crKeyMemo("udadd", event.keyCode);
 const keymemoUp = (event) => crKeyMemo("remove", event.keyCode);
-window.addEventListener("keydown", keymemoDown)
-window.addEventListener("keyup", keymemoUp)
+window.addEventListener("keydown", keymemoDown);
+window.addEventListener("keyup", keymemoUp);
 // window.addEventListener("keydown", () => Keys("$ilst"))
 // window.addEventListener("keyup", () => Keys("$ilst"))
 
