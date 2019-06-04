@@ -233,6 +233,14 @@ function OwnLists(name, ud, ...arg) {
 }
 
 function isObject(o) { return (o instanceof Object && !(o instanceof Array)) ? true : false; };
+
+function ObjectforEach(obj, fn) {
+    Object.keys(obj).forEach(key => {
+        let val = this[key];
+        fn(key);
+    }, obj)
+}
+
 function Optionalys(uds, sear) {
     if (!uds) {
         return false
