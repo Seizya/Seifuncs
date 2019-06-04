@@ -317,6 +317,7 @@ omitfn("SeChainArgument", "Sa")
 omitfn("MsChainFunction", "Mf")
 omitfn("GetViewPoint", "GVP")
 omitfn("chara_contain", "characon")
+omitfn("ObjectforEach", "Ofe")
 
 function OmitFunctionName(base, abbr) { //abbreviation
     crOmitFn("add", base, abbr);
