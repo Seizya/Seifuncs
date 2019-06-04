@@ -489,6 +489,6 @@ window.addEventListener("keyup", keymemoUp);
 
 function Keys(code) {
     return code == "$list" ? crKeyMemo() : Boolean(crKeyMemo("filter", code)[0])
-}
+};
 
 console.log("Seifuncs ver.1.2.1 for JS was completely loaded. \n e-mail : Yakumo.Seizya@gmail.com \n Github : https://github.com/Seizya")
