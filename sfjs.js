@@ -334,6 +334,7 @@ function _OLFindBase(base) {
 //---Calculation-----------------------
 //chara_contain(elem, 50);
 //動作未確認
+//Bugged
 OwnLists("Characon", "Arradmit", "Elem", "Parse")
 function chara_contain(option, elem) {
     if (option == "$start") {
