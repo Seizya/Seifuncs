@@ -268,7 +268,7 @@ window.addEventListener("load", () => {
         rems.textContent = "m";
         Derie("#SeifuncCSS")[0].parentNode.insertBefore(rems, Derie("#SeifuncCSS")[0].nextSibling);
 
-        chara_contain("$start");
+        characon("$start");
     })
 })
 
@@ -311,31 +311,20 @@ function ElementViewMax(elem) {
 //作業領域
 OwnLists("OmitFn", "Arradmit", "Base", "Abbr");
 OmitFunctionName("OmitFunctionName", "omitfn")
-omitfn("DeriveElement", "Derie")
-omitfn("GetElementStyle", "Getsy")
-omitfn("SeChainArgument", "Sa")
-omitfn("MsChainFunction", "Mf")
-omitfn("GetViewPoint", "GVP")
-omitfn("chara_contain", "characon")
-omitfn("ObjectforEach", "Ofe")
+const preomitfn = [["DeriveElement", "Derie"], ["GetElementStyle", "Getsy"], ["SeChainArgument", "Sa"], ["MsChainFundtion", "Mf"], ["GetViewPoint", "GVP"], ["CharaContain", "characon"], ["ObjectforEach", "Ofe"]]
 
 function OmitFunctionName(base, abbr) { //abbreviation
     crOmitFn("add", base, abbr);
-    //window[abbr] = (..._arg) => eval(_OLFindBase(base))(..._arg);
-    //window[abbr] = (...arg) => eval('crOmitFn().filter(_E0 => _E0["Base"] == base)[0]["Abbr"]+(...arg)')
     window[abbr] = (...arg) => eval(base + "(...arg)")
-    //console.log(_OLFindBase(base))
 }
 
-function _OLFindBase(base) {
-    return crOmitFn().filter(_E0 => _E0["Base"] == String(base))[0]["Base"]
-}
+(() => preomitfn.forEach(_E0 => omitfn(_E0[0], _E0[1])))()
 
 //---Calculation-----------------------
 //chara_contain(elem, 50);
 //動作未確認
 OwnLists("Characon", "Arradmit", "Elem", "Parse")
-function chara_contain(option, elem) {
+function CharaContain(option, elem) {
     if (option == "$start") {
         let elems = Derie(".chara_contain");
         if (elems[0]) {
@@ -484,11 +473,51 @@ const keymemoDown = (event) => crKeyMemo("udadd", event.keyCode);
 const keymemoUp = (event) => crKeyMemo("remove", event.keyCode);
 window.addEventListener("keydown", keymemoDown);
 window.addEventListener("keyup", keymemoUp);
-// window.addEventListener("keydown", () => Keys("$ilst"))
-// window.addEventListener("keyup", () => Keys("$ilst"))
 
 function Keys(code) {
     return code == "$list" ? crKeyMemo() : Boolean(crKeyMemo("filter", code)[0])
 };
 
-console.log("Seifuncs ver.1.2.1 for JS was completely loaded. \n e-mail : Yakumo.Seizya@gmail.com \n Github : https://github.com/Seizya")
+OwnLists("Saynumber", "Arradmit", "Code", "Number")
+crSaynumber("add", 13, 0)
+crSaynumber("add", 70, 0)
+crSaynumber("add", 83, 0)
+crSaynumber().forEach(_E0 => _E0["Number"] = 0)
+window.addEventListener("keydown", (event) => {
+    if (!event.repeat) {
+        crSaynumber().forEach(_E0 => {
+            if (_E0["Code"] == event.keyCode) {
+                _E0["Number"]++
+            }
+        })
+    }
+})
+
+//Sayclickが実行されたときに, SeList似なかったら作る。あれば通常
+function Sayclick(code, delet) {
+    if (delet) crSaynumber().filter(_E0 => _E0["Code"] == code).forEach(_E0 => _E0["Number"] = 0)
+    return crSaynumber().filter(_E0 => _E0["Code"] == code).map(_E0 => _E0["Number"])
+}
+
+
+function Random(min, max) {
+    return Math.floor(Math.random() * (max - min) + min)
+}
+
+function Funcrand(graph, xmin, xmax, ymin, ymax) {
+    let [xx, yy] = [Random(xmin, xmax), Random(ymin, ymax)]
+    let x = xx
+    return eval(graph) >= yy ? yy : Funcrand(graph, xmin, xmax, ymin, ymax);
+}
+
+function Array2(...arg) {
+    tmp0 = [];
+    arg.forEach(_E0 => tmp0.push(_E0))
+    return tmp0
+}
+
+function RandFn(now, min, max) {
+    if (now >= Random(min, max)) { return true } else { return false }
+}
+
+console.log("Seifuncs ver.1.3 for JS was completely loaded. \n e-mail : Yakumo.Seizya@gmail.com \n Github : https://github.com/Seizya")
