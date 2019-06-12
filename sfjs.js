@@ -520,4 +520,6 @@ function RandFn(now, min, max) {
     if (now >= Random(min, max)) { return true } else { return false }
 }
 
-console.log("Seifuncs ver.1.3 for JS was completely loaded. \n e-mail : Yakumo.Seizya@gmail.com \n Github : https://github.com/Seizya")
+console.log("Seifuncs ver.1.3 for JS was completely loaded.") 
+console.log("%c %c Seifuncs for JS%c \n%c %c e-mail : Yakumo.Seizya@gmail.com \n%c %c Github : https://github.com/Seizya",
+"background-color:#165e83;border-bottom:solid #f0f 2px","border-bottom:solid #f0f 2px","","background-color:#165e83","","background-color:#165e83","")
