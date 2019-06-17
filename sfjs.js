@@ -520,6 +520,11 @@ function RandFn(now, min, max) {
     if (now >= Random(min, max)) { return true } else { return false }
 }
 
-console.log("Seifuncs ver.1.3 for JS was completely loaded.") 
-console.log("%c %c Seifuncs for JS%c \n%c %c e-mail : Yakumo.Seizya@gmail.com \n%c %c Github : https://github.com/Seizya",
-"background-color:#165e83;border-bottom:solid #f0f 2px","border-bottom:solid #f0f 2px","","background-color:#165e83","","background-color:#165e83","")
+console.log("Seifuncs ver.1.3.1 for JS was completely loaded.")
+if (/^(?=.*Chrome)(?!.*Edge)/.test(window.navigator.userAgent)) {
+    console.log("%c %c Seifuncs for JS %c \n%c %c E-mail : Yakumo.Seizya@gmail.com \n%c %c Github : https://github.com/Seizya",
+        "background-color:#165e83;border-bottom:solid #f0f 2px", "border-bottom:solid #f0f 2px", "", "background-color:#165e83", "", "background-color:#165e83", "")
+} else {
+    console.log("Seifuncs for JS \nE-mail : Yakumo.Seizya@gmail.com \nGithub : https://github.com/Seizya")
+}
+if (/MSIE|Trident|Edge/.test(window.navigator.userAgent)) console.warn("The use of Seifuncs in IE is not envisaged at all. \nPlease immediately stop using Seifucs and use another browser. \nThere are no plans to support IE.")
