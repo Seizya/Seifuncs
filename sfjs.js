@@ -241,16 +241,14 @@ function ObjectforEach(obj, fn) {
     }, obj)
 }
 
-function Optionalys(uds, sear) {
-    if (!uds) {
+function Optionalys(...args) {
+    if (args.length == 0 || args[0] == undefined) {
         return false
     } else {
-        let tmp = [];
-        if (~uds.indexOf("add")) tmp.push("add")
-        if (~uds.indexOf("exc")) tmp.push("exc")
-        if (~uds.indexOf("ud")) tmp.push("ud")
-        if (~uds.indexOf("id")) tmp.push("id")
-        return sear ? tmp.includes(sear) : tmp;
+        args = [args[0], typeof args.slice(-1)[0] == "boolean" ? args.slice(1, -1) : args.slice(1), args.slice(-1) == false ? false : true]
+        let _T0 = [];
+        _T0 = new Array(args[1].filter(_E0 => /${_E0}/.test(args[0])).flat()
+        return args[2] ? (_T0.length == 0 ? false : true) : (_T0.every(_E0 => args[1].some(_E1 => _E0 == _E1)))
     }
 }
 
