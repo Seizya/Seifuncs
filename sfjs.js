@@ -1,9 +1,9 @@
 ﻿/**It's JavaScript Function Library.
-* Seifuncs_List() : View Function List on console.
-* 
-* Made by Seizya.
-* Special thanks : omasakun
-*/
+ * Seifuncs_List() : View Function List on console.
+ * 
+ * Made by Seizya.
+ * Special thanks : omasakun
+ */
 
 /* 訳
 このスクリプトは、どのスクリプトよりも早く読み込まれるようにしてください。
@@ -110,16 +110,21 @@ function CSS(elements) {
 //Deel
 function DeriveElement(id, option) {
     return [id].flat().flatMap(_E0 => _E0 instanceof HTMLElement ? _E0 : CQgeny(_E0)).filter(_E0 => _E0)
+
     function CQgeny(_id) {
         if (document.querySelectorAll(_id).length >= 1) {
-            if (option == undefined) {
-                return Array.from(document.querySelectorAll(_id));
-            } else if (option == "$class") {
-                return ArrUnDup(Array.from(document.querySelectorAll(_id)).filter(_E0 => _E0.className != "").flatMap(_E0 => document.getElementsByClassName(_E0)));
-            } else if (option == "$relatives") {
-                return ArrUnDup(Array.from(document.querySelectorAll(_id)).flatMap(_E0 => document.getElementsByTagName(_E0.tagName))).filter(_E0 => Array.from(document.querySelectorAll(_id)).some(_E1 => _E0.parentNode == _E1.parentNode))
-            } else {
-                return (function CQgeny(pare, arr) { [...arr, ...pare.slice().filter(_E0 => Array.from(document.querySelectorAll(_id)).some(_E1 => window.getComputedStyle(_E0).getPropertyValue(option) == window.getComputedStyle(_E1).getPropertyValue(option)))]; return pare.filter(_E0 => _E0.hasChildNodes()).flatMap(_E1 => _E1.child).length != 0 ? CQgeny(pare, arr) : ArrUnDup(arr) })(Array.from(document.getElementsByTagName("HTML")), [])
+            switch (potion) {
+                case undefined:
+                    return Array.from(document.querySelectorAll(_id));
+                case "$class":
+                    return ArrUnDup(Array.from(document.querySelectorAll(_id)).filter(_E0 => _E0.className != "").flatMap(_E0 => document.getElementsByClassName(_E0)));
+                case "$relative":
+                    return ArrUnDup(Array.from(document.querySelectorAll(_id)).flatMap(_E0 => document.getElementsByTagName(_E0.tagName))).filter(_E0 => Array.from(document.querySelectorAll(_id)).some(_E1 => _E0.parentNode == _E1.parentNode))
+                default:
+                    return (function CQgeny(pare, arr) {
+                        [...arr, ...pare.slice().filter(_E0 => Array.from(document.querySelectorAll(_id)).some(_E1 => window.getComputedStyle(_E0).getPropertyValue(option) == window.getComputedStyle(_E1).getPropertyValue(option)))];
+                        return pare.filter(_E0 => _E0.hasChildNodes()).flatMap(_E1 => _E1.child).length != 0 ? CQgeny(pare, arr) : ArrUnDup(arr)
+                    })(Array.from(document.getElementsByTagName("HTML")), [])
             }
         } else {
             return undefined;
@@ -142,6 +147,7 @@ function GetElementStyle(elem, pro0, pro1) {
  * MsCF <Msy Chain Function> MsCF(obj)(fn0)...(fnn) => arg(obj) ... argn(arg(obj));
  */
 function SeChainArgument(fn) { return (tmp = args => arg => arg ? tmp([...args, ...arg]) : fn(...args))([]) }
+
 function MsChainFundtion(obj) { return fn => fn ? MsCF(fn(obj)) : obj }
 
 
@@ -152,6 +158,19 @@ function MsChainFundtion(obj) { return fn => fn ? MsCF(fn(obj)) : obj }
  * 一応動くので, 書き直しは後回しです。
  * あと, この関数は私の頭の思考回路と相性が悪いらしく, 十分な能力を発揮できないのです。
  */
+
+//共通UI
+
+let AnceList = {};
+class ProgList {
+    add() { }
+    remove() { }
+    filter() { }
+    get() { }
+    self() { }
+};
+
+//#region
 let SeList = {};
 function OwnLists(name, ud, ...arg) {
     [name, ud, ...arg] = [String(name), String(ud), ...arg.map(_E0 => String(_E0))]
@@ -231,6 +250,7 @@ function OwnLists(name, ud, ...arg) {
         return SeList
     }
 }
+//#endregion
 
 function isObject(o) { return (o instanceof Object && !(o instanceof Array)) ? true : false; };
 
@@ -242,14 +262,10 @@ function ObjectforEach(obj, fn) {
 }
 
 function Optionalys(...args) {
-    if (args.length == 0 || args[0] == undefined) {
-        return false
-    } else {
-        args = [args[0], typeof args.slice(-1)[0] == "boolean" ? args.slice(1, -1) : args.slice(1), args.slice(-1) == false ? false : true]
-        let _T0 = [];
-        _T0 = new Array(args[1].filter(_E0 => args[0].indexOf(_E0) != -1)).flat()
-        return args[2] ? (_T0.length == 0 ? false : true) : (_T0.every(_E0 => args[1].some(_E1 => _E0 == _E1)))
-    }
+    if (args.length == 0 || args[0] == undefined) return false;
+    args = [args[0], typeof args.slice(-1)[0] == "boolean" ? args.slice(1, -1) : args.slice(1), args.slice(-1)[0] == false ? false : true]
+    return args[1].concat().filter(_E0 => args[2] ? new RegExp(_E0).test(args[0]) : new RegExp(_E0.toLowerCase()).test(args[0].toLowerCase())).length > 0 ? true : false;
+    //_T0 = new Array(args[1].filter(_E0 => new RegExp(_E0).test(args[0]))).flat();
 }
 
 //---add-elements----------------------
@@ -271,18 +287,19 @@ window.addEventListener("load", () => {
 })
 
 function GetViewPoint(point) {
-    if (point == "vmin") {
-        return window.innerHeight < window.innerWidth ? window.innerHeight : window.innerWidth;
-    } else if (point == "vmax") {
-        return window.innerHeight > window.innerWidth ? window.innerHeight : window.innerWidth;
-    } else if (point == "vh") {
-        return window.innerHeight;
-    } else if (point == "vw") {
-        return window.innerWidth;
-    } else if (point == "rem") {
-        return window.getComputedStyle(Derie("html")).getPropertyValue("font-size");
-    } else if (point == "small_rem") {
-        return Derie("#get_small_rem").innerWidth;
+    switch (point) {
+        case "vmin":
+            return window.innerHeight < window.innerWidth ? window.innerHeight : window.innerWidth;
+        case "vmax":
+            return window.innerHeight > window.innerWidth ? window.innerHeight : window.innerWidth;
+        case "vh":
+            return window.innerHeight;
+        case "vw":
+            return window.innerWidth;
+        case "rem":
+            return window.getComputedStyle(Derie("html")).getPropertyValue("font-size");
+        case "small_rem":
+            return Derie("#get_small_rem").innerWidth;
     }
 }
 
@@ -322,6 +339,7 @@ function OmitFunctionName(base, abbr) { //abbreviation
 //chara_contain(elem, 50);
 //動作未確認
 OwnLists("Characon", "Arradmit", "Elem", "Parse")
+
 function CharaContain(option, elem) {
     if (option == "$start") {
         let elems = Derie(".chara_contain");
@@ -339,7 +357,9 @@ function CharaContain(option, elem) {
                         let = con_width = GVP("rem")
                     }
                     if (con_width / width >= con_height) {
-                        Derie(_E0)[0].style.fontSize = px2rem(parseInt(Getsy(_E0, "font-size")) * wide / con_wide * crCharacon("filter", { Elem: _E0 })[0][Parse] * 0.01) + "rem"
+                        Derie(_E0)[0].style.fontSize = px2rem(parseInt(Getsy(_E0, "font-size")) * wide / con_wide * crCharacon("filter", {
+                            Elem: _E0
+                        })[0][Parse] * 0.01) + "rem"
                     }
                 })
             })
@@ -349,13 +369,9 @@ function CharaContain(option, elem) {
     }
 }
 
-function px2rem(pix) {
-    return pix / GVP("rem")
-}
+function px2rem(pix) { return pix / GVP("rem") }
 
-function rem2px(rem) {
-    return rem * GVP("rem")
-}
+function rem2px(rem) { return rem * GVP("rem") }
 
 function Nomall(str) {
     let tmp = Array.from(str).slice().filter(_E0 => _E0 == ((0 || 1 || 2 || 3 || 4 || 5 || 6 || 7 || 8 || 9) || _E0.charCodeAt(0) <= 122)).length
@@ -371,7 +387,9 @@ function zeroPadding(num, dig) {
         } else {
             throw new Error("Digt must be bigger than digit of number")
         }
-    } else { throw new Error("Digit must be natural number") }
+    } else {
+        throw new Error("Digit must be natural number")
+    }
 }
 
 //Puppeteer
@@ -386,13 +404,9 @@ function rewindow(toww, towh) {
     }
 }
 
-function Array2Array(...args) {
-    return (A2A = (Arg, Arr) => Arg.length > 0 ? A2A(Arg.slice(0, -1), Arg.slice(-1).flat().flatMap(elemG => Arr.map(elem => [elemG, ...elemG]))) : Arr)(args.map(_E0 => Array.isArray(_E0) ? _E0 : [_E0]), [[]])
-}
+function Array2Array(...args) { return (A2A = (Arg, Arr) => Arg.length > 0 ? A2A(Arg.slice(0, -1), Arg.slice(-1).flat().flatMap(elemG => Arr.map(elem => [elemG, ...elemG]))) : Arr)(args.map(_E0 => Array.isArray(_E0) ? _E0 : [_E0]), [[]]) }
 
-function ArrUnDup/**Duplicate */(array, back) {
-    return array.filter((x, i, self) => (back ? self.lastIndexOf(x) : self.indexOf(x)) === i);
-}
+function ArrUnDup /**Duplicate */(array, back) { return array.filter((x, i, self) => (back ? self.lastIndexOf(x) : self.indexOf(x)) === i); }
 
 function FuncProgeny(_E0, fn) {
     (Array.isArray(_E0) ? _E0 : Array.from(_E0)).flatMap(_E1 => _E1 instanceof HTMLElement ? _E1 : (document.querySelectorAll(_E1).length == 0 ? undefined : Array.from(document.querySelectorAll(_E1)))).filter(_E1 => _E1 != undefined).forEach(_E1 => _E1.fn())
@@ -401,6 +415,7 @@ function FuncProgeny(_E0, fn) {
 
 let didTaskswork = true;
 OwnLists("Tasks", "Arradmit", "If", "Fn", "Id")
+
 function Tasks(ar, equa, fn, id) {
     if (Optionalys(ar, "add")) {
         if (Optionalys(ar, "id")) {
@@ -414,10 +429,13 @@ function Tasks(ar, equa, fn, id) {
 }
 
 function Tasksstart() { didTaskswork = true; }
+
 function Tasksstop() { didTaskswork = false; }
 
 function Taskscall() {
-    crTasks().forEach(_E0 => { if (_E0["If"]) _E0["Fn"]() })
+    crTasks().forEach(_E0 => {
+        if (_E0["If"]) _E0["Fn"]()
+    })
     if (didTadwork) requestAnimationFrame(arguments.callee);
 }
 
@@ -427,8 +445,8 @@ function Taskscall() {
  * 未来は, 私のみぞ知るものです。
  * 
  * I will stop development as my willingness to make is on a journey.
- * Perhaps, it may be reopened in the near future, and I may meet the end because of the high level of development difficulty ...
- *The future is something I only know.
+ * Perhaps, it may be reopened in the near future, and I may meet the end because of the high level of development difficulty ...
+ *The future is something I only know.
  * Transformed with Mr.Google
  */
 
@@ -472,9 +490,7 @@ const keymemoUp = (event) => crKeyMemo("remove", event.keyCode);
 window.addEventListener("keydown", keymemoDown);
 window.addEventListener("keyup", keymemoUp);
 
-function Keys(code) {
-    return code == "$list" ? crKeyMemo() : Boolean(crKeyMemo("filter", code)[0])
-};
+function Keys(code) { return code == "$list" ? crKeyMemo() : Boolean(crKeyMemo("filter", code)[0]) };
 
 OwnLists("Saynumber", "Arradmit", "Code", "Number")
 crSaynumber("add", 13, 0)
@@ -498,9 +514,7 @@ function Sayclick(code, delet) {
 }
 
 
-function Random(min, max) {
-    return Math.floor(Math.random() * (max - min) + min)
-}
+function Random(min, max) { return Math.floor(Math.random() * (max - min) + min) }
 
 function Funcrand(graph, xmin, xmax, ymin, ymax) {
     let [xx, yy] = [Random(xmin, xmax), Random(ymin, ymax)]
@@ -508,15 +522,7 @@ function Funcrand(graph, xmin, xmax, ymin, ymax) {
     return eval(graph) >= yy ? yy : Funcrand(graph, xmin, xmax, ymin, ymax);
 }
 
-function Array2(...arg) {
-    tmp0 = [];
-    arg.forEach(_E0 => tmp0.push(_E0))
-    return tmp0
-}
-
-function RandFn(now, min, max) {
-    if (now >= Random(min, max)) { return true } else { return false }
-}
+function RandFn(now, min, max) { return now >= Random(min, max) ? true : false; }
 
 console.log("Seifuncs ver.1.3.1 for JS was completely loaded.")
 if (/^(?=.*Chrome)(?!.*Edge)/.test(window.navigator.userAgent)) {
