@@ -152,7 +152,12 @@ function MsChainFundtion(obj) { return fn => fn ? MsCF(fn(obj)) : obj }
  * 一応動くので, 書き直しは後回しです。
  * あと, この関数は私の頭の思考回路と相性が悪いらしく, 十分な能力を発揮できないのです。
  */
-let SeList = {};
+ 
+ /**
+ * let AnceList = {};
+ * class ProgList(); 
+ */
+let AnceList = {};
 function OwnLists(name, ud, ...arg) {
     [name, ud, ...arg] = [String(name), String(ud), ...arg.map(_E0 => String(_E0))]
     if (ud) {
