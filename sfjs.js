@@ -113,17 +113,17 @@ function DeriveElement(id, option) {
 
     function CQgeny(_id) {
         if (document.querySelectorAll(_id).length >= 1) {
-            switch (potion) {
+            switch (option) {
                 case undefined:
                     return Array.from(document.querySelectorAll(_id));
                 case "$class":
-                    return ArrUnDup(Array.from(document.querySelectorAll(_id)).filter(_E0 => _E0.className != "").flatMap(_E0 => document.getElementsByClassName(_E0)));
+                    return AOM.Arr.UnDup(Array.from(document.querySelectorAll(_id)).filter(_E0 => _E0.className != "").flatMap(_E0 => document.getElementsByClassName(_E0)));
                 case "$relative":
-                    return ArrUnDup(Array.from(document.querySelectorAll(_id)).flatMap(_E0 => document.getElementsByTagName(_E0.tagName))).filter(_E0 => Array.from(document.querySelectorAll(_id)).some(_E1 => _E0.parentNode == _E1.parentNode))
+                    return AOM.Arr.UnDup(Array.from(document.querySelectorAll(_id)).flatMap(_E0 => document.getElementsByTagName(_E0.tagName))).filter(_E0 => Array.from(document.querySelectorAll(_id)).some(_E1 => _E0.parentNode == _E1.parentNode))
                 default:
                     return (function CQgeny(pare, arr) {
                         [...arr, ...pare.slice().filter(_E0 => Array.from(document.querySelectorAll(_id)).some(_E1 => window.getComputedStyle(_E0).getPropertyValue(option) == window.getComputedStyle(_E1).getPropertyValue(option)))];
-                        return pare.filter(_E0 => _E0.hasChildNodes()).flatMap(_E1 => _E1.child).length != 0 ? CQgeny(pare, arr) : ArrUnDup(arr)
+                        return pare.filter(_E0 => _E0.hasChildNodes()).flatMap(_E1 => _E1.child).length != 0 ? CQgeny(pare, arr) : AOM.Arr.UnDup(arr)
                     })(Array.from(document.getElementsByTagName("HTML")), [])
             }
         } else {
@@ -135,7 +135,7 @@ function DeriveElement(id, option) {
 //Getsy(elem,prpperty)
 //Getsy(elem,:~ ,Property)
 function GetElementStyle(elem, pro0, pro1) {
-    return ArrUnDup([elem].flat().flatMap(_E0 => _E0 instanceof HTMLElement ? _E0 : Derie(_E0))).map(_E0 => !pro0 ? window.getComputedStyle(_E0) : (!~pro0.indexOf(":") ? window.getComputedStyle(_E0).getPropertyValue(pro0) : window.getComputedStyle(_E0, pro0).getPropertyValue(pro1)));
+    return AOM.Arr.UnDup([elem].flat().flatMap(_E0 => _E0 instanceof HTMLElement ? _E0 : Derie(_E0))).map(_E0 => !pro0 ? window.getComputedStyle(_E0) : (!~pro0.indexOf(":") ? window.getComputedStyle(_E0).getPropertyValue(pro0) : window.getComputedStyle(_E0, pro0).getPropertyValue(pro1)));
 }
 
 /**
@@ -150,26 +150,34 @@ function SeChainArgument(fn) { return (tmp = args => arg => arg ? tmp([...args, 
 
 function MsChainFundtion(obj) { return fn => fn ? MsCF(fn(obj)) : obj }
 
+let ALdata = {}
+let ProgenyList = {}
+class Ancestor {
+    add(name, option, ...args) {
+        if (!name) return "";
+        [Aldata[name], PLdata[name]] = (() => {
+            if (Optionalys(option, "arr", false)) {
+                return [new Array(), args.length > 0 ? new PLarray(name) : new PLarray(name, ...args)]
+            } else if (Optionalys(option, "obj", false)) {
+                return [new Object(), args.length > 0 ? new PLobject(name) : new PLobject(name, ...args)]
+            } else if (Optionalys(option, "map", false)) {
+                return [new Map(), args.length > 0 ? new PLmap(name) : PLMap(name, ...args)]
+            }
+        })()
+    }
+    remove(name) {
+        delete ALdata[name];
+        delete ProgenyList[name];
+    }
+    set gain(name) {
 
-/**
- * こちらは, 眠気と疲労により頭が回らない人が書いた関数です。
- * 現に,この文章も何回か書き直しています。
- * 
- * 一応動くので, 書き直しは後回しです。
- * あと, この関数は私の頭の思考回路と相性が悪いらしく, 十分な能力を発揮できないのです。
- */
+    }
+    get gain() {
+
+    }
+}
 
 //共通UI
-
-let AnceList = {};
-class ProgList {
-    add() { }
-    remove() { }
-    filter() { }
-    get() { }
-    self() { }
-};
-
 //#region
 let SeList = {};
 function OwnLists(name, ud, ...arg) {
@@ -252,14 +260,21 @@ function OwnLists(name, ud, ...arg) {
 }
 //#endregion
 
-function isObject(o) { return (o instanceof Object && !(o instanceof Array)) ? true : false; };
-
-function ObjectforEach(obj, fn) {
-    Object.keys(obj).forEach(key => {
-        let val = this[key];
-        fn(val);
-    }, obj)
+const AOM = {
+    Arr: {
+        flat: function (...args) { return (A2A = _A0 => _A0.flatMap(_E0 => Array.isArray(_E0) ? A2A(_E0) : _E0))(args) },
+        unDup: function  /**Duplicate */(array, back) { return array.filter((x, i, self) => (back ? self.lastIndexOf(x) : self.indexOf(x)) === i); }
+    },
+    Obj: {
+        is: function (o) { return (o instanceof Object && !(o instanceof Array)) ? true : false; },
+        forEach: function (obj, fn) { Object.keys(obj).forEach(key => { let val = this[key]; fn(val); }, obj) }
+    },
+    Map: {},
+    prototype: function (_A0) { return Object.prototype.toString.call(_A0).slice(8, -1) }
 }
+
+
+
 
 function Optionalys(...args) {
     if (args.length == 0 || args[0] == undefined) return false;
@@ -286,47 +301,49 @@ window.addEventListener("load", () => {
     })
 })
 
-function GetViewPoint(point) {
-    switch (point) {
-        case "vmin":
-            return window.innerHeight < window.innerWidth ? window.innerHeight : window.innerWidth;
-        case "vmax":
-            return window.innerHeight > window.innerWidth ? window.innerHeight : window.innerWidth;
-        case "vh":
-            return window.innerHeight;
-        case "vw":
-            return window.innerWidth;
-        case "rem":
-            return window.getComputedStyle(Derie("html")).getPropertyValue("font-size");
-        case "small_rem":
-            return Derie("#get_small_rem").innerWidth;
+const View = {
+    get: function (point) {
+        switch (point) {
+            case "vmin":
+                return window.innerHeight < window.innerWidth ? window.innerHeight : window.innerWidth;
+            case "vmax":
+                return window.innerHeight > window.innerWidth ? window.innerHeight : window.innerWidth;
+            case "vh":
+                return window.innerHeight;
+            case "vw":
+                return window.innerWidth;
+            case "rem":
+                return window.getComputedStyle(Derie("html")).getPropertyValue("font-size");
+            case "small_rem":
+                return Derie("#get_small_rem").innerWidth;
+        }
+    },
+    elemMin: function (elem) {
+        Derie(elem).map(_E0 => {
+            let width = _E0.clientWidth - (_E0.style.paddingLeft + _E0.style.paddingRight);
+            let height = _E0.clientHeight - (_E0.style.paddingTop + _E0.style.paddingBottom);
+
+            return width < height ? width : height;
+        })
+    },
+    elemMax: function (elem) {
+        Derie(elem).map(_E0 => {
+            let width = _E0.clientWidth - (_E0.style.paddingLeft + _E0.style.paddingRight);
+            let height = _E0.clientHeight - (_E0.style.paddingTop + _E0.style.paddingBottom);
+
+            return width < height ? height : width;
+        })
     }
 }
 
-function ElementViewMin(elem) {
-    elem = Derie(elem);
-    return elem.map(_E0 => {
-        let width = _E0.clientWidth - (_E0.style.paddingLeft + _E0.style.paddingRight);
-        let height = _E0.clientHeight - (_E0.style.paddingTop + _E0.style.paddingBottom);
 
-        return width < height ? width : height;
-    })
-}
 
-function ElementViewMax(elem) {
-    elem = Derie(elem);
-    return elem.map(_E0 => {
-        let width = _E0.clientWidth - (_E0.style.paddingLeft + _E0.style.paddingRight);
-        let height = _E0.clientHeight - (_E0.style.paddingTop + _E0.style.paddingBottom);
 
-        return width < height ? height : width;
-    })
-}
 
 //作業領域
 OwnLists("OmitFn", "Arradmit", "Base", "Abbr");
 OmitFunctionName("OmitFunctionName", "omitfn")
-const preomitfn = [["DeriveElement", "Derie"], ["GetElementStyle", "Getsy"], ["SeChainArgument", "Sa"], ["MsChainFundtion", "Mf"], ["GetViewPoint", "GVP"], ["CharaContain", "characon"], ["ObjectforEach", "Ofe"]]
+const preomitfn = [["DeriveElement", "Derie"], ["GetElementStyle", "Getsy"], ["SeChainArgument", "Sa"], ["MsChainFundtion", "Mf"], ["CharaContain", "characon"]]
 
 function OmitFunctionName(base, abbr) { //abbreviation
     crOmitFn("add", base, abbr);
@@ -403,10 +420,6 @@ function rewindow(toww, towh) {
         window.open("./index.html", null, "top=0,left=0,height=" + fromheight + ",width=" + fromwidth * toww / towh)
     }
 }
-
-function Array2Array(...args) { return (A2A = (Arg, Arr) => Arg.length > 0 ? A2A(Arg.slice(0, -1), Arg.slice(-1).flat().flatMap(elemG => Arr.map(elem => [elemG, ...elemG]))) : Arr)(args.map(_E0 => Array.isArray(_E0) ? _E0 : [_E0]), [[]]) }
-
-function ArrUnDup /**Duplicate */(array, back) { return array.filter((x, i, self) => (back ? self.lastIndexOf(x) : self.indexOf(x)) === i); }
 
 function FuncProgeny(_E0, fn) {
     (Array.isArray(_E0) ? _E0 : Array.from(_E0)).flatMap(_E1 => _E1 instanceof HTMLElement ? _E1 : (document.querySelectorAll(_E1).length == 0 ? undefined : Array.from(document.querySelectorAll(_E1)))).filter(_E1 => _E1 != undefined).forEach(_E1 => _E1.fn())
