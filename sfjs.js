@@ -138,6 +138,41 @@ function GetElementStyle(elem, pro0, pro1) {
     return AOM.Arr.UnDup([elem].flat().flatMap(_E0 => _E0 instanceof HTMLElement ? _E0 : Derie(_E0))).map(_E0 => !pro0 ? window.getComputedStyle(_E0) : (!~pro0.indexOf(":") ? window.getComputedStyle(_E0).getPropertyValue(pro0) : window.getComputedStyle(_E0, pro0).getPropertyValue(pro1)));
 }
 
+const View = {
+    get: function (point) {
+        switch (point) {
+            case "vmin":
+                return window.innerHeight < window.innerWidth ? window.innerHeight : window.innerWidth;
+            case "vmax":
+                return window.innerHeight > window.innerWidth ? window.innerHeight : window.innerWidth;
+            case "vh":
+                return window.innerHeight;
+            case "vw":
+                return window.innerWidth;
+            case "rem":
+                return window.getComputedStyle(Derie("html")).getPropertyValue("font-size");
+            case "small_rem":
+                return Derie("#get_small_rem").innerWidth;
+        }
+    },
+    elemMin: function (elem) {
+        Derie(elem).map(_E0 => {
+            let width = _E0.clientWidth - (_E0.style.paddingLeft + _E0.style.paddingRight);
+            let height = _E0.clientHeight - (_E0.style.paddingTop + _E0.style.paddingBottom);
+
+            return width < height ? width : height;
+        })
+    },
+    elemMax: function (elem) {
+        Derie(elem).map(_E0 => {
+            let width = _E0.clientWidth - (_E0.style.paddingLeft + _E0.style.paddingRight);
+            let height = _E0.clientHeight - (_E0.style.paddingTop + _E0.style.paddingBottom);
+
+            return width < height ? height : width;
+        })
+    }
+}
+
 /**
  * const SeCA = fn => (tmp = args => arg => arg ? tmp([...args, ...arg]) : fn(...args))([]);
  * const MsCF = obj => fn => fn ? MsCF(fn(obj)) : obj; 
@@ -147,39 +182,12 @@ function GetElementStyle(elem, pro0, pro1) {
  * MsCF <Msy Chain Function> MsCF(obj)(fn0)...(fnn) => arg(obj) ... argn(arg(obj));
  */
 function SeChainArgument(fn) { return (tmp = args => arg => arg ? tmp([...args, ...arg]) : fn(...args))([]) }
-
 function MsChainFundtion(obj) { return fn => fn ? MsCF(fn(obj)) : obj }
 
-let ALdata = {}
-let ProgenyList = {}
-class Ancestor {
-    add(name, option, ...args) {
-        if (!name) return "";
-        [Aldata[name], PLdata[name]] = (() => {
-            if (Optionalys(option, "arr", false)) {
-                return [new Array(), args.length > 0 ? new PLarray(name) : new PLarray(name, ...args)]
-            } else if (Optionalys(option, "obj", false)) {
-                return [new Object(), args.length > 0 ? new PLobject(name) : new PLobject(name, ...args)]
-            } else if (Optionalys(option, "map", false)) {
-                return [new Map(), args.length > 0 ? new PLmap(name) : PLMap(name, ...args)]
-            }
-        })()
-    }
-    remove(name) {
-        delete ALdata[name];
-        delete ProgenyList[name];
-    }
-    set gain(name) {
-
-    }
-    get gain() {
-
-    }
-}
-
+//- Data --------------------
 //共通UI
 //#region
-let SeList = {};
+let SeList = new Object();
 function OwnLists(name, ud, ...arg) {
     [name, ud, ...arg] = [String(name), String(ud), ...arg.map(_E0 => String(_E0))]
     if (ud) {
@@ -260,6 +268,58 @@ function OwnLists(name, ud, ...arg) {
 }
 //#endregion
 
+let ALdata = {}
+let ProgenyList = {}
+class Ancestor {
+    /**add(name, option, ...args) {
+        if (!name) return "";
+        [Aldata[name], PLdata[name]] = (() => {
+            if (Optionalys(option, "arr", false)) {
+                return [new Array(), args.length > 0 ? new PLarray(name) : new PLarray(name, ...args)]
+            } else if (Optionalys(option, "obj", false)) {
+                return [new Object(), args.length > 0 ? new PLobject(name) : new PLobject(name, ...args)]
+            } else if (Optionalys(option, "map", false)) {
+                return [new Map(), args.length > 0 ? new PLmap(name) : PLMap(name, ...args)]
+            }
+        })()
+    }
+    remove(name) {
+        delete ALdata[name];
+        delete ProgenyList[name];
+    }*/
+}
+
+OwnLists("KeyMemo", "Arradmit");
+const keymemoDown = (event) => crKeyMemo("udadd", event.keyCode);
+const keymemoUp = (event) => crKeyMemo("remove", event.keyCode);
+window.addEventListener("keydown", keymemoDown);
+window.addEventListener("keyup", keymemoUp);
+
+function Keys(code) { return code == "$list" ? crKeyMemo() : Boolean(crKeyMemo("filter", code)[0]) };
+
+OwnLists("Saynumber", "Arradmit", "Code", "Number")
+crSaynumber("add", 13, 0)
+crSaynumber("add", 70, 0)
+crSaynumber("add", 83, 0)
+crSaynumber().forEach(_E0 => _E0["Number"] = 0)
+window.addEventListener("keydown", (event) => {
+    if (!event.repeat) {
+        crSaynumber().forEach(_E0 => {
+            if (_E0["Code"] == event.keyCode) {
+                _E0["Number"]++
+            }
+        })
+    }
+})
+
+//Sayclickが実行されたときに, SeList似なかったら作る。あれば通常
+function Sayclick(code, delet) {
+    if (delet) crSaynumber().filter(_E0 => _E0["Code"] == code).forEach(_E0 => _E0["Number"] = 0)
+    return crSaynumber().filter(_E0 => _E0["Code"] == code).map(_E0 => _E0["Number"])
+}
+
+
+//-Object--------------------
 const AOM = {
     Arr: {
         flat: function (...args) { return (A2A = _A0 => _A0.flatMap(_E0 => Array.isArray(_E0) ? A2A(_E0) : _E0))(args) },
@@ -273,9 +333,6 @@ const AOM = {
     prototype: function (_A0) { return Object.prototype.toString.call(_A0).slice(8, -1) }
 }
 
-
-
-
 function Optionalys(...args) {
     if (args.length == 0 || args[0] == undefined) return false;
     args = [args[0], typeof args.slice(-1)[0] == "boolean" ? args.slice(1, -1) : args.slice(1), args.slice(-1)[0] == false ? false : true]
@@ -283,7 +340,7 @@ function Optionalys(...args) {
     //_T0 = new Array(args[1].filter(_E0 => new RegExp(_E0).test(args[0]))).flat();
 }
 
-//---add-elements----------------------
+//-Add Elements--------------
 window.addEventListener("load", () => {
     let sfcss = document.createElement('style');
     sfcss.setAttribute("id", "SeifuncCSS");
@@ -297,62 +354,21 @@ window.addEventListener("load", () => {
         rems.textContent = "m";
         Derie("#SeifuncCSS")[0].parentNode.insertBefore(rems, Derie("#SeifuncCSS")[0].nextSibling);
 
-        characon("$start");
+        Characon("$start");
     })
 })
 
-const View = {
-    get: function (point) {
-        switch (point) {
-            case "vmin":
-                return window.innerHeight < window.innerWidth ? window.innerHeight : window.innerWidth;
-            case "vmax":
-                return window.innerHeight > window.innerWidth ? window.innerHeight : window.innerWidth;
-            case "vh":
-                return window.innerHeight;
-            case "vw":
-                return window.innerWidth;
-            case "rem":
-                return window.getComputedStyle(Derie("html")).getPropertyValue("font-size");
-            case "small_rem":
-                return Derie("#get_small_rem").innerWidth;
-        }
-    },
-    elemMin: function (elem) {
-        Derie(elem).map(_E0 => {
-            let width = _E0.clientWidth - (_E0.style.paddingLeft + _E0.style.paddingRight);
-            let height = _E0.clientHeight - (_E0.style.paddingTop + _E0.style.paddingBottom);
-
-            return width < height ? width : height;
-        })
-    },
-    elemMax: function (elem) {
-        Derie(elem).map(_E0 => {
-            let width = _E0.clientWidth - (_E0.style.paddingLeft + _E0.style.paddingRight);
-            let height = _E0.clientHeight - (_E0.style.paddingTop + _E0.style.paddingBottom);
-
-            return width < height ? height : width;
-        })
-    }
-}
-
-
-
-
-
-//作業領域
+//-Calculation---------------
 OwnLists("OmitFn", "Arradmit", "Base", "Abbr");
 OmitFunctionName("OmitFunctionName", "omitfn")
-const preomitfn = [["DeriveElement", "Derie"], ["GetElementStyle", "Getsy"], ["SeChainArgument", "Sa"], ["MsChainFundtion", "Mf"], ["CharaContain", "characon"]]
+OmitFunctionName("DeriveElement", "Derie")
+OmitFunctionName("CharaContain","Characon")
 
 function OmitFunctionName(base, abbr) { //abbreviation
     crOmitFn("add", base, abbr);
     window[abbr] = (...arg) => eval(base + "(...arg)")
 }
 
-(() => preomitfn.forEach(_E0 => omitfn(_E0[0], _E0[1])))()
-
-//---Calculation-----------------------
 //chara_contain(elem, 50);
 //動作未確認
 OwnLists("Characon", "Arradmit", "Elem", "Parse")
@@ -386,15 +402,10 @@ function CharaContain(option, elem) {
     }
 }
 
-function px2rem(pix) { return pix / GVP("rem") }
-
-function rem2px(rem) { return rem * GVP("rem") }
-
 function Nomall(str) {
     let tmp = Array.from(str).slice().filter(_E0 => _E0 == ((0 || 1 || 2 || 3 || 4 || 5 || 6 || 7 || 8 || 9) || _E0.charCodeAt(0) <= 122)).length
     return tmp * GVP(small_rem) + (str.length - tmp) * GVP(rem)
 }
-
 
 function zeroPadding(num, dig) {
     const AddZero = (_num, _dig) => _num.length < (_num.indexOf(".") == -1 ? _dig : _dig + 1) ? AddZero("0" + _num, _dig) : _num;
@@ -409,6 +420,7 @@ function zeroPadding(num, dig) {
     }
 }
 
+//-Auto Process--------------
 //Puppeteer
 function rewindow(toww, towh) {
     let fromheight = window.outerHeight;
@@ -419,11 +431,6 @@ function rewindow(toww, towh) {
     } else {
         window.open("./index.html", null, "top=0,left=0,height=" + fromheight + ",width=" + fromwidth * toww / towh)
     }
-}
-
-function FuncProgeny(_E0, fn) {
-    (Array.isArray(_E0) ? _E0 : Array.from(_E0)).flatMap(_E1 => _E1 instanceof HTMLElement ? _E1 : (document.querySelectorAll(_E1).length == 0 ? undefined : Array.from(document.querySelectorAll(_E1)))).filter(_E1 => _E1 != undefined).forEach(_E1 => _E1.fn())
-    if (_E0.filter(_E0 => _E0.hasChildNodes()).map(_E0 => _E0.child).length != 0) FuncProgeny(_E0, fn)
 }
 
 let didTaskswork = true;
@@ -452,81 +459,12 @@ function Taskscall() {
     if (didTadwork) requestAnimationFrame(arguments.callee);
 }
 
-/**
- * 製作意欲の低迷により, 開発の一時停止をします。
- * 恐らく, 近日中に再開するかもしれませんし, 開発難易度の高さからこのまま挫折するかもしれません。
- * 未来は, 私のみぞ知るものです。
- * 
- * I will stop development as my willingness to make is on a journey.
- * Perhaps, it may be reopened in the near future, and I may meet the end because of the high level of development difficulty ...
- *The future is something I only know.
- * Transformed with Mr.Google
- */
-
-/*OwnList("KeyTasks", "Arradmit", "Ud", "Elem", "Fn", "Id")
-function KeyTasks(ar, ud, elem, fn, id) {
-    if (Optionalys(ar, "add")) {
-        if (!Optionalys(ar, "id")) {
-            crKeyTasks(ud, elem, fn)
-        } else {
-            crKeyTasks(ud, elem, fn, id)
-        }
-    } else if (ar == "remove") {
-        crKeyTasks("remove", { Id: id })
-    }
+function FuncProgeny(_E0, fn) {
+    (Array.isArray(_E0) ? _E0 : Array.from(_E0)).flatMap(_E1 => _E1 instanceof HTMLElement ? _E1 : (document.querySelectorAll(_E1).length == 0 ? undefined : Array.from(document.querySelectorAll(_E1)))).filter(_E1 => _E1 != undefined).forEach(_E1 => _E1.fn())
+    if (_E0.filter(_E0 => _E0.hasChildNodes()).map(_E0 => _E0.child).length != 0) FuncProgeny(_E0, fn)
 }
 
-window.addEventListener("mouseup", mousecall)
-window.addEventListener("mousedown", mousecall)
-window.addEventListener("mousemove", mousecall)
-window.addEventListener("mouseover", mousecall)
-window.addEventListener("mouseout", mousecall)
-
-function mousecall()
-
-OwnList("MouseTasks", "Arradmit", "Ud", "Elem", "Fn", "Id")
-function MouseTasks(ar, ud, elem, fn, id) {
-    if (Optionalys(ar, "add")) {
-        if (!Optionalys(ar, "id")) {
-            crMouseTasks(ud, elem, fn)
-        } else {
-            crKeyTasks(ud, elem, fn, id)
-        }
-    } else if (ar == "remove") {
-        crMouseTasks("remove", { Id: id })
-    }
-}*/
-
-OwnLists("KeyMemo", "Arradmit");
-const keymemoDown = (event) => crKeyMemo("udadd", event.keyCode);
-const keymemoUp = (event) => crKeyMemo("remove", event.keyCode);
-window.addEventListener("keydown", keymemoDown);
-window.addEventListener("keyup", keymemoUp);
-
-function Keys(code) { return code == "$list" ? crKeyMemo() : Boolean(crKeyMemo("filter", code)[0]) };
-
-OwnLists("Saynumber", "Arradmit", "Code", "Number")
-crSaynumber("add", 13, 0)
-crSaynumber("add", 70, 0)
-crSaynumber("add", 83, 0)
-crSaynumber().forEach(_E0 => _E0["Number"] = 0)
-window.addEventListener("keydown", (event) => {
-    if (!event.repeat) {
-        crSaynumber().forEach(_E0 => {
-            if (_E0["Code"] == event.keyCode) {
-                _E0["Number"]++
-            }
-        })
-    }
-})
-
-//Sayclickが実行されたときに, SeList似なかったら作る。あれば通常
-function Sayclick(code, delet) {
-    if (delet) crSaynumber().filter(_E0 => _E0["Code"] == code).forEach(_E0 => _E0["Number"] = 0)
-    return crSaynumber().filter(_E0 => _E0["Code"] == code).map(_E0 => _E0["Number"])
-}
-
-
+//-Item Function-------------
 function Random(min, max) { return Math.floor(Math.random() * (max - min) + min) }
 
 function Funcrand(graph, xmin, xmax, ymin, ymax) {
@@ -537,6 +475,11 @@ function Funcrand(graph, xmin, xmax, ymin, ymax) {
 
 function RandFn(now, min, max) { return now >= Random(min, max) ? true : false; }
 
+function px2rem(pix) { return pix / GVP("rem") }
+
+function rem2px(rem) { return rem * GVP("rem") }
+
+//-Loaded--------------------
 console.log("Seifuncs ver.1.3.1 for JS was completely loaded.")
 if (/^(?=.*Chrome)(?!.*Edge)/.test(window.navigator.userAgent)) {
     console.log("%c %c Seifuncs for JS %c \n%c %c E-mail : Yakumo.Seizya@gmail.com \n%c %c Github : https://github.com/Seizya",
