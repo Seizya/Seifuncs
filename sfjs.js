@@ -267,27 +267,108 @@ function OwnLists(name, ud, ...arg) {
     }
 }
 //#endregion
-
-let ALdata = {}
-let ProgenyList = {}
-class Ancestor {
-    /**add(name, option, ...args) {
-        if (!name) return "";
-        [Aldata[name], PLdata[name]] = (() => {
-            if (Optionalys(option, "arr", false)) {
-                return [new Array(), args.length > 0 ? new PLarray(name) : new PLarray(name, ...args)]
-            } else if (Optionalys(option, "obj", false)) {
-                return [new Object(), args.length > 0 ? new PLobject(name) : new PLobject(name, ...args)]
-            } else if (Optionalys(option, "map", false)) {
-                return [new Map(), args.length > 0 ? new PLmap(name) : PLMap(name, ...args)]
+/**
+ * cset /create and sest
+ * admit
+ * remove
+ * clear
+ * self
+ * filter
+ * length
+ * assign
+ * marge
+ */
+class Note {
+    constructor() {
+        this.Page = new Map();
+        this.publication = new Publication();
+    }
+    cset(name, proto, ...args) {
+        if (this.Page.has(name)) console.warn(name + " is already written in this Note.")
+        this.Page.set(name, (() => {
+            if (Optionalys(proto, "arr", false)) {
+                return args.length > 0 ? new Docarr(args) : new Docarr();
+            } else if (Optionalys(proto, "obj", false)) {
+                return args.length > 0 ? new Docbj(args) : new Docobj();
+            } else if (Optionalys(proto, "map", false)) {
+                return new Docmap();
+            } else {
+                return new Doclet();
             }
-        })()
+        })())
+    }
+    admit(...args) {
+        if (!this.Page.has(name)) this.cset(...args);
     }
     remove(name) {
-        delete ALdata[name];
-        delete ProgenyList[name];
-    }*/
+        this.Page.delete(name);
+    }
+    clear() {
+        this.Page.clear()
+    }
+    get self() {
+        return this.Page;
+    }
+    get length() {
+        return this.Page.size;
+    }
+    set assign(newNote) {
+        newNote.forEach((value, key) => { if (!this.Page.has(key)) this.Page.set(key, value) })
+    }
+    set marge(newNote) {
+        newNote.forEach((value, key) => this.Page.set(key, value))
+    }
 }
+
+class Docarr extends Array {
+    constructor(...args) {
+        super()
+        this.__proto__.Base = args.length == 0 ? undefined : args.flat();
+    }
+    cset(...args) {
+        if (this.Base) {
+            super.push((() => {
+                let _T0 = new Object()
+                this.Base.forEach((_E0, _E1) => {
+                    _T0[_E0] = args[_E1];
+                })
+                return _T0;
+            })())
+        } else { super.push(...args) }
+    }
+    admit(...args) {
+        if (this.Base) {
+            let _t0 = (() => {
+                let _T0 = new Object()
+                this.Base.forEach((_E0, _E1) => {
+                    _T0[_E0] = args[_E1];
+                })
+                return _T0;
+            })()
+            if (this.Base.includes(_t0)) super.push(_t0)
+        } else { args.forEach(_E0 => { if (args.includes(_E0)) super.push(_E0) }) }
+    }
+    remove(...args) {
+        if (this.Base) {
+            super.forEach((_E0, _E1) => {
+                if (_E0 == (() => {
+                    let _T0 = new Object()
+                    this.Base.forEach((_E0, _E1) => {
+                        _T0[_E0] = args[_E1];
+                    })
+                    return _T0;
+                })()) super.splice(_E1, 1)
+            })
+        }
+    }
+}
+class Docobj extends Object { }
+class Docmap extends Map { }
+class Doclet { }
+
+class Publication { }
+
+let note = new Note()
 
 OwnLists("KeyMemo", "Arradmit");
 const keymemoDown = (event) => crKeyMemo("udadd", event.keyCode);
@@ -362,7 +443,7 @@ window.addEventListener("load", () => {
 OwnLists("OmitFn", "Arradmit", "Base", "Abbr");
 OmitFunctionName("OmitFunctionName", "omitfn")
 OmitFunctionName("DeriveElement", "Derie")
-OmitFunctionName("CharaContain","Characon")
+OmitFunctionName("CharaContain", "Characon")
 
 function OmitFunctionName(base, abbr) { //abbreviation
     crOmitFn("add", base, abbr);
