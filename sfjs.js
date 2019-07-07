@@ -353,12 +353,14 @@ class Docarr extends Array {
             super.forEach((_E0, _E1) => {
                 if (_E0 == (() => {
                     let _T0 = new Object()
-                    this.Base.forEach((_E0, _E1) => {
-                        _T0[_E0] = args[_E1];
+                    this.Base.forEach((_E2, _E3) => {
+                        _T0[_E2] = args[_E3];
                     })
                     return _T0;
                 })()) super.splice(_E1, 1)
             })
+        } else {
+            args.forEach((_E0, _E1) => { if (super.some(_E2 => _E2 = _E0)) super.splice(_E1, 1) })
         }
     }
 }
