@@ -267,17 +267,16 @@ function OwnLists(name, ud, ...arg) {
     }
 }
 //#endregion
-/**
+*
  * cset /create and sest
  * admit
  * remove
  * clear
- * self
- * filter
+ * page
  * length
  * assign
  * marge
- */
+
 class Note {
     constructor() {
         this.Page = new Map();
@@ -306,7 +305,7 @@ class Note {
     clear() {
         this.Page.clear()
     }
-    get self() {
+    get page() {
         return this.Page;
     }
     get length() {
@@ -364,7 +363,17 @@ class Docarr extends Array {
         }
     }
 }
-class Docobj extends Object { }
+class Docobj extends Object {
+	constructor(...args){
+		super();
+		this.__proto__.Base = args.length == 0 ? undefined : args.flat();
+	}
+	cset(property,...args){
+		if(this.Base){
+			
+		}
+	}
+}
 class Docmap extends Map { }
 class Doclet { }
 
