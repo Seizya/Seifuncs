@@ -267,16 +267,11 @@ function OwnLists(name, ud, ...arg) {
     }
 }
 //#endregion
-*
+/**
  * cset /create and sest
  * admit
  * remove
- * clear
- * page
- * length
- * assign
- * marge
-
+ */
 class Note {
     constructor() {
         this.Page = new Map();
@@ -288,11 +283,11 @@ class Note {
             if (Optionalys(proto, "arr", false)) {
                 return args.length > 0 ? new Docarr(args) : new Docarr();
             } else if (Optionalys(proto, "obj", false)) {
-                return args.length > 0 ? new Docbj(args) : new Docobj();
+                return args.length > 0 ? new Docobj(args) : new Docobj();
             } else if (Optionalys(proto, "map", false)) {
-                return new Docmap();
+                return args.length > 0 ? new Docmap(args) : new Docmap();
             } else {
-                return new Doclet();
+                return args.length > 0 ? new Doclet(args) : new Doclet();
             }
         })())
     }
@@ -305,7 +300,7 @@ class Note {
     clear() {
         this.Page.clear()
     }
-    get page() {
+    get self() {
         return this.Page;
     }
     get length() {
@@ -344,7 +339,7 @@ class Docarr extends Array {
                 })
                 return _T0;
             })()
-            if (this.Base.includes(_t0)) super.push(_t0)
+            if (super.includes(_t0)) super.push(_t0)
         } else { args.forEach(_E0 => { if (args.includes(_E0)) super.push(_E0) }) }
     }
     remove(...args) {
@@ -363,19 +358,52 @@ class Docarr extends Array {
         }
     }
 }
+
 class Docobj extends Object {
-	constructor(...args){
-		super();
-		this.__proto__.Base = args.length == 0 ? undefined : args.flat();
+	constructor(...args) {
+        super()
+        this.__proto__.Base = args.length == 0 ? undefined : args.flat();
+    }
+    cset(property,...args){
+    	  if (this.Base) {
+            super[property] = (() => {
+                let _T0 = new Object()
+                this.Base.forEach((_E0, _E1) => {
+                    _T0[_E0] = args[_E1];
+                })
+                return _T0;
+            })()
+        } else { super[property] = args[0] }
 	}
-	cset(property,...args){
-		if(this.Base){
-			
+	admit(property,...args){
+		if (this.Base) {
+            let _t0 = (() => {
+                let _T0 = new Object()
+                this.Base.forEach((_E0, _E1) => {
+                    _T0[_E0] = args[_E1];
+                })
+                return _T0;
+            })()
+            super.forEach((_E0,_E1) => if( _E1 != property) super[property] = _t0)
+        } else {
+        	super.forEach((_E0,_E1) => if( _E1 != property) super[property] = args[0])
 		}
 	}
 }
-class Docmap extends Map { }
-class Doclet { }
+
+class Docmap extends Map {
+	constructor(...args) {
+        super()
+        this.__proto__.Base = args.length == 0 ? undefined : args.flat();
+    }
+}
+
+class Doclet {
+	constructor(...args) {
+        super()
+        this.__proto__.Base = args.length == 0 ? undefined : args.flat();
+    }
+}
 
 class Publication { }
 
