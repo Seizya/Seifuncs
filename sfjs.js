@@ -267,11 +267,6 @@ function OwnLists(name, ud, ...arg) {
     }
 }
 //#endregion
-/**
- * cset /create and sest
- * admit
- * remove
- */
 class Note {
     constructor() {
         this.Page = new Map();
@@ -360,12 +355,12 @@ class Docarr extends Array {
 }
 
 class Docobj extends Object {
-	constructor(...args) {
+    constructor(...args) {
         super()
         this.__proto__.Base = args.length == 0 ? undefined : args.flat();
     }
-    cset(property,...args){
-    	  if (this.Base) {
+    cset(property, ...args) {
+        if (this.Base) {
             super[property] = (() => {
                 let _T0 = new Object()
                 this.Base.forEach((_E0, _E1) => {
@@ -373,33 +368,36 @@ class Docobj extends Object {
                 })
                 return _T0;
             })()
-        } else { super[property] = args[0] }
-	}
-	admit(property,...args){
-		if (this.Base) {
-            let _t0 = (() => {
+        } else {
+            super[property] = args[0]
+        }
+    }
+    admit(property, ...args) { super.forEach((_E0, _E1) => { if (_E1 != property) super.cset(property, ...args) }) }
+}
+
+class Docmap extends Map {
+    constructor(...args) {
+        super()
+        this.__proto__.Base = args.length == 0 ? undefined : args.flat();
+    }
+    cset(key, ...args) {
+        if (this.Base) {
+            super.set(key, (() => {
                 let _T0 = new Object()
                 this.Base.forEach((_E0, _E1) => {
                     _T0[_E0] = args[_E1];
                 })
                 return _T0;
-            })()
-            super.forEach((_E0,_E1) => if( _E1 != property) super[property] = _t0)
+            })())
         } else {
-        	super.forEach((_E0,_E1) => if( _E1 != property) super[property] = args[0])
-		}
-	}
-}
-
-class Docmap extends Map {
-	constructor(...args) {
-        super()
-        this.__proto__.Base = args.length == 0 ? undefined : args.flat();
+            super.set(key, args[0])
+        }
     }
+    admit(key, ...args) { if (super.has(key)) super.cset(key, ...args) }
 }
 
 class Doclet {
-	constructor(...args) {
+    constructor(...args) {
         super()
         this.__proto__.Base = args.length == 0 ? undefined : args.flat();
     }
