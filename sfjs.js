@@ -186,7 +186,6 @@ function MsChainFundtion(obj) { return fn => fn ? MsCF(fn(obj)) : obj }
 
 //- Data --------------------
 //共通UI
-//#region
 let SeList = new Object();
 function OwnLists(name, ud, ...arg) {
     [name, ud, ...arg] = [String(name), String(ud), ...arg.map(_E0 => String(_E0))]
