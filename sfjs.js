@@ -558,18 +558,11 @@ function rewindow(toww, towh) {
 }
 
 let didTaskswork = true;
-OwnLists("Tasks", "Arradmit", "If", "Fn", "Id")
+note.cset("TasksList", "Array", "If", "Fn", "Id")
 
-function Tasks(ar, equa, fn, id) {
-    if (Optionalys(ar, "add")) {
-        if (Optionalys(ar, "id")) {
-            crTasks("add", equa, fn, id)
-        } else {
-            crTasks("add", equa, fn)
-        }
-    } else if (ar == "remove") {
-        SeList["Tasks"].filter(_E0 => _E0["id"] != id)
-    }
+const Tasks = {
+    add: function (equa, fn, id) { TasksList.cset(equa, fn, (id ? id : undefined)) },
+    remove: function (id) { TasksList.forEach((_E0, _E1, _E2) => { if (_E0["Id"] == id) _E2.splice(_E1, 1) }) }
 }
 
 function Tasksstart() { didTaskswork = true; }
@@ -577,11 +570,11 @@ function Tasksstart() { didTaskswork = true; }
 function Tasksstop() { didTaskswork = false; }
 
 function Taskscall() {
-    crTasks().forEach(_E0 => {
-        if (_E0["If"]) _E0["Fn"]()
-    })
+    TasksList.forEach(_E0 => { if (eval(_E0["If"])) _E0["Fn"]() })
     if (didTadwork) requestAnimationFrame(arguments.callee);
 }
+
+// Taskscall()
 
 function FuncProgeny(_E0, fn) {
     (Array.isArray(_E0) ? _E0 : Array.from(_E0)).flatMap(_E1 => _E1 instanceof HTMLElement ? _E1 : (document.querySelectorAll(_E1).length == 0 ? undefined : Array.from(document.querySelectorAll(_E1)))).filter(_E1 => _E1 != undefined).forEach(_E1 => _E1.fn())
