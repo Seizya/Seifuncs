@@ -323,7 +323,9 @@ class Docarr extends Array {
                 })
                 return _T0;
             })())
-        } else { super.push(...args) }
+        } else {
+            super.push(...args)
+        }
     }
     admit(...args) {
         if (this.Base) {
@@ -334,8 +336,10 @@ class Docarr extends Array {
                 })
                 return _T0;
             })()
-            if (super.includes(_t0)) super.push(_t0)
-        } else { args.forEach(_E0 => { if (args.includes(_E0)) super.push(_E0) }) }
+            if (!super.includes(_t0)) super.push(_t0)
+        } else {
+            args.forEach(_E0 => { if (args.includes(_E0)) super.push(_E0) })
+        }
     }
     remove(...args) {
         if (this.Base) {
@@ -349,7 +353,9 @@ class Docarr extends Array {
                 })()) super.splice(_E1, 1)
             })
         } else {
-            args.forEach((_E0, _E1) => { if (super.some(_E2 => _E2 = _E0)) super.splice(_E1, 1) })
+            args.forEach((_E0, _E1) => {
+                if (super.some(_E2 => _E2 = _E0)) super.splice(_E1, 1)
+            })
         }
     }
 }
@@ -397,45 +403,39 @@ class Docmap extends Map {
 }
 
 class Doclet {
-    constructor(...args) {
-        super()
-        this.__proto__.Base = args.length == 0 ? undefined : args.flat();
+    constructor(...args) { this.__proto__.Base = args.length == 0 ? undefined : args.flat(); }
+    cset(...args) {
+        if (this.Base) {
+            this.Doc = (() => {
+                let _T0 = new Object()
+                this.Base.forEach((_E0, _E1) => {
+                    _T0[_E0] = args[_E1];
+                })
+                return _T0;
+            })()
+        } else { this.Doc = args[0] }
     }
+    get self() { return this.Doc; }
 }
 
 class Publication { }
 
 let note = new Note()
 
-OwnLists("KeyMemo", "Arradmit");
-const keymemoDown = (event) => crKeyMemo("udadd", event.keyCode);
-const keymemoUp = (event) => crKeyMemo("remove", event.keyCode);
-window.addEventListener("keydown", keymemoDown);
-window.addEventListener("keyup", keymemoUp);
+function BookTag(book, page) { window[page] = eval(book).self.get(page); }
+const noteAllPageBookTag = true;
+window.addEventListener('load', () => { if (noteAllPageBookTag) note.self.forEach((_E0, _E1) => BookTag(note, _E1)) })
 
-function Keys(code) { return code == "$list" ? crKeyMemo() : Boolean(crKeyMemo("filter", code)[0]) };
-
-OwnLists("Saynumber", "Arradmit", "Code", "Number")
-crSaynumber("add", 13, 0)
-crSaynumber("add", 70, 0)
-crSaynumber("add", 83, 0)
-crSaynumber().forEach(_E0 => _E0["Number"] = 0)
-window.addEventListener("keydown", (event) => {
-    if (!event.repeat) {
-        crSaynumber().forEach(_E0 => {
-            if (_E0["Code"] == event.keyCode) {
-                _E0["Number"]++
-            }
-        })
-    }
-})
-
-//Sayclickが実行されたときに, SeList似なかったら作る。あれば通常
-function Sayclick(code, delet) {
-    if (delet) crSaynumber().filter(_E0 => _E0["Code"] == code).forEach(_E0 => _E0["Number"] = 0)
-    return crSaynumber().filter(_E0 => _E0["Code"] == code).map(_E0 => _E0["Number"])
+note.cset("KeyHold", "map");
+note.cset("KeyCount", "map");
+const keys = {
+    hold: function (code) { return note.self.get("KeyHold").get(code) },
+    count: function (code, clear) { if (clear) { note.self.get("KeyCount").set(code, 0) } else { return note.self.get("KeyCount").get(code) } }
 }
 
+window.addEventListener('keydown', (event) => { if (!event.repeat) note.self.get("KeyCount").set(event.keyCode, note.self.get("KeyCount").get(event.keyCode) == undefined ? 1 : note.self.get("KeyCount").get(event.keyCode) + 1) })
+window.addEventListener('keydown', (event) => { if (!event.repeat) note.self.get("KeyHold").set(event.keyCode, true) })
+window.addEventListener('keyup', (event) => { if (!event.repeat) note.self.get("KeyHold").set(event.keyCode, false) })
 
 //-Object--------------------
 const AOM = {
@@ -448,7 +448,7 @@ const AOM = {
         forEach: function (obj, fn) { Object.keys(obj).forEach(key => { let val = this[key]; fn(val); }, obj) }
     },
     Map: {},
-    prototype: function (_A0) { return Object.prototype.toString.call(_A0).slice(8, -1) }
+    prototype: function (_A0) { return _A0.constructor.name; }
 }
 
 function Optionalys(...args) {
@@ -472,24 +472,30 @@ window.addEventListener("load", () => {
         rems.textContent = "m";
         Derie("#SeifuncCSS")[0].parentNode.insertBefore(rems, Derie("#SeifuncCSS")[0].nextSibling);
 
-        Characon("$start");
+        // Characon("$start");
     })
 })
 
 //-Calculation---------------
-OwnLists("OmitFn", "Arradmit", "Base", "Abbr");
-OmitFunctionName("OmitFunctionName", "omitfn")
-OmitFunctionName("DeriveElement", "Derie")
-OmitFunctionName("CharaContain", "Characon")
+note.cset("OmitFnList", "Array", "Base", "Abbr");
+BookTag("note", "OmitFnList")
+OmitFunctionName("OmitFunctionName", "OmitFn")
+OmitFn("DeriveElement", "Derie")
+OmitFn("CharaContain", "Characon")
 
-function OmitFunctionName(base, abbr) { //abbreviation
-    crOmitFn("add", base, abbr);
-    window[abbr] = (...arg) => eval(base + "(...arg)")
+function OmitFunctionName(base, abbr, admit) {
+    if (!admit) {
+        let _T0 = { "Base": base, "Abbr": abbr }
+        OmitFnList.forEach((_E0, _E1, _E2) => { if (_E0 == _T0) { _E2.splice(_E1, 1) } OmitFnList.cset(base, abbr) })
+        window[abbr] = (...arg) => eval(base + "(...arg)")
+    } else {
+        OmitFnList.cset(base, abbr); window[abbr] = (...arg) => eval(base + "(...arg)")
+    }
 }
 
 //chara_contain(elem, 50);
 //動作未確認
-OwnLists("Characon", "Arradmit", "Elem", "Parse")
+/**OwnLists("Characon", "Arradmit", "Elem", "Parse")
 
 function CharaContain(option, elem) {
     if (option == "$start") {
@@ -518,7 +524,7 @@ function CharaContain(option, elem) {
     } else if (typeof option == "number") {
         crCharacon("udadd", elem, option);
     }
-}
+}*/
 
 function Nomall(str) {
     let tmp = Array.from(str).slice().filter(_E0 => _E0 == ((0 || 1 || 2 || 3 || 4 || 5 || 6 || 7 || 8 || 9) || _E0.charCodeAt(0) <= 122)).length
