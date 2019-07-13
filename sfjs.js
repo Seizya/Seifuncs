@@ -132,44 +132,44 @@ function DeriveElement(id, option) {
     }
 }
 
-//Getsy(elem,prpperty)
-//Getsy(elem,:~ ,Property)
-function GetElementStyle(elem, pro0, pro1) {
+//Derie().Getsy()
+function GetStyle(elem, pro0, pro1) {
     return AOM.Arr.UnDup([elem].flat().flatMap(_E0 => _E0 instanceof HTMLElement ? _E0 : Derie(_E0))).map(_E0 => !pro0 ? window.getComputedStyle(_E0) : (!~pro0.indexOf(":") ? window.getComputedStyle(_E0).getPropertyValue(pro0) : window.getComputedStyle(_E0, pro0).getPropertyValue(pro1)));
 }
 
-const View = {
-    get: function (point) {
-        switch (point) {
-            case "vmin":
-                return window.innerHeight < window.innerWidth ? window.innerHeight : window.innerWidth;
-            case "vmax":
-                return window.innerHeight > window.innerWidth ? window.innerHeight : window.innerWidth;
-            case "vh":
-                return window.innerHeight;
-            case "vw":
-                return window.innerWidth;
-            case "rem":
-                return window.getComputedStyle(Derie("html")).getPropertyValue("font-size");
-            case "small_rem":
-                return Derie("#get_small_rem").innerWidth;
-        }
-    },
-    elemMin: function (elem) {
-        Derie(elem).map(_E0 => {
-            let width = _E0.clientWidth - (_E0.style.paddingLeft + _E0.style.paddingRight);
-            let height = _E0.clientHeight - (_E0.style.paddingTop + _E0.style.paddingBottom);
+function ViewScale(point) {
+    switch (point) {
+        case "vmin":
+            return window.innerHeight < window.innerWidth ? window.innerHeight : window.innerWidth;
+        case "vmax":
+            return window.innerHeight > window.innerWidth ? window.innerHeight : window.innerWidth;
+        case "vh":
+            return window.innerHeight;
+        case "vw":
+            return window.innerWidth;
+        case "rem":
+            return window.getComputedStyle(Derie("html")).getPropertyValue("font-size");
+        case "small_rem":
+            return Derie("#get_small_rem").innerWidth;
+    }
+}
 
-            return width < height ? width : height;
-        })
-    },
-    elemMax: function (elem) {
-        Derie(elem).map(_E0 => {
-            let width = _E0.clientWidth - (_E0.style.paddingLeft + _E0.style.paddingRight);
-            let height = _E0.clientHeight - (_E0.style.paddingTop + _E0.style.paddingBottom);
+function getScale(point) {
+    switch (point) {
+        case "min":
+            this.map(_E0 => {
+                let width = _E0.clientWidth - (_E0.style.paddingLeft + _E0.style.paddingRight);
+                let height = _E0.clientHeight - (_E0.style.paddingTop + _E0.style.paddingBottom);
 
-            return width < height ? height : width;
-        })
+                return width < height ? width : height;
+            })
+        case "max":
+            this.map(_E0 => {
+                let width = _E0.clientWidth - (_E0.style.paddingLeft + _E0.style.paddingRight);
+                let height = _E0.clientHeight - (_E0.style.paddingTop + _E0.style.paddingBottom);
+
+                return width < height ? height : width;
+            })
     }
 }
 
@@ -186,86 +186,6 @@ function MsChainFundtion(obj) { return fn => fn ? MsCF(fn(obj)) : obj }
 
 //- Data --------------------
 //共通UI
-let SeList = new Object();
-function OwnLists(name, ud, ...arg) {
-    [name, ud, ...arg] = [String(name), String(ud), ...arg.map(_E0 => String(_E0))]
-    if (ud) {
-        if (ud == "expel") {
-            delete SeList[name];
-        } else if (!SeList[name]) {
-            if (ud == "admit") {
-                SeList[name] = {};
-                window["cr" + name] = (_name, _ud, ..._arg) => {
-                    if (Optionalys(_ud, "add")) {
-                        if (!arg[0] || _ud == "excadd") {
-                            SeList[name][_name] = _arg[0];
-                        } else {
-                            let tmp0 = {};
-                            for (i = 0; i < arg.length; i++) {
-                                tmp0[arg[i]] = _arg[i];
-                            }
-                            SeList[name][_name] = tmp0;
-                        }
-                        //{name : {_name:{_arg:arg,arg1:_arg1},_name1..}}
-                    } else if (_ud == "remove") {
-                        delete SeList[name][_name]
-                    } else if (_ud == "filter") {
-                        return Selist[name][_name];
-                    } else if (_ud == "clear") {
-                        SeList[name] = {};
-                    } else {
-                        return SeList[name];
-                    }
-                }
-            } else if (ud == "Arradmit") {
-                SeList[name] = [];
-                window["cr" + name] = (_ud, ..._arg) => {
-                    if (Optionalys(_ud, "add")) {
-                        if (!arg[0] || Optionalys(_ud, "exc")) {
-                            if (Optionalys(_ud, "ud")) {
-                                if (!SeList[name].includes(_arg[0])) SeList[name].push(_arg[0]);
-                            } else {
-                                SeList[name].push(_arg[0]);
-                            }
-                        } else {
-                            let tmp0 = {};
-                            for (i = 0; i < arg.length; i++) {
-                                tmp0[arg[i]] = _arg[i];
-                            }
-                            if (Optionalys(_ud, "ud")) {
-                                if (!SeList[name].includes(_arg[0])) SeList[name].push(tmp0);
-                            } else {
-                                SeList[name].push(tmp0);
-                            }
-                        }
-                        //[arg,arg1,{arg2:arg3}]
-                    } else if (_ud == "remove") {
-                        if (!arg[0]) {
-                            SeList[name] = SeList[name].filter(_E0 => !_arg.some(_E1 => _E0 === _E1));
-                        } else {
-                            SeList[name] = SeList[name].filter(_E0 => Object.key(_E0).filter(_E1 => _E1.some(_E1 == Object.key(_arg[0]))).some(_E1 => _E0[_E1] != _arg[0][_E1]));
-                        }
-                    } else if (_ud == "filter") {
-                        if (!arg[0]) {
-                            return SeList[name].filter(_E0 => _arg.some(_E1 => _E0 == _E1));
-                        } else {
-                            return SeList[name].filter(_E0 => Object.key(_E0).filter(_E1 => _E1.some(_E1 == Object.key(_arg[0]))).every(_E1 => _E0[_E1] == _arg[0][_E1]));
-                        }
-                    } else if (_ud == "clear") {
-                        SeList[name] = [];
-                    } else {
-                        return SeList[name];
-                    }
-                }
-            }
-        }
-    } else if (!name) {
-        return SeList[name];
-    } else {
-        return SeList
-    }
-}
-//#endregion
 class Note {
     constructor() {
         this.Page = new Map();
@@ -480,7 +400,6 @@ note.cset("OmitFnList", "Array", "Base", "Abbr");
 BookTag("note", "OmitFnList")
 OmitFunctionName("OmitFunctionName", "OmitFn")
 OmitFn("DeriveElement", "Derie")
-OmitFn("CharaContain", "Characon")
 
 function OmitFunctionName(base, abbr, admit) {
     if (!admit) {
