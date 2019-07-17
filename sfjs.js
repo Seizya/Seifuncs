@@ -133,43 +133,41 @@ function DeriveElement(id, option) {
 }
 
 //Derie().Getsy()
-function GetStyle(elem, pro0, pro1) {
-    return AOM.Arr.UnDup([elem].flat().flatMap(_E0 => _E0 instanceof HTMLElement ? _E0 : Derie(_E0))).map(_E0 => !pro0 ? window.getComputedStyle(_E0) : (!~pro0.indexOf(":") ? window.getComputedStyle(_E0).getPropertyValue(pro0) : window.getComputedStyle(_E0, pro0).getPropertyValue(pro1)));
-}
-
-function ViewScale(point) {
-    switch (point) {
-        case "vmin":
-            return window.innerHeight < window.innerWidth ? window.innerHeight : window.innerWidth;
-        case "vmax":
-            return window.innerHeight > window.innerWidth ? window.innerHeight : window.innerWidth;
-        case "vh":
-            return window.innerHeight;
-        case "vw":
-            return window.innerWidth;
-        case "rem":
-            return window.getComputedStyle(Derie("html")).getPropertyValue("font-size");
-        case "small_rem":
-            return Derie("#get_small_rem").innerWidth;
+function GetStyle(pro0, pro1) {
+	if (this === window){
+		if(Optionalys(pro0,"min",false)){
+			return window.innerHeight < window.innerWidth ? window.innerHeight : window.innerWidth;
+		}else if(Optionalys(pro0,"max",false)){
+			return window.innerHeight > window.innerWidth ? window.innerHeight : window.innerWidth;
+		}else if(Optionalys(pro0,"height",false)){
+			return window.innerHeight;
+		}else if(Optionalys(pro0,"width",false)){
+			return window.innerWidth;
+		}else if(Optionalys(pro0,"rem") && !Optionalys(point,"small",false)){
+			return window.getComputedStyle(Derie("html")).getPropertyValue("font-size");
+		}else if(Optionalys(pro0,"small_rem",false)){
+			return Derie("#get_small_rem").innerWidth;
+		}
+	}else if (Optionalys(pro0, "min", false)) {
+        if (Array.isArray(this)) { this.map(_E0 => Getsytmp(this, "min")) }
+        else { return Getsytmp(this, "min") }
+    } else if (Optionalys(pro0, "max", false)) {
+        if (Array.isArray(this)) { this.map(_E0 => Getsytmp(this, "max")) }
+        else { return Getsytmp(this, "max") }
+    } else {
+        if (Array.isArray(this)) { this.map(_E0 => Getsytmp1(this)) } 
+		else { return Getsytmp1(this) }
     }
-}
 
-function getScale(point) {
-    switch (point) {
-        case "min":
-            this.map(_E0 => {
-                let width = _E0.clientWidth - (_E0.style.paddingLeft + _E0.style.paddingRight);
-                let height = _E0.clientHeight - (_E0.style.paddingTop + _E0.style.paddingBottom);
+    function Getsytmp(that, proto) {
+        let width = that.clientWidth - (that.style.paddingLeft + that.style.paddingRight);
+        let height = that.clientHeight - (that.style.paddingTop + that.style.paddingBottom);
 
-                return width < height ? width : height;
-            })
-        case "max":
-            this.map(_E0 => {
-                let width = _E0.clientWidth - (_E0.style.paddingLeft + _E0.style.paddingRight);
-                let height = _E0.clientHeight - (_E0.style.paddingTop + _E0.style.paddingBottom);
+        return proto == "min" ? (width < height ? width : height) : (width < height ? height : width)
+    }
 
-                return width < height ? height : width;
-            })
+    function Getsytmp1(that){
+    	return !~pro0.indexOf(":") ? window.getComputedStyle(that).getPropertyValue(pro0) : window.getComputedStyle(that, pro0).getPropertyValue(pro1);
     }
 }
 
