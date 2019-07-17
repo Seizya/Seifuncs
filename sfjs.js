@@ -133,8 +133,29 @@ function DeriveElement(id, option) {
 }
 
 //Derie().Getsy()
-function GetStyle(elem, pro0, pro1) {
-    return AOM.Arr.UnDup([elem].flat().flatMap(_E0 => _E0 instanceof HTMLElement ? _E0 : Derie(_E0))).map(_E0 => !pro0 ? window.getComputedStyle(_E0) : (!~pro0.indexOf(":") ? window.getComputedStyle(_E0).getPropertyValue(pro0) : window.getComputedStyle(_E0, pro0).getPropertyValue(pro1)));
+function GetStyle(pro0, pro1) {
+    if (Optionalys(pro0, "min", false)) {
+        if (Array.isArray(this)) { this.map(_E0 => Getsytmp(this, "min")) }
+        else { Getsytmp(this, "min") }
+    } else if (Optionalys(pro0, "max", false)) {
+        if (Array.isArray(this)) { this.map(_E0 => Getsytmp(this, "max")) }
+        else { Getsytmp(this, "max") }
+    } else {
+        if (Array.isArray(this)) {
+            return AOM.Arr.UnDup([elem].flat().flatMap(_E0 => _E0 instanceof HTMLElement ? _E0 : Derie(_E0))).map(_E0 => !pro0 ? window.getComputedStyle(_E0) : (!~pro0.indexOf(":") ? window.getComputedStyle(_E0).getPropertyValue(pro0) : window.getComputedStyle(_E0, pro0).getPropertyValue(pro1)));
+        } else {
+            
+        }
+    }
+
+    function Getsytmp(that, proto) {
+        let width = that.clientWidth - (that.style.paddingLeft + that.style.paddingRight);
+        let height = that.clientHeight - (that.style.paddingTop + that.style.paddingBottom);
+
+        return proto == "min" ? (width < height ? width : height) : (width < height ? height : width)
+    }
+
+    function Getsytmp1()
 }
 
 function ViewScale(point) {
@@ -151,25 +172,6 @@ function ViewScale(point) {
             return window.getComputedStyle(Derie("html")).getPropertyValue("font-size");
         case "small_rem":
             return Derie("#get_small_rem").innerWidth;
-    }
-}
-
-function getScale(point) {
-    switch (point) {
-        case "min":
-            this.map(_E0 => {
-                let width = _E0.clientWidth - (_E0.style.paddingLeft + _E0.style.paddingRight);
-                let height = _E0.clientHeight - (_E0.style.paddingTop + _E0.style.paddingBottom);
-
-                return width < height ? width : height;
-            })
-        case "max":
-            this.map(_E0 => {
-                let width = _E0.clientWidth - (_E0.style.paddingLeft + _E0.style.paddingRight);
-                let height = _E0.clientHeight - (_E0.style.paddingTop + _E0.style.paddingBottom);
-
-                return width < height ? height : width;
-            })
     }
 }
 
