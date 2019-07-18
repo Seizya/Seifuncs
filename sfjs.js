@@ -255,7 +255,7 @@ class Docarr extends Array {
             })()
             if (!super.includes(_t0)) super.push(_t0)
         } else {
-            args.forEach(_E0 => { if (args.includes(_E0)) super.push(_E0) })
+            args.forEach(_E0 => { if (!args.includes(_E0)) super.push(_E0) })
         }
     }
     remove(...args) {
@@ -316,7 +316,7 @@ class Docmap extends Map {
             super.set(key, args[0])
         }
     }
-    admit(key, ...args) { if (super.has(key)) super.cset(key, ...args) }
+    admit(key, ...args) { if (!super.has(key)) super.cset(key, ...args) }
 }
 
 class Doclet {
@@ -398,6 +398,7 @@ note.cset("OmitFnList", "Array", "Base", "Abbr");
 BookTag("note", "OmitFnList")
 OmitFunctionName("OmitFunctionName", "OmitFn")
 OmitFn("DeriveElement", "Derie")
+OmitFn("GetStyle","Getsy")
 
 function OmitFunctionName(base, abbr, admit) {
     if (!admit) {
@@ -508,9 +509,9 @@ function Funcrand(graph, xmin, xmax, ymin, ymax) {
 
 function RandFn(now, min, max) { return now >= Random(min, max) ? true : false; }
 
-function px2rem(pix) { return pix / GVP("rem") }
+function px2rem(pix) { return pix / wundiw.Getsy("rem") }
 
-function rem2px(rem) { return rem * GVP("rem") }
+function rem2px(rem) { return rem * window.Getsy("rem") }
 
 //-Loaded--------------------
 console.log("Seifuncs ver.1.3.1 for JS was completely loaded.")
