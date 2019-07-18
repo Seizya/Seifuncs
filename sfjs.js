@@ -410,38 +410,11 @@ function OmitFunctionName(base, abbr, admit) {
     }
 }
 
-//chara_contain(elem, 50);
-//動作未確認
-/**OwnLists("Characon", "Arradmit", "Elem", "Parse")
+//TextContain(elem, 50);
 
-function CharaContain(option, elem) {
-    if (option == "$start") {
-        let elems = Derie(".chara_contain");
-        if (elems[0]) {
-            elems.forEach(_E0 => {
-                crCharacon("udadd", _E0, 100)
-                _E0.addEventListener('resize', () => {
-                    let width = _E0.clientWidth - (_E0.style.paddingLeft + _E0.style.paddingRight);
-                    let height = _E0.clientHeight - (_E0.style.paddingTop + _E0.style.paddingBottom);
-                    if (Getsy(_E0, "writing-mdoe")[0] == "horizontal-tb") {
-                        let con_width = Nomall(_E0.clientWidth - (_E0.style.paddingLeft + _E0.style.paddingRight));
-                        let con_height = GVP("rem")
-                    } else {
-                        let con_height = Nomall(_E0.clientHeight - (_E0.style.paddingTop + _E0.style.paddingBottom));
-                        let = con_width = GVP("rem")
-                    }
-                    if (con_width / width >= con_height) {
-                        Derie(_E0)[0].style.fontSize = px2rem(parseInt(Getsy(_E0, "font-size")) * wide / con_wide * crCharacon("filter", {
-                            Elem: _E0
-                        })[0][Parse] * 0.01) + "rem"
-                    }
-                })
-            })
-        }
-    } else if (typeof option == "number") {
-        crCharacon("udadd", elem, option);
-    }
-}*/
+function TextSize(elem) {
+    
+}
 
 function Nomall(str) {
     let tmp = Array.from(str).slice().filter(_E0 => _E0 == ((0 || 1 || 2 || 3 || 4 || 5 || 6 || 7 || 8 || 9) || _E0.charCodeAt(0) <= 122)).length
