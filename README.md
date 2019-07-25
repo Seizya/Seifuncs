@@ -11,7 +11,7 @@ caution : Developper only think good for Seizya because they are Seizya alone.
 # Contents
 Do `SeHelp( command )`
 ### Command 
-Blank : Func List
+Blank : Func List.
 Func Name : Explanatory text
   
 # license
