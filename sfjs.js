@@ -107,7 +107,6 @@ function CSS(elements) {
     });
 }
 
-//Deel
 function DeriveElement(id, option) {
     return [id].flat().flatMap(_E0 => _E0 instanceof HTMLElement ? _E0 : CQgeny(_E0)).filter(_E0 => _E0)
 
@@ -122,7 +121,7 @@ function DeriveElement(id, option) {
                     return AOM.Arr.UnDup(Array.from(document.querySelectorAll(_id)).flatMap(_E0 => document.getElementsByTagName(_E0.tagName))).filter(_E0 => Array.from(document.querySelectorAll(_id)).some(_E1 => _E0.parentNode == _E1.parentNode))
                 default:
                     return (function CQgeny(pare, arr) {
-                        [...arr, ...pare.slice().filter(_E0 => Array.from(document.querySelectorAll(_id)).some(_E1 => window.getComputedStyle(_E0).getPropertyValue(option) == window.getComputedStyle(_E1).getPropertyValue(option)))];
+                        arr = [...arr, ...pare.slice().filter(_E0 => Array.from(document.querySelectorAll(_id)).some(_E1 => window.getComputedStyle(_E0).getPropertyValue(option) == window.getComputedStyle(_E1).getPropertyValue(option)))];
                         return pare.filter(_E0 => _E0.hasChildNodes()).flatMap(_E1 => _E1.child).length != 0 ? CQgeny(pare, arr) : AOM.Arr.UnDup(arr)
                     })(Array.from(document.getElementsByTagName("HTML")), [])
             }
@@ -131,32 +130,31 @@ function DeriveElement(id, option) {
         }
     }
 }
-
 //Derie().Getsy()
 function GetStyle(pro0, pro1) {
-	if (this === window){
-		if(Optionalys(pro0,"min",false)){
-			return window.innerHeight < window.innerWidth ? window.innerHeight : window.innerWidth;
-		}else if(Optionalys(pro0,"max",false)){
-			return window.innerHeight > window.innerWidth ? window.innerHeight : window.innerWidth;
-		}else if(Optionalys(pro0,"height",false)){
-			return window.innerHeight;
-		}else if(Optionalys(pro0,"width",false)){
-			return window.innerWidth;
-		}else if(Optionalys(pro0,"rem") && !Optionalys(point,"small",false)){
-			return window.getComputedStyle(Derie("html")).getPropertyValue("font-size");
-		}else if(Optionalys(pro0,"small_rem",false)){
-			return Derie("#get_small_rem").innerWidth;
-		}
-	}else if (Optionalys(pro0, "min", false)) {
+    if (this === window) {
+        if (Optionalys(pro0, "min", false)) {
+            return window.innerHeight < window.innerWidth ? window.innerHeight : window.innerWidth;
+        } else if (Optionalys(pro0, "max", false)) {
+            return window.innerHeight > window.innerWidth ? window.innerHeight : window.innerWidth;
+        } else if (Optionalys(pro0, "height", false)) {
+            return window.innerHeight;
+        } else if (Optionalys(pro0, "width", false)) {
+            return window.innerWidth;
+        } else if (Optionalys(pro0, "rem") && !Optionalys(point, "small", false)) {
+            return window.getComputedStyle(Derie("html")).getPropertyValue("font-size");
+        } else if (Optionalys(pro0, "small_rem", false)) {
+            return Derie("#get_small_rem").innerWidth;
+        }
+    } else if (Optionalys(pro0, "min", false)) {
         if (Array.isArray(this)) { this.map(_E0 => Getsytmp(this, "min")) }
         else { return Getsytmp(this, "min") }
     } else if (Optionalys(pro0, "max", false)) {
         if (Array.isArray(this)) { this.map(_E0 => Getsytmp(this, "max")) }
         else { return Getsytmp(this, "max") }
     } else {
-        if (Array.isArray(this)) { this.map(_E0 => Getsytmp1(this)) } 
-		else { return Getsytmp1(this) }
+        if (Array.isArray(this)) { this.map(_E0 => Getsytmp1(this)) }
+        else { return Getsytmp1(this) }
     }
 
     function Getsytmp(that, proto) {
@@ -166,9 +164,16 @@ function GetStyle(pro0, pro1) {
         return proto == "min" ? (width < height ? width : height) : (width < height ? height : width)
     }
 
-    function Getsytmp1(that){
-    	return !~pro0.indexOf(":") ? window.getComputedStyle(that).getPropertyValue(pro0) : window.getComputedStyle(that, pro0).getPropertyValue(pro1);
+    function Getsytmp1(that) {
+        return !~pro0.indexOf(":") ? window.getComputedStyle(that).getPropertyValue(pro0) : window.getComputedStyle(that, pro0).getPropertyValue(pro1);
     }
+}
+
+class Getsies extends Array {
+    constructor(_A0) {
+        AOM.prototype(_A0) == "Array" ? super(..._A0) : super(_A0)
+    }
+
 }
 
 /**
@@ -377,9 +382,11 @@ function Optionalys(...args) {
 
 //-Add Elements--------------
 window.addEventListener("load", () => {
-    let sfcss = document.createElement('style');
+    let sfcss = document.createElement('link');
     sfcss.setAttribute("id", "SeifuncCSS");
-    sfcss.textContent = '@import "./Seifuncs/sfcss.css";';
+    sfcss.setAttribute("rel", "stylesheet");
+    sfcss.setAttribute("type", "text/css");
+    sfcss.setAttribute("href", "./Seifuncs/sfcss.css");
     Derie("script")[0].parentNode.insertBefore(sfcss, Derie("script")[0].nextSibling);
     //document.querySelectorAll('script[src="index.js"]')
 
@@ -398,7 +405,7 @@ note.cset("OmitFnList", "Array", "Base", "Abbr");
 BookTag("note", "OmitFnList")
 OmitFunctionName("OmitFunctionName", "OmitFn")
 OmitFn("DeriveElement", "Derie")
-OmitFn("GetStyle","Getsy")
+OmitFn("GetStyle", "Getsy")
 
 function OmitFunctionName(base, abbr, admit) {
     if (!admit) {
@@ -413,7 +420,7 @@ function OmitFunctionName(base, abbr, admit) {
 //TextContain(elem, 50);
 
 function TextSize(elem) {
-    
+
 }
 
 function Nomall(str) {
@@ -487,7 +494,7 @@ function px2rem(pix) { return pix / wundiw.Getsy("rem") }
 function rem2px(rem) { return rem * window.Getsy("rem") }
 
 //-Loaded--------------------
-console.log("Seifuncs ver.1.3.1 for JS was completely loaded.")
+console.log("Seifuncs ver.1.4.2 for JS was completely loaded.")
 if (/^(?=.*Chrome)(?!.*Edge)/.test(window.navigator.userAgent)) {
     console.log("%c %c Seifuncs for JS %c \n%c %c E-mail : Yakumo.Seizya@gmail.com \n%c %c Github : https://github.com/Seizya",
         "background-color:#165e83;border-bottom:solid #f0f 2px", "border-bottom:solid #f0f 2px", "", "background-color:#165e83", "", "background-color:#165e83", "")
