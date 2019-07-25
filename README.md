@@ -10,7 +10,7 @@ caution : Developper only think good for Seizya because they are Seizya alone.
 
 # Contents
 Do `SeHelp( command )`
-## Command 
+### Command 
 Blank : Func List
 Func Name : Explanatory text
   
@@ -22,23 +22,23 @@ If you want to use it for commercial purposes, please contact my e-mail.
 Send e-mail or pullquest
 
 # Japanese Readme
-## Seifuncs
+### Seifuncs
 Seifuncs は, Programming を簡単にすることを目的に Seizya が製作した Library です。
 
-## 使用方法
+### 使用方法
 Download した Folder を Seifuncs と変更して, 使用予定の HTML file と同世代の Folder に解凍してください。
 `<script src="./Seifuncs/sfjs.js"></script>`を他のJS関数より早く読み込むことで, 動作します。
 
-## 内容
+### 内容
 `SeHelp( Command )`を実行してください。
-### Command
+#### Command
 空白 : 関数List
 関数名 : 説明
 
-## License 
+### License 
  非商用目的に限り, 使用・改変・再配布(`Developper : Seizya`の表記必須,最後8行の改変のないもの限定)・その他の行為(日本の法に抵触しない範囲に限る)を 自由とします。
  商用目的で使用する場合は, Seizya の E-mail へ連絡・承諾 を必要とします。
 
- # Caution 
+# Caution 
  Developper never like `IE` and `like IE`.
  So, they aren't  supported at all.
