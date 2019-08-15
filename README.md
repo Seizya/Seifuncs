@@ -1,6 +1,6 @@
 # Seifuncs
 This is usefull corection of JavaScript Function.  
-caution : Developper only think good for Seizya because they are Seizya alone.  
+*caution* : Developper only think good for Seizya because they are Seizya alone.  
 
 # How use
 0. Download this.
@@ -37,7 +37,7 @@ Download した Folder を Seifuncs と改名して, 使用予定の HTML file �
 
 ### License 
  非商用目的に限り, 使用・改変・再配布(`Developper : Seizya`の表記必須,最後8行の改変のないもの限定)・その他の行為(日本の法に抵触しない範囲に限る)を 自由とします。  
- 商用目的で使用する場合は, Seizya の E-mail へ連絡・承諾 を必要とします。
+ 商用目的で使用する場合は, Seizya への連絡・承諾 を必要とします。
 
 # Caution 
  Developper never like `IE` and `like IE`.  
