@@ -1,5 +1,5 @@
 ﻿/**It's JavaScript Function Library.
- * Seifuncs_List() : View Function List on console.
+ * SeHelp() : View Function List on console.
  * 
  * Made by Seizya.
  * Special thanks : omasakun
@@ -178,6 +178,8 @@ class Getsies extends Array {
  */
 function SeChainArgument(fn) { return (tmp = args => arg => arg ? tmp([...args, ...arg]) : fn(...args))([]) }
 function MsChainFundtion(obj) { return fn => fn ? MsCF(fn(obj)) : obj }
+
+//- Confing -----------------
 
 //- Data --------------------
 //共通UI
@@ -374,17 +376,6 @@ function Optionalys(...args) {
     //_T0 = new Array(args[1].filter(_E0 => new RegExp(_E0).test(args[0]))).flat();
 }
 
-//-Add Elements--------------
-DeriveElement("script")[0].addEventListener("load", () => {
-    let sfcss = document.createElement('link');
-    sfcss.setAttribute("id", "SeifuncCSS");
-    sfcss.setAttribute("rel", "stylesheet");
-    sfcss.setAttribute("type", "text/css");
-    sfcss.setAttribute("href", "./Seifuncs/sfcss.css");
-    Derie("script")[0].parentNode.insertBefore(sfcss, Derie("script")[0].nextSibling);
-    //document.querySelectorAll('script[src="index.js"]')
-})
-
 //-Calculation---------------
 note.cset("OmitFnList", "Map");
 BookTag("note", "OmitFnList")
@@ -502,11 +493,11 @@ function Funcrand(graph, xmin, xmax, ymin, ymax) {
 
 function RandFn(now, min, max) { return now >= Random(min, max) ? true : false; }
 //-Loaded--------------------
-console.log("Seifuncs ver.1.4.2 for JS was completely loaded.")
+console.log("Seifuncs ver.1.5.0 for JS was completely loaded.")
 if (/^(?=.*Chrome)(?!.*Edge)/.test(window.navigator.userAgent)) {
-    console.log("%c %c Seifuncs for JS %c \n%c %c E-mail : Yakumo.Seizya@gmail.com \n%c %c Github : https://github.com/Seizya",
-        "background-color:#165e83;border-bottom:solid #f0f 2px", "border-bottom:solid #f0f 2px", "", "background-color:#165e83", "", "background-color:#165e83", "")
+    console.log("%c %c Seifuncs for JS %c \n%c %c Developper : Seizya \n%c %c E-mail : Yakumo.Seizya@gmail.com \n%c %c Github : https://github.com/Seizya",
+        "background-color:#165e83;border-bottom:solid #f0f 2px", "border-bottom:solid #f0f 2px", "", "background-color:#165e83", "", "background-color:#165e83", "", "background-color:#165e83", "")
 } else {
-    console.log("Seifuncs for JS \nE-mail : Yakumo.Seizya@gmail.com \nGithub : https://github.com/Seizya")
+    console.log("Seifuncs for JS \nDevelopper : Seizya \nE-mail : Yakumo.Seizya@gmail.com \nGithub : https://github.com/Seizya")
 }
 if (/MSIE|Trident|Edge/.test(window.navigator.userAgent)) console.warn("The use of Seifuncs in IE is not envisaged at all. \nPlease immediately stop using Seifucs and use another browser. \nThere are no plans to support IE.")

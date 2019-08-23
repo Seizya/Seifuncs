@@ -6,7 +6,7 @@ This is usefull corection of JavaScript Function.
 0. Download this.
 1. Put and unzip downloaded folder into your folder you want use.
 2. Rename Folder "Seifuncs"
-3. Write `<script src="./Seifuncs/sfjs.js"></script>` to will be loaded before others JS Funcs.
+3. Write `<script src="./Seifuncs/trigger.js"></script>` to will be loaded before others JS Funcs.
 
 # Contents
 Do `SeHelp( command )`
@@ -17,6 +17,7 @@ Func Name : Explanatory text
 # license
 It is basically free only for redistribution and use other than commercial purpose use.  
 If you want to use it for commercial purposes, please contact my e-mail.
+Do not modify the last 8 lines.
 
 # Bug report
 Send e-mail or pullquest
@@ -26,8 +27,8 @@ Send e-mail or pullquest
 Seifuncs は, Programming を簡単にすることを目的に Seizya が製作した Library です。
 
 ### 使用方法
-Download した Folder を Seifuncs と改名して, 使用予定の HTML file と同世代の Folder に解凍してください。  
-`<script src="./Seifuncs/sfjs.js"></script>`を他のJS関数より早く読み込むことで, 動作します。
+Download した Folder を Seifuncs と改名して, 使用予定の HTMLfile と同世代の Folder に解凍してください。  
+`<script src="./Seifuncs/trigger.js"></script>`を他のJS関数より早く読み込むことで, 動作します。
 
 ### 内容
 `SeHelp( Command )`を実行してください。
