@@ -1,5 +1,6 @@
 ﻿/**It's JavaScript Function Library.
- * SeHelp() : View Function List on console.
+ * SeHelp() : Get Function List or help in rough english.
+ * SeHelpJp() : 日本語での関数リストや, ヘルプを得られます。(後日実装予定)
  * 
  * Made by Seizya.
  * Special thanks : omasakun
@@ -177,7 +178,7 @@ class Getsies extends Array {
  * MsCF <Msy Chain Function> MsCF(obj)(fn0)...(fnn) => arg(obj) ... argn(arg(obj));
  */
 function SeChainArgument(fn) { return (tmp = args => arg => arg ? tmp([...args, ...arg]) : fn(...args))([]) }
-function MsChainFundtion(obj) { return fn => fn ? MsCF(fn(obj)) : obj }
+function MsChainFunction(obj) { return fn => fn ? MsCF(fn(obj)) : obj }
 
 //- Confing -----------------
 
@@ -339,8 +340,7 @@ class Publication { }
 let note = new Note()
 
 function BookTag(book, page) { window[page] = new Function(`return ${book}.self.get("${page}")`)() }
-const NoteBookTag = true;
-DeriveElement("script")[0].addEventListener('load', () => { if (NoteBookTag) note.self.forEach((_E0, _E1) => BookTag("note", _E1)) })
+DeriveElement("#SfMain")[0].addEventListener('load', () => { if (sfuserconfig.noteBooktag) note.self.forEach((_E0, _E1) => BookTag("note", _E1)) })
 
 note.cset("KeyHold", "map");
 note.cset("KeyCount", "map");
@@ -358,14 +358,14 @@ const Aom = {
     A: {
         flat: function (...args) { return (A2A = _A0 => _A0.flatMap(_E0 => Array.isArray(_E0) ? A2A(_E0) : _E0))(args) },
         unDup: function  /**Duplicate */(array, back) { return array.filter((x, i, self) => (back ? self.lastIndexOf(x) : self.indexOf(x)) === i); },
-        from: function (_A0) { return Aom.prototype(_A0) == "Array" ? _A0 : [_A0] }
+        // from: function (_A0) { return Aom.prototype(_A0) == "Array" ? _A0 : [_A0] }
     },
     O: {
         is: function (o) { return (o instanceof Object && !(o instanceof Array)) ? true : false; },
         forEach: function (obj, fn) { Object.keys(obj).forEach(key => { let val = this[key]; fn(val); }, obj) }
     },
     M: {},
-    E: { from: function (_A0) { return Aom.A.from(_A0).flatMap(_E0 => _E0 instanceof HTMLElement ? [_E0] : Derie(_E0)) } },
+    E: { from: function (_A0) { return _A0 instanceof HTMLElement ? [_A0] : Derie(_A0) } },
     prototype: function (_A0) { return _A0.constructor.name; }
 }
 
@@ -383,9 +383,9 @@ OmitFunctionName("OmitFunctionName", "OmitFn")
 OmitFn("DeriveElement", "Derie")
 OmitFn("GetStyle", "Getsy")
 
-function OmitFunctionName(base, abbr, Prioritize) {
-    if (Prioritize) { OmitFnList.set(abbr, [base]) } else { OmitFnList.set(abbr, OmitFnList.get(abbr) ? [...OmitFnList.get(abbr), base] : [base]) }
-    window[abbr] = new Function("...arg", `return ${Array.from(OmitFnList.entries()).filter(_E0 => _E0[1].some(_E1 => _E1 == base))[0][1][0]}(...arg)`);
+function OmitFunctionName(base, abbr, Postscript) {
+    if (!Postscript) { OmitFnList.set(base, [abbr]) } else { OmitFnList.set(base, OmitFnList.get(base) ? [...OmitFnList.get(base), abbr] : [abbr]) }
+    window[abbr] = new Function("...arg", `return ${Array.from(OmitFnList.entries()).filter(_E0 => _E0[1].some(_E1 => _E1 == abbr))[0][0]}(...arg)`);
 }
 
 // 要改良 言語識別効率化
@@ -411,11 +411,11 @@ function TextSize(elem, Wper, Hper, redo) {
         Derie("body")[0].removeChild(Derie("#get_text_size")[0]);
     } else if (Optionalys(Wper, "add", false)) {
         elem.classList.add("text_contain")
-        elem.addEventListener("resize",TextSize)
+        elem.addEventListener("resize", TextSize)
     } else if (Optionalys(Wper, "remove", false)) {
         elem.classList.remove("text_contain")
-        elem.removeEventListener("resize",TextSize)
-    }else {
+        elem.removeEventListener("resize", TextSize)
+    } else {
         Wper = Wper === null ? TextSizeList.get(elem)["width"] : Wper;
         Hper = Hper === null ? TextSizeList.get(elem)["height"] : (Hper === undefined && redo ? Wper : Hper);
         // Wper = Wper === undefined ? Hper : Wper;
@@ -436,7 +436,7 @@ function zeroPadding(num, dig) {
     const AddZero = (_num, _dig) => _num.length < (_num.indexOf(".") == -1 ? _dig : _dig + 1) ? AddZero("0" + _num, _dig) : _num;
     if (String(dig).indexOf(".") == -1) {
         if (String(num).length < (String(num).indexOf(".") == -1 ? dig : dig + 1)) {
-            return AddZero(String(num), (String(num).indexOf(".") == -1 ? dig : dig + 1));
+            return AddZero(String(num), dig/**(String(num).indexOf(".") == -1 ? dig : dig + 1)*/);
         } else {
             throw new Error("Digit must be bigger than digit of number")
         }
@@ -458,24 +458,20 @@ function rewindow(toww, towh) {
     }
 }
 
-let didTaskswork = false;
+let didTaskswork = sfuserconfig.TaskWork;
 note.cset("TasksList", "Array", "If", "Fn", "Id")
 
 const Tasks = {
     add: function (equa, fn, id) { TasksList.cset(equa, fn, (id ? id : undefined)) },
-    remove: function (id) { TasksList.forEach((_E0, _E1, _E2) => { if (_E0["Id"] == id) _E2.splice(_E1, 1) }) }
+    remove: function (id) { TasksList.forEach((_E0, _E1, _E2) => { if (_E0["Id"] == id) _E2.splice(_E1, 1) }) },
+    start: () => didTaskswork = true,
+    stop: () => didTaskswork = false,
+    call: () => {
+        TasksList.forEach(_E0 => { new Function(`if (${_E0["If"]}) ${_E0["Fn"]}()`)() })
+        if (didTadwork) requestAnimationFrame(arguments.callee);
+    }
 }
-
-function Tasksstart() { didTaskswork = true; }
-
-function Tasksstop() { didTaskswork = false; }
-
-function Taskscall() {
-    TasksList.forEach(_E0 => { new Function(`if (${_E0["If"]}) ${_E0["Fn"]}()`)() })
-    if (didTadwork) requestAnimationFrame(arguments.callee);
-}
-
-// Taskscall()
+// Tasks.call()
 
 function FuncProgeny(_E0, fn) {
     (Array.isArray(_E0) ? _E0 : Array.from(_E0)).flatMap(_E1 => _E1 instanceof HTMLElement ? _E1 : (document.querySelectorAll(_E1).length == 0 ? undefined : Array.from(document.querySelectorAll(_E1)))).filter(_E1 => _E1 != undefined).forEach(_E1 => _E1.fn())
@@ -483,19 +479,26 @@ function FuncProgeny(_E0, fn) {
 }
 
 //-Item Function-------------
-function Random(min, max) { return Math.floor(Math.random() * (max - min) + min) }
+function Random(min, max, digit) { if (!digit) digit = 0; return (Math.random() * (max - min) + min).toFixed(digit) - 0 }
 
-function Funcrand(graph, xmin, xmax, ymin, ymax) {
+/**A revised version will be released soon.
+ * 
+ * function Funcrand(graph, xmin, xmax, ymin, ymax) {
     let [xx, yy] = [Random(xmin, xmax), Random(ymin, ymax)]
     let x = xx
     return new Function(`return ${graph}`)() >= yy ? yy : Funcrand(graph, xmin, xmax, ymin, ymax);
 }
 
-function RandFn(now, min, max) { return now >= Random(min, max) ? true : false; }
+function RandFn(now, min, max) { return now >= Random(min, max) ? true : false; }*/
+
+function sfHelp(command) {
+    if (!command) { return sfhelpData.map(_E0 => _E0.name) }
+    else { return sfhelpData.filter(_E0 => _E0.name == command)[0].explanatory }
+}
 //-Loaded--------------------
 console.log("Seifuncs ver.1.5.0 for JS was completely loaded.")
 if (/^(?=.*Chrome)(?!.*Edge)/.test(window.navigator.userAgent)) {
-    console.log("%c %c Seifuncs for JS %c \n%c %c Developper : Seizya \n%c %c E-mail : Yakumo.Seizya@gmail.com \n%c %c Github : https://github.com/Seizya",
+    console.log("%c %c Seifuncs for JS %c \n%c %c Developper : Seizya \n%c %c Github : https://github.com/Seizya \n%c %c Special Thanks : omasakun (https://github.com/omasakun)",
         "background-color:#165e83;border-bottom:solid #f0f 2px", "border-bottom:solid #f0f 2px", "", "background-color:#165e83", "", "background-color:#165e83", "", "background-color:#165e83", "")
 } else {
     console.log("Seifuncs for JS \nDevelopper : Seizya \nE-mail : Yakumo.Seizya@gmail.com \nGithub : https://github.com/Seizya")
