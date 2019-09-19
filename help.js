@@ -24,9 +24,12 @@ const sfhelpData = [
 		name: "Getsy",
 		explanatory: "Standard shorthand for GetStyle."
 	}, {
+<<<<<<< HEAD
 		name: "potopx",
 		explanatory:"translate point into pixel. Units affected by the parent element cannot be used."
 	}, {
+=======
+>>>>>>> ffce3454542138c8d67fcadf4e3b73f39878d678
 		name: "SeChainArgument",
 		explanatory: "You can put arguments into some round brackets.\n\
 		Tmp(a)(b)(c)() equal Tmp(a,b,c). this must be put '()'."
