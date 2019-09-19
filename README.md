@@ -10,6 +10,7 @@ This is usefull corection of JavaScript Function.
 
 # Contents
 Do `SeHelp( command )`
+I am not an English speaker, so I use translation software. So there are many incorrect translations and grammars. Maybe you will come back.
 ### Command 
 Blank : Func List.  
 Func Name : Explanatory text
@@ -30,8 +31,8 @@ Seifuncs は, Programming を簡単にすることを目的に Seizya が製作�
 Download した Folder を Seifuncs と改名して, 使用予定の HTMLfile と同世代の Folder に解凍してください。  
 `<script src="./Seifuncs/trigger.js"></script>`を他のJS関数より早く読み込むことで, 動作します。
 
-### 内容
-`SeHelp( Command )`を実行してください。
+### 内容 (後日実装予定)
+`SeHelpJp( Command )`を実行してください。
 #### Command
 空白 : 関数List  
 関数名 : 説明
