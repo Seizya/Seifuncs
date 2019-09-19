@@ -462,17 +462,15 @@ function zeroPadding(num, dig) {
 //Puppeteer
 let sfwindow;
 function rewindow(width, height, size) {
-    console.log(width)
     if (width == "close") { sfwindow = undefined; return false }
     if (Aom.prototype(width) != Aom.prototype(height)) { console.log("The first and second arguments must have the same type."); return false }
     _F0 = () => {
         sfwindow = window.open(location.href, "sfwindow", `width=${Aom.prototype(width) == "Number" ? size ? potopx(size) + "px" : "300px" : width},\
                 height=${Aom.prototype(height) == "Number" ? size ? potopx(width) * height / width + "px" : 300 * height / width : height}`);
-        let _T0 = setInterval(() => { if (sfwindow.closed) { clearInterval(_T0); rewindow("close") } }, 1000);
+        let _T0 = setInterval(() => { if (!sfwindow || sfwindow.closed) { clearInterval(_T0); rewindow("close") } }, 1000);
     }
-    try {
-        if (!sfwindow || sfwindow.closed) { _F0() } else { console.log("Aa") }
-    } catch{ _F0(); }
+    try { if (sfwindow && !sfwindow.closed) sfwindow.close(); } catch{ }
+    _F0()
 }
 
 let didTaskswork = sfuserconfig.TaskWork;

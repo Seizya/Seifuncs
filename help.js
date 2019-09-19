@@ -24,12 +24,9 @@ const sfhelpData = [
 		name: "Getsy",
 		explanatory: "Standard shorthand for GetStyle."
 	}, {
-<<<<<<< HEAD
 		name: "potopx",
 		explanatory:"translate point into pixel. Units affected by the parent element cannot be used."
 	}, {
-=======
->>>>>>> ffce3454542138c8d67fcadf4e3b73f39878d678
 		name: "SeChainArgument",
 		explanatory: "You can put arguments into some round brackets.\n\
 		Tmp(a)(b)(c)() equal Tmp(a,b,c). this must be put '()'."
@@ -94,7 +91,8 @@ const sfhelpData = [
 		This will be addressed in the near future."
 	}, {
 		name: "rewindow",
-		explanatory: ""
+		explanatory: "A function that opens a child window with the desired size and ratio. The first argument is x size and the second argument is y size.\n\
+		 If a number is assigned, it indicates the ratio, and the length in the x direction can be specified with the third argument."
 	}, {
 		name: "Tasks",
 		explanatory: "An object with functions related to automatic Tasks. A function is automatically executed when a specific situation occurs, but it is impossible to give an argument to the function. Use variables.\n\
