@@ -171,13 +171,13 @@ class Getsies extends Array {
 
 function potopx(A0) {
     let rems = document.createElement('span');
-    rems.setAttribute("id", "ptp_get");
+    rems.setAttribute("class", "sfget_ew");
     rems.style.width = A0;
     Derie("body")[0].insertBefore(rems, Derie("body")[0].firstChild);
 
-    let _T0 = parseFloat(Getsy(Derie("#ptp_get")[0]).compute("width"));
+    let _T0 = parseFloat(Getsy(Derie(".sfget_ew")[0]).compute("width"));
 
-    Derie("body")[0].removeChild(Derie("#ptp_get")[0]);
+    Derie("body")[0].removeChild(Derie(".sfget_ew")[0]);
     return _T0;
 }
 
@@ -408,20 +408,20 @@ function TextSize(elem, Wper, Hper, redo) {
     if (!TextSizeList.has(elem)) TextSizeList.cset(elem, 100, 100)
     if (Wper === undefined && Wper !== null) {
         let rems = document.createElement('span');
-        rems.setAttribute("id", "get_text_size");
+        rems.setAttribute("class", "sfget_ew");
         Derie("body")[0].insertBefore(rems, Derie("body")[0].firstChild);
 
         elem = elem || elem.target;
-        Derie("#get_text_size")[0].innerText = elem.innerText;
-        Derie("#get_text_size")[0].style.fontSize = Getsy(elem).compute("font-size")[0]
-        Derie("#get_text_size")[0].style.writingMode = Getsy(elem).compute("writing-mode")[0]
-        Derie("#get_text_size")[0].style.lineHeight = Getsy(elem).compute("line-height")[0]
-        let [_TH, _TW] = [Getsy(Derie("#get_text_size")[0]).compute("height")[0], Getsy(Derie("#get_text_size")[0]).compute("width")[0]]
+        Derie(".sfget_ew")[0].innerText = elem.innerText;
+        Derie(".sfget_ew")[0].style.fontSize = Getsy(elem).compute("font-size")[0]
+        Derie(".sfget_ew")[0].style.writingMode = Getsy(elem).compute("writing-mode")[0]
+        Derie(".sfget_ew")[0].style.lineHeight = Getsy(elem).compute("line-height")[0]
+        let [_TH, _TW] = [Getsy(Derie(".sfget_ew")[0]).compute("height")[0], Getsy(Derie(".sfget_ew")[0]).compute("width")[0]]
         elem.style.fontSize = (parseInt(Getsy(elem).compute("width")[0]) - parseInt(_TW) <= parseInt(Getsy(elem).compute("height")[0]) - parseInt(_TH)
             ? parseInt(Getsy(elem).compute("width")[0]) / parseInt(_TW) * parseInt(Getsy(elem).compute("font-size")[0]) * Number(TextSizeList.get(Aom.E.from(elem)[0])["width"]) * 0.01
             : parseInt(Getsy(elem).compute("height")[0]) / parseInt(_TH) * parseInt(Getsy(elem).compute("font-size")[0]) * Number(TextSizeList.get(Aom.E.from(elem)[0])["height"]) * 0.01) + "px"
 
-        Derie("body")[0].removeChild(Derie("#get_text_size")[0]);
+        Derie("body")[0].removeChild(Derie(".sfget_ew")[0]);
     } else if (Optionalys(Wper, "add", false)) {
         elem.classList.add("text_contain")
         elem.addEventListener("resize", TextSize)
@@ -514,9 +514,9 @@ function sfHelp(command) {
 //-Loaded--------------------
 console.log("Seifuncs ver.1.5.0 for JS was completely loaded.")
 if (/^(?=.*Chrome)(?!.*Edge)/.test(window.navigator.userAgent)) {
-    console.log("%c %c Seifuncs for JS %c \n%c %c Developper : Seizya \n%c %c Github : https://github.com/Seizya \n%c %c Special Thanks : omasakun (https://github.com/omasakun)",
-        "background-color:#165e83;border-bottom:solid #f0f 2px", "border-bottom:solid #f0f 2px", "", "background-color:#165e83", "", "background-color:#165e83", "", "background-color:#165e83", "")
+    console.log("%c %c Seifuncs for JS %c \n%c %c Developer : Seizya \n%c %c GitHub : https://github.com/Seizya \n%c %c Special Thanks : omasakun (github.com/omasakun)",
+        "background-color:#165e83;border-bottom:solid #f0f 2px", "border-bottom:solid #f0f 2px", "", "background-color:#165e83", "", "background-color:#165e83", "", "background-color:#165e83", "color: transparent")
 } else {
-    console.log("Seifuncs for JS \nDevelopper : Seizya \nE-mail : Yakumo.Seizya@gmail.com \nGithub : https://github.com/Seizya")
+    console.log("Seifuncs for JS \nDeveloper : Seizya \nGitHub : https://github.com/Seizya")
 }
 if (/MSIE|Trident|Edge/.test(window.navigator.userAgent)) console.warn("The use of Seifuncs in IE is not envisaged at all. \nPlease immediately stop using Seifucs and use another browser. \nThere are no plans to support IE.")
