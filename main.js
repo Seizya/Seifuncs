@@ -172,7 +172,7 @@ class Getsies extends Array {
 function potopx(A0) {
     let rems = document.createElement('span');
     rems.setAttribute("class", "sfget_ew");
-    rems.style.width = A0;
+    rems.style.width = Aom.prototype(A0) == "Number" ? A0 + "px" : A0;
     Derie("body")[0].insertBefore(rems, Derie("body")[0].firstChild);
 
     let _T0 = parseFloat(Getsy(Derie(".sfget_ew")[0]).compute("width"));
@@ -466,7 +466,7 @@ function rewindow(width, height, size) {
     if (Aom.prototype(width) != Aom.prototype(height)) { console.log("The first and second arguments must have the same type."); return false }
     _F0 = () => {
         sfwindow = window.open(location.href, "sfwindow", `width=${Aom.prototype(width) == "Number" ? size ? potopx(size) + "px" : "300px" : width},\
-                height=${Aom.prototype(height) == "Number" ? size ? potopx(width) * height / width + "px" : 300 * height / width : height}`);
+                height=${Aom.prototype(height) == "Number" ? size ? potopx(size) * height / width + "px" : 300 * height / width : height}`);
         let _T0 = setInterval(() => { if (!sfwindow || sfwindow.closed) { clearInterval(_T0); rewindow("close") } }, 1000);
     }
     try { if (sfwindow && !sfwindow.closed) sfwindow.close(); } catch{ }
