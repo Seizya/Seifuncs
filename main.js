@@ -416,7 +416,8 @@ function TextSize(elem, Wper, Hper, redo) {
         Derie(".sfget_ew")[0].style.fontSize = Getsy(elem).compute("font-size")[0]
         Derie(".sfget_ew")[0].style.writingMode = Getsy(elem).compute("writing-mode")[0]
         Derie(".sfget_ew")[0].style.lineHeight = Getsy(elem).compute("line-height")[0]
-        let [_TH, _TW] = [Getsy(Derie(".sfget_ew")[0]).compute("height")[0], Getsy(Derie(".sfget_ew")[0]).compute("width")[0]]
+        let [_TH, _TW] = [Derie(".sfget_ew")[0].offsetHeight, Derie(".sfget_ew")[0].offsetWidth]
+        // let [_TH, _TW] = [Getsy(Derie(".sfget_ew")[0]).compute("height")[0], Getsy(Derie(".sfget_ew")[0]).compute("width")[0]]
         elem.style.fontSize = (parseInt(Getsy(elem).compute("width")[0]) - parseInt(_TW) <= parseInt(Getsy(elem).compute("height")[0]) - parseInt(_TH)
             ? parseInt(Getsy(elem).compute("width")[0]) / parseInt(_TW) * parseInt(Getsy(elem).compute("font-size")[0]) * Number(TextSizeList.get(Aom.E.from(elem)[0])["width"]) * 0.01
             : parseInt(Getsy(elem).compute("height")[0]) / parseInt(_TH) * parseInt(Getsy(elem).compute("font-size")[0]) * Number(TextSizeList.get(Aom.E.from(elem)[0])["height"]) * 0.01) + "px"
