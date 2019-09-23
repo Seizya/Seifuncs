@@ -383,7 +383,7 @@ const Aom = {
 }
 
 function Optionalys(...args) {
-    if (args.length == 0 || args[0] == undefined) return false;
+    if (args.length == 0 || args[0] == undefined || args.some(_E0 => typeof _E0 == "number")) return false;
     args = [args[0], typeof args.slice(-1)[0] == "boolean" ? args.slice(1, -1) : args.slice(1), args.slice(-1)[0] == false ? false : true]
     return args[1].concat().filter(_E0 => args[2] ? new RegExp(_E0).test(args[0]) : new RegExp(_E0.toLowerCase()).test(args[0].toLowerCase())).length > 0 ? true : false;
     //_T0 = new Array(args[1].filter(_E0 => new RegExp(_E0).test(args[0]))).flat();
@@ -431,10 +431,10 @@ function TextSize(elem, Wper, Hper, redo) {
         elem.removeEventListener("resize", TextSize)
     } else {
         Wper = Wper === null ? TextSizeList.get(elem)["width"] : Wper;
-        Hper = Hper === null ? TextSizeList.get(elem)["height"] : (Hper === undefined && redo ? Wper : Hper);
+        Hper = Hper === null ? TextSizeList.get(elem)["height"] : (Hper === undefined ? Wper : Hper);
         // Wper = Wper === undefined ? Hper : Wper;
         // Wper = Wper === null ? (!TextSizeList.has(Aom.E.from(elem)[0] || !TextSizeList.get(Aom.E.from(elem)[0]).hasOwnProperty("width")) ? Hper : TextSizeList.get(Aom.E.from(elem)[0])["width"]) : Wper;
-        TextSizeList.cset(elem, Hper, Wper)
+        TextSizeList.cset(elem, Wper, Hper)
         if (redo) TextSize(elem);
     }
 }
