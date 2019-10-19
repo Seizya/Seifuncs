@@ -299,7 +299,7 @@ class Docobj extends Object {
             super[property] = (() => {
                 let _T0 = new Object()
                 this.Base.forEach((_E0, _E1) => {
-                    _T0[_E0] = args[_E1];
+                    _T0[_E0] = super[property][_E0] && args[_E1] == null ? super[property][_E0] : args[_E1];
                 })
                 return _T0;
             })()
@@ -320,7 +320,7 @@ class Docmap extends Map {
             super.set(key, (() => {
                 let _T0 = new Object()
                 this.Base.forEach((_E0, _E1) => {
-                    _T0[_E0] = args[_E1];
+                    _T0[_E0] = super[property][_E0] && args[_E1] == null ? super[property][_E0] : args[_E1];
                 })
                 return _T0;
             })())
@@ -338,7 +338,7 @@ class Doclet {
             this.Doc = (() => {
                 let _T0 = new Object()
                 this.Base.forEach((_E0, _E1) => {
-                    _T0[_E0] = args[_E1];
+                    _T0[_E0] = super[property][_E0] && args[_E1] == null ? super[property][_E0] : args[_E1];
                 })
                 return _T0;
             })()
@@ -370,7 +370,8 @@ const Aom = {
     A: {
         flat: function (...args) { return (A2A = _A0 => _A0.flatMap(_E0 => Array.isArray(_E0) ? A2A(_E0) : _E0))(args) },
         unDup: function  /**Duplicate */(array, back) { return array.filter((x, i, self) => (back ? self.lastIndexOf(x) : self.indexOf(x)) === i); },
-        // from: function (_A0) { return Aom.prototype(_A0) == "Array" ? _A0 : [_A0] }
+        // from: function (_A0) { return Aom.prototype(_A0) == "Array" ? _A0 : [_A0] },
+        by: function (arr, end, _T0) { _T0 = _T0 || []; console.log(arr.splice(-1)); /**return arr[0] == end ? [..._T0, arr[0]] : Aom.A.by(arr.splice(-1), end, [..._T0,arr[0]])*/ }
     },
     O: {
         is: function (o) { return (o instanceof Object && !(o instanceof Array)) ? true : false; },
