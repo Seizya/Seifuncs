@@ -17,6 +17,13 @@ import-htmlタグを追加します。
 このスクリプトが読み込まれてから window の load イベントが発火するまでに追加された load イベントハンドラーは、importHTMLs 実行後に呼び出されます。
 
 */
+
+//Config---------------------
+const sfuserconfig = {
+    TaskWork: false
+};
+
+//Maindish-------------------
 (() => {
     var listeners = [];
     const tmp = window.addEventListener;
@@ -101,14 +108,14 @@ function CSS(elements) {
                 return undefined;
             });
             if (errors.reduce(function (pv, cv) {
-                return pv + (cv ? 1 : 0);
-            }, 0) == 0) return true;
+                    return pv + (cv ? 1 : 0);
+                }, 0) == 0) return true;
             throw errors;
         }
     });
 }
 
-function DeriveElement(id, option) {
+function DeriveElements(id, option) {
     return [id].flat().flatMap(_E0 => _E0 instanceof HTMLElement ? _E0 : CQgeny(_E0)).filter(_E0 => _E0)
 
     function CQgeny(_id) {
@@ -117,14 +124,14 @@ function DeriveElement(id, option) {
                 case undefined:
                     return Array.from(document.querySelectorAll(_id));
                 case "$class":
-                    return Aom.A.UnDup(Array.from(document.querySelectorAll(_id)).filter(_E0 => _E0.className != "").flatMap(_E0 => document.getElementsByClassName(_E0)));
+                    return Array.from(document.querySelectorAll(_id)).filter(_E0 => _E0.className != "").flatMap(_E0 => document.getElementsByClassName(_E0))[UnDup]();
                 case "$relative":
-                    return Aom.A.UnDup(Array.from(document.querySelectorAll(_id)).flatMap(_E0 => document.getElementsByTagName(_E0.tagName))).filter(_E0 => Array.from(document.querySelectorAll(_id)).some(_E1 => _E0.parentNode == _E1.parentNode))
+                    return Array.from(document.querySelectorAll(_id)).flatMap(_E0 => document.getElementsByTagName(_E0.tagName)).filter(_E0 => Array.from(document.querySelectorAll(_id))).some(_E1 => _E0.parentNode == _E1.parentNode)[UnDup]();
                 default:
                     return (function CQgeny(pare, arr) {
                         arr = [...arr, ...pare.slice().filter(_E0 => Array.from(document.querySelectorAll(_id)).some(_E1 => window.getComputedStyle(_E0).getPropertyValue(option) == window.getComputedStyle(_E1).getPropertyValue(option)))];
-                        return pare.filter(_E0 => _E0.hasChildNodes()).flatMap(_E1 => _E1.child).length != 0 ? CQgeny(pare, arr) : Aom.A.UnDup(arr)
-                    })(Array.from(document.getElementsByTagName("HTML")), [])
+                        return pare.filter(_E0 => _E0.hasChildNodes()).flatMap(_E1 => _E1.child).length != 0 ? CQgeny(pare, arr) : arr[unDup]();
+                    })(Array.from(document.getElementsByTagName("HTML")), []);
             }
         } else {
             return undefined;
@@ -132,27 +139,31 @@ function DeriveElement(id, option) {
     }
 }
 
-function GetStyle(_A0) { return new Getsies(_A0) }
+function GetStyle(_A0) {
+    return new Getsies(_A0);
+}
 
 class Getsies extends Array {
-    constructor(_A0) { Aom.prototype(_A0) == "Array" ? super(..._A0) : super(_A0) }
+    constructor(_A0) {
+        Aom(_A0) == "Array" ? super(..._A0) : super(_A0)
+    }
     compute(_A0, _A1) {
         return this.map(_E0 => {
             if (_E0 === window) {
-                if (Optionalys(_A0, "min", false)) {
+                if (_A0[comprise]("min")) {
                     return window.innerHeight < window.innerWidth ? window.innerHeight : window.innerWidth;
-                } else if (Optionalys(_A0, "max", false)) {
+                } else if (_A0[comprise]("max", false)) {
                     return window.innerHeight > window.innerWidth ? window.innerHeight : window.innerWidth;
-                } else if (Optionalys(_A0, "height", false)) {
+                } else if (_A0[comprise]("height", false)) {
                     return window.innerHeight;
-                } else if (Optionalys(_A0, "width", false)) {
+                } else if (_A0[comprise]("width", false)) {
                     return window.innerWidth;
-                } else if (Optionalys(_A0, "rem") && !Optionalys(point, "small", false)) {
+                } else if (_A0.includes("rem") && !point[comprise]("small", false)) {
                     return window.getComputedStyle(Derie("html")).getPropertyValue("font-size");
                 }
-            } else if (Optionalys(_A0, "min", false)) {
+            } else if (_A0[comprise]("min", false)) {
                 return Getsytmp(_E0, true)
-            } else if (Optionalys(_A0, "max", false)) {
+            } else if (_A0[comprise]("max", false)) {
                 return Getsytmp(_E0, false)
             } else {
                 return !~_A0.indexOf(":") ? window.getComputedStyle(_E0).getPropertyValue(_A0) : window.getComputedStyle(_E0, _A0).getPropertyValue(_A1);
@@ -166,13 +177,15 @@ class Getsies extends Array {
             return _Ato ? (width < height ? width : height) : (width < height ? height : width)
         }
     }
-    style(_A0) { return this.map(_E0 => _A0 ? new Function("_E1", `return _E1.style.${_A0}`)(_E0) : _E0.style) }
+    style(_A0) {
+        return this.map(_E0 => _A0 ? new Function("_E1", `return _E1.style.${_A0}`)(_E0) : _E0.style)
+    }
 }
 
 function potopx(A0) {
     let rems = document.createElement('span');
     rems.setAttribute("class", "sfget_ew");
-    rems.style.width = Aom.prototype(A0) == "Number" ? A0 + "px" : A0;
+    rems.style.width = Aom(A0) == "Number" ? A0 + "px" : A0;
     Derie("body")[0].insertBefore(rems, Derie("body")[0].firstChild);
 
     let _T0 = parseFloat(Getsy(Derie(".sfget_ew")[0]).compute("width"));
@@ -189,199 +202,221 @@ function potopx(A0) {
  * SeCA <Sei Chain Argument> SeCA(fn Name)(arg0)...(argn)() == fn(arg0,...,argn);
  * MsCF <Msy Chain Function> MsCF(obj)(fn0)...(fnn) => arg(obj) ... argn(arg(obj));
  */
-function SeChainArgument(fn) { return (tmp = args => arg => arg ? tmp([...args, ...arg]) : fn(...args))([]) }
-function MsChainFunction(obj) { return fn => fn ? MsCF(fn(obj)) : obj }
+function SfChainArguments(fn) {
+    return (tmp = args => arg => arg ? tmp([...args, ...arg]) : fn(...args))([])
+}
+
+function MsChainFunctions(obj) {
+    return fn => fn ? MsCF(fn(obj)) : obj
+}
 
 //- Confing -----------------
 
 //- Data --------------------
 //共通UI
-class Note {
+class Note extends Map {
     constructor() {
-        this.Page = new Map();
-        this.publication = new Publication();
+        super();
     }
-    cset(name, proto, ...args) {
-        if (this.Page.has(name)) console.warn(name + " is already written in this Note.")
-        this.Page.set(name, (() => {
-            if (Optionalys(proto, "arr", false)) {
-                return args.length > 0 ? new Docarr(args) : new Docarr();
-            } else if (Optionalys(proto, "obj", false)) {
-                return args.length > 0 ? new Docobj(args) : new Docobj();
-            } else if (Optionalys(proto, "map", false)) {
-                return args.length > 0 ? new Docmap(args) : new Docmap();
-            } else {
-                return args.length > 0 ? new Doclet(args) : new Doclet();
+    cset(name, proto) {
+        super.set(name, (() => {
+            switch (proto) {
+                case Array:
+                    return new Docarr()
+                case Object:
+                    return new Docobj()
+                case Map:
+                    return new Docmap()
+                default:
+                    return new Doclet()
             }
         })())
+        return super.get(name);
     }
-    admit(...args) {
-        if (!this.Page.has(name)) this.cset(...args);
+    aset(name, arg) {
+        if (super.has(name)) console.warn(name + " is already written in this Note.")
+        if (!super.has(name)) return this.cset(name, arg);
     }
-    remove(name) {
-        this.Page.delete(name);
-    }
-    clear() {
-        this.Page.clear()
-    }
-    get self() {
-        return this.Page;
-    }
-    get length() {
-        return this.Page.size;
+    set join(newNote) {
+        newNote.forEach((value, key) => {
+            if (!super.has(key)) super.set(key, value)
+        })
+        return this;
     }
     set assign(newNote) {
-        newNote.forEach((value, key) => { if (!this.Page.has(key)) this.Page.set(key, value) })
-    }
-    set marge(newNote) {
-        newNote.forEach((value, key) => this.Page.set(key, value))
+        new Note.forEach((value, key) => super.set(key, value))
+        return this;
     }
 }
 
 class Docarr extends Array {
-    constructor(...args) {
+    constructor(args) {
         super()
-        this.__proto__.Base = args.length == 0 ? undefined : args.flat();
     }
-    cset(...args) {
-        if (this.Base) {
-            super.push((() => {
-                let _T0 = new Object()
-                this.Base.forEach((_E0, _E1) => {
-                    _T0[_E0] = args[_E1];
-                })
-                return _T0;
-            })())
-        } else {
-            super.push(...args)
-        }
+    cset(arg) {
+        super.push(arg)
+        return this;
     }
-    admit(...args) {
-        if (this.Base) {
-            let _t0 = (() => {
-                let _T0 = new Object()
-                this.Base.forEach((_E0, _E1) => {
-                    _T0[_E0] = args[_E1];
-                })
-                return _T0;
-            })()
-            if (!super.includes(_t0)) super.push(_t0)
-        } else {
-            args.forEach(_E0 => { if (!args.includes(_E0)) super.push(_E0) })
-        }
+    aset(arg) {
+        if (!arg.includes(arg)) super.push(arg)
     }
-    remove(...args) {
-        if (this.Base) {
-            super.forEach((_E0, _E1) => {
-                if (_E0 == (() => {
-                    let _T0 = new Object()
-                    this.Base.forEach((_E2, _E3) => {
-                        _T0[_E2] = args[_E3];
-                    })
-                    return _T0;
-                })()) super.splice(_E1, 1)
-            })
-        } else {
-            args.forEach((_E0, _E1) => {
-                if (super.some(_E2 => _E2 = _E0)) super.splice(_E1, 1)
-            })
-        }
+    remove(arg) {
+        super.forEach((_E0, _E1) => {
+            if (_E0 == arg) super.splice(_E1, 1)
+        })
     }
 }
 
 class Docobj extends Object {
-    constructor(...args) {
+    constructor() {
         super()
-        this.__proto__.Base = args.length == 0 ? undefined : args.flat();
     }
-    cset(property, ...args) {
-        if (this.Base) {
-            super[property] = (() => {
-                let _T0 = new Object()
-                this.Base.forEach((_E0, _E1) => {
-                    _T0[_E0] = super[property][_E0] && args[_E1] == null ? super[property][_E0] : args[_E1];
-                })
-                return _T0;
-            })()
-        } else {
-            super[property] = args[0]
-        }
+    cset(property, arg) {
+        super[property] = arg;
+        return this;
     }
-    admit(property, ...args) { super.forEach((_E0, _E1) => { if (_E1 != property) super.cset(property, ...args) }) }
+    aset(property, arg) {
+        Object.keys(this).forEach((_E0) => {
+            if (_E0 != property) super.cset(property, arg)
+        })
+    }
 }
 
 class Docmap extends Map {
-    constructor(...args) {
+    constructor() {
         super()
-        this.__proto__.Base = args.length == 0 ? undefined : args.flat();
     }
-    cset(key, ...args) {
-        if (this.Base) {
-            super.set(key, (() => {
-                let _T0 = new Object()
-                this.Base.forEach((_E0, _E1) => {
-                    _T0[_E0] = super[property][_E0] && args[_E1] == null ? super[property][_E0] : args[_E1];
-                })
-                return _T0;
-            })())
-        } else {
-            super.set(key, args[0])
-        }
+    cset(key, arg) {
+        super.set(key, arg)
     }
-    admit(key, ...args) { if (!super.has(key)) super.cset(key, ...args) }
+    aset(key, arg) {
+        if (!super.has(key)) super.cset(key, arg)
+    }
 }
 
 class Doclet {
-    constructor(...args) { this.__proto__.Base = args.length == 0 ? undefined : args.flat(); }
-    cset(...args) {
-        if (this.Base) {
-            this.Doc = (() => {
-                let _T0 = new Object()
-                this.Base.forEach((_E0, _E1) => {
-                    _T0[_E0] = super[property][_E0] && args[_E1] == null ? super[property][_E0] : args[_E1];
-                })
-                return _T0;
-            })()
-        } else { this.Doc = args[0] }
+    cset(arg) {
+        this.value = arg;
+        return this;
     }
-    get self() { return this.Doc; }
+    get self() {
+        return this.value;
+    }
 }
 
-class Publication { }
+const note = new Note()
 
-let note = new Note()
+function BookTag(book, page) {
+    window[page] = new Function(`return ${book}.self.get("${page}")`)()
+};
 
-function BookTag(book, page) { window[page] = new Function(`return ${book}.self.get("${page}")`)() }
-DeriveElement("#SfMain")[0].addEventListener('load', () => { if (sfuserconfig.noteBooktag) note.self.forEach((_E0, _E1) => BookTag("note", _E1)) })
+function baser(...args) {
+    if (args.length % 2 != 0) {
+        console.warn("length of args must be even");
+        return false
+    }
+    args = [args.slice(0, args.length / 2), args.slice(-args.length / 2)]
 
-note.cset("KeyHold", "map");
-note.cset("KeyCount", "map");
+    let _T0 = new Object()
+    args[0].forEach((_E0, _E1) => {
+        _T0[_E0] = args[1][_E1];
+    })
+    return _T0;
+}
+
+note.cset("KeyHold", Map);
+note.cset("KeyCount", Map);
+note.cset("KeyCode").cset(false)
 const keys = {
-    hold: function (code) { return note.self.get("KeyHold").get(code) },
-    count: function (code, clear) { if (clear) { note.self.get("KeyCount").set(code, 0) } else { return note.self.get("KeyCount").get(code) } }
+    hold: function (code) {
+        return note.get("KeyHold").get(code)
+    },
+    count: function (code, clear) {
+        if (clear) {
+            note.get("KeyCount").set(code, 0)
+        } else {
+            return note.get("KeyCount").get(code)
+        }
+    },
+    code: function () {
+        note.get("KeyCode").cset(!note.get("KeyCode").self)
+        return "KeyCode : " + note.get("KeyCode").self;
+    }
 }
 
-window.addEventListener('keydown', (event) => { if (!event.repeat) note.self.get("KeyCount").set(event.keyCode, note.self.get("KeyCount").get(event.keyCode) == undefined ? 1 : note.self.get("KeyCount").get(event.keyCode) + 1) })
-window.addEventListener('keydown', (event) => { if (!event.repeat) note.self.get("KeyHold").set(event.keyCode, true) })
-window.addEventListener('keyup', (event) => { if (!event.repeat) note.self.get("KeyHold").set(event.keyCode, false) })
+window.addEventListener('keydown', (event) => {
+    if (!event.repeat) note.get("KeyCount").set(event.keyCode, note.get("KeyCount").get(event.keyCode) == undefined ? 1 : note.get("KeyCount").get(event.keyCode) + 1)
+    if (note.get("KeyCode").self) console.log(event.keyCode);
+})
+window.addEventListener('keydown', (event) => {
+    if (!event.repeat) note.get("KeyHold").set(event.keyCode, true)
+})
+window.addEventListener('keyup', (event) => {
+    if (!event.repeat) note.get("KeyHold").set(event.keyCode, false)
+})
 
 //-Object--------------------
-const Aom = {
-    A: {
-        flat: function (...args) { return (A2A = _A0 => _A0.flatMap(_E0 => Array.isArray(_E0) ? A2A(_E0) : _E0))(args) },
-        unDup: function  /**Duplicate */(array, back) { return array.filter((x, i, self) => (back ? self.lastIndexOf(x) : self.indexOf(x)) === i); },
-        // from: function (_A0) { return Aom.prototype(_A0) == "Array" ? _A0 : [_A0] },
-        by: function (arr, end, _T0) { _T0 = _T0 || []; console.log(arr.splice(-1)); /**return arr[0] == end ? [..._T0, arr[0]] : Aom.A.by(arr.splice(-1), end, [..._T0,arr[0]])*/ }
-    },
-    O: {
-        is: function (o) { return (o instanceof Object && !(o instanceof Array)) ? true : false; },
-        forEach: function (obj, fn) { Object.keys(obj).forEach(key => { let val = this[key]; fn(val); }, obj) }
-    },
-    M: {},
-    E: { from: function (_A0) { return _A0 instanceof HTMLElement ? [_A0] : Derie(_A0) } },
-    B: function (..._A0) { return Array.from(_A0).map(_E0 => Boolean(_E0)) },
-    prototype: function (_A0) { try { return _A0.constructor.name; } catch{ return undefined } }
-}
+function Aom(proto, name, func, method) {
+    if (!name) {
+        try {
+            return proto.constructor.name;
+        } catch {
+            return undefined
+        }
+    } else {
+        note.get("Aomadds").cset(baser("Prototype", "Name", "Function", (() => {
+            try {
+                return new proto;
+            } catch {
+                return String(proto)
+            }
+        })(), name, func))
+        window[name] = name = Symbol();
+        if (method) {
+            proto[name] = func;
+            return true;
+        }
+        try {
+            proto.prototype[name] = func;
+        } catch {
+            proto[name] = func
+        }
+    }
+};
+
+note.cset("Aomadds", Array);
+[
+    [Array, "flat", function () {
+        return (A2A = _A0 => _A0.flatMap(_E0 => Array.isArray(_E0) ? A2A(_E0) : _E0))(this)
+    }],
+    [Array, "unDup", function /**Duplicate */ (back) {
+        return this.filter((x, i, self) => (back ? self.lastIndexOf(x) : self.indexOf(x)) === i);
+    }],
+    [Object, "is", function () {
+        return (this instanceof Object && !(this instanceof Array)) ? true : false;
+    }, true],
+    [Object, "forEach", function (fn) {
+        Object.keys(this).forEach(key => {
+            let val = this[key];
+            fn(key, val);
+        }, this)
+    }],
+    [String, "comprise", function (string) {
+        return [string].concat().filter(_E0 => new RegExp(_E0.toLowerCase()).test(this.toLowerCase())).length > 0 ? true : false;
+    }],
+    [Math, "zeroPadding", function (num, dig) {
+        const AddZero = (_num, _dig) => _num.length < (_num.indexOf(".") == -1 ? _dig : _dig + 1) ? AddZero("0" + _num, _dig) : _num;
+        if (String(dig).indexOf(".") == -1) {
+            if (String(num).length < (String(num).indexOf(".") == -1 ? dig : dig + 1)) {
+                return AddZero(String(num), dig /**(String(num).indexOf(".") == -1 ? dig : dig + 1)*/ );
+            } else {
+                throw new Error("Digit must be bigger than digit of number")
+            }
+        } else {
+            throw new Error("Digit must be natural number")
+        }
+    }]
+].forEach((_E0) => Aom(..._E0));
 
 function Optionalys(...args) {
     if (args.length == 0 || args[0] == undefined || args.some(_E0 => typeof _E0 == "number")) return false;
@@ -390,23 +425,31 @@ function Optionalys(...args) {
     //_T0 = new Array(args[1].filter(_E0 => new RegExp(_E0).test(args[0]))).flat();
 }
 
+
 //-Calculation---------------
-note.cset("OmitFnList", "Map");
-BookTag("note", "OmitFnList")
+note.cset("OmitFn", Map);
+//BookTag("note", "note.get("OmitFn")")
 OmitFunctionName("OmitFunctionName", "OmitFn")
-OmitFn("DeriveElement", "Derie")
+OmitFn("DeriveElements", "Derie")
 OmitFn("GetStyle", "Getsy")
+OmitFn("SeChainArguments", "Cag")
+OmitFn("MsChainfunctions", "Cfn")
 
 function OmitFunctionName(base, abbr, Postscript) {
-    if (!Postscript) { OmitFnList.set(base, [abbr]) } else { OmitFnList.set(base, OmitFnList.get(base) ? [...OmitFnList.get(base), abbr] : [abbr]) }
-    window[abbr] = new Function("...arg", `return ${Array.from(OmitFnList.entries()).filter(_E0 => _E0[1].some(_E1 => _E1 == abbr))[0][0]}(...arg)`);
+    if (!Postscript) {
+        note.get("OmitFn").set(base, [abbr])
+    } else {
+        note.get("OmitFn").set(base, note.get("OmitFn").get(base) ? [...note.get("OmitFn").get(base), abbr] : [abbr])
+    }
+    window[abbr] = new Function("...arg", `return ${Array.from(note.get("OmitFn").entries()).filter(_E0 => _E0[1].some(_E1 => _E1 == abbr))[0][0]}(...arg)`);
 }
 
 // 要改良 言語識別効率化
-note.cset("TextSizeList", "Map", "height", "width")
-BookTag("note", "TextSizeList");
+note.cset("TextSize", Map)
+//BookTag("note", "note.get("TextSize")");
+
 function TextSize(elem, Wper, Hper, redo) {
-    if (!TextSizeList.has(elem)) TextSizeList.cset(elem, 100, 100)
+    if (!note.get("TextSize").has(elem)) note.get("TextSize").cset(elem, baser("height", "width", 100, 100))
     if (Wper === undefined && Wper !== null) {
         let rems = document.createElement('span');
         rems.setAttribute("class", "sfget_ew");
@@ -419,28 +462,32 @@ function TextSize(elem, Wper, Hper, redo) {
         Derie(".sfget_ew")[0].style.lineHeight = Getsy(elem).compute("line-height")[0]
         let [_TH, _TW] = [Derie(".sfget_ew")[0].offsetHeight, Derie(".sfget_ew")[0].offsetWidth]
         // let [_TH, _TW] = [Getsy(Derie(".sfget_ew")[0]).compute("height")[0], Getsy(Derie(".sfget_ew")[0]).compute("width")[0]]
-        elem.style.fontSize = (parseInt(Getsy(elem).compute("width")[0]) - parseInt(_TW) <= parseInt(Getsy(elem).compute("height")[0]) - parseInt(_TH)
-            ? parseInt(Getsy(elem).compute("width")[0]) / parseInt(_TW) * parseInt(Getsy(elem).compute("font-size")[0]) * Number(TextSizeList.get(Aom.E.from(elem)[0])["width"]) * 0.01
-            : parseInt(Getsy(elem).compute("height")[0]) / parseInt(_TH) * parseInt(Getsy(elem).compute("font-size")[0]) * Number(TextSizeList.get(Aom.E.from(elem)[0])["height"]) * 0.01) + "px"
+        elem.style.fontSize = (parseInt(Getsy(elem).compute("width")[0]) - parseInt(_TW) <= parseInt(Getsy(elem).compute("height")[0]) - parseInt(_TH) ?
+            parseInt(Getsy(elem).compute("width")[0]) / parseInt(_TW) * parseInt(Getsy(elem).compute("font-size")[0]) * Number(note.get("TextSize").get(Derie(elem)[0])["width"]) * 0.01 :
+            parseInt(Getsy(elem).compute("height")[0]) / parseInt(_TH) * parseInt(Getsy(elem).compute("font-size")[0]) * Number(note.get("TextSize").get(Derie(elem)[0])["height"]) * 0.01) + "px"
 
         Derie("body")[0].removeChild(Derie(".sfget_ew")[0]);
-    } else if (Optionalys(Wper, "add", false)) {
+    } else if (Wper[comprise]("add", false)) {
         elem.classList.add("text_contain")
         elem.addEventListener("resize", TextSize)
-    } else if (Optionalys(Wper, "remove", false)) {
+    } else if (Wper[comprise]("remove", false)) {
         elem.classList.remove("text_contain")
         elem.removeEventListener("resize", TextSize)
     } else {
-        Wper = Wper === null ? TextSizeList.get(elem)["width"] : Wper;
-        Hper = Hper === null ? TextSizeList.get(elem)["height"] : (Hper === undefined ? Wper : Hper);
+        Wper = Wper === null ? note.get("TextSize").get(elem)["width"] : Wper;
+        Hper = Hper === null ? note.get("TextSize").get(elem)["height"] : (Hper === undefined ? Wper : Hper);
         // Wper = Wper === undefined ? Hper : Wper;
-        // Wper = Wper === null ? (!TextSizeList.has(Aom.E.from(elem)[0] || !TextSizeList.get(Aom.E.from(elem)[0]).hasOwnProperty("width")) ? Hper : TextSizeList.get(Aom.E.from(elem)[0])["width"]) : Wper;
-        TextSizeList.cset(elem, Wper, Hper)
+        // Wper = Wper === null ? (!note.get("TextSize").has(Aom.E.from(elem)[0] || !note.get("TextSize").get(Aom.E.from(elem)[0]).hasOwnProperty("width")) ? Hper : note.get("TextSize").get(Aom.E.from(elem)[0])["width"]) : Wper;
+        note.get("TextSize").cset(elem, baser("height", "width", Wper, Hper))
         if (redo) TextSize(elem);
     }
 }
 
-window.addEventListener("load", () => { Derie(".text_contain").forEach(_E0 => { TextSize(_E0); _E0.addEventListener("resize", TextSize) }) })
+window.addEventListener("load", () => {
+    Derie(".text_contain").forEach(_E0 => {
+        TextSize(_E0);
+    })
+})
 
 // function Nomall(str) {
 //     let tmp = Array.from(str).slice().filter(_E0 => _E0 == ((0 || 1 || 2 || 3 || 4 || 5 || 6 || 7 || 8 || 9) || _E0.charCodeAt(0) <= 122)).length
@@ -451,7 +498,7 @@ function zeroPadding(num, dig) {
     const AddZero = (_num, _dig) => _num.length < (_num.indexOf(".") == -1 ? _dig : _dig + 1) ? AddZero("0" + _num, _dig) : _num;
     if (String(dig).indexOf(".") == -1) {
         if (String(num).length < (String(num).indexOf(".") == -1 ? dig : dig + 1)) {
-            return AddZero(String(num), dig/**(String(num).indexOf(".") == -1 ? dig : dig + 1)*/);
+            return AddZero(String(num), dig /**(String(num).indexOf(".") == -1 ? dig : dig + 1)*/ );
         } else {
             throw new Error("Digit must be bigger than digit of number")
         }
@@ -462,29 +509,51 @@ function zeroPadding(num, dig) {
 
 //-Auto Process--------------
 //Puppeteer
-let sfwindow;
+note.cset("sfwindow");
+
 function rewindow(width, height, size) {
-    if (width == "close") { sfwindow = undefined; return false }
-    if (Aom.prototype(width) != Aom.prototype(height)) { console.log("The first and second arguments must have the same type."); return false }
-    _F0 = () => {
-        sfwindow = window.open(location.href, "sfwindow", `width=${Aom.prototype(width) == "Number" ? size ? potopx(size) + "px" : "300px" : width},\
-                height=${Aom.prototype(height) == "Number" ? size ? potopx(size) * height / width + "px" : 300 * height / width : height}`);
-        let _T0 = setInterval(() => { if (!sfwindow || sfwindow.closed) { clearInterval(_T0); rewindow("close") } }, 1000);
+    if (width == "close") {
+        note.get("sfwindow").cset(undefined);
+        return false
     }
-    try { if (sfwindow && !sfwindow.closed) sfwindow.close(); } catch{ }
+    if (Aom(width) != Aom(height)) {
+        console.log("The first and second arguments must have the same type.");
+        return false
+    }
+    _F0 = () => {
+        note.get("sfwindow").cset(window.open(location.href, "sfwindow", `width=${Aom(width) == "Number" ? size ? potopx(size) + "px" : "300px" : width},\
+                height=${Aom(height) == "Number" ? size ? potopx(size) * height / width + "px" : 300 * height / width : height}`));
+        let _T0 = setInterval(() => {
+            if (!note.get("sfwindow") || note.get("sfwindow").closed) {
+                clearInterval(_T0);
+                rewindow("close")
+            }
+        }, 1000);
+    }
+    try {
+        if (sfwindow && !sfwindow.closed) sfwindow.close();
+    } catch {}
     _F0()
 }
 
-let didTaskswork = sfuserconfig.TaskWork;
-note.cset("TasksList", "Array", "If", "Fn", "Id")
+note.cset("doTasks").cset(sfuserconfig.TaskWork)
+note.cset("Tasks", Array)
 
 const Tasks = {
-    add: function (equa, fn, id) { TasksList.cset(equa, fn, (id ? id : undefined)) },
-    remove: function (id) { TasksList.forEach((_E0, _E1, _E2) => { if (_E0["Id"] == id) _E2.splice(_E1, 1) }) },
-    start: () => didTaskswork = true,
-    stop: () => didTaskswork = false,
+    add: function (equa, fn, id) {
+        note.get("TasksList").cset(baser("If", "Fn", "Id", equa, fn, (id ? id : undefined)))
+    },
+    remove: function (id) {
+        note.get("TasksList").forEach((_E0, _E1, _E2) => {
+            if (_E0["Id"] == id) _E2.splice(_E1, 1)
+        })
+    },
+    start: () => note.get("doTasks") = true,
+    stop: () => note.get("doTasks") = false,
     call: () => {
-        TasksList.forEach(_E0 => { new Function(`if (${_E0["If"]}) ${_E0["Fn"]}()`)() })
+        note.get("TasksList").forEach(_E0 => {
+            new Function(`if (${_E0["If"]}) ${_E0["Fn"]}()`)()
+        })
         if (didTadwork) requestAnimationFrame(arguments.callee);
     }
 }
@@ -496,7 +565,10 @@ function FuncProgeny(_E0, fn) {
 }
 
 //-Item Function-------------
-function Random(min, max, digit) { if (!digit) digit = 0; return (Math.random() * (max - min) + min).toFixed(digit) - 0 }
+function Random(min, max, digit) {
+    if (!digit) digit = 0;
+    return (Math.random() * (max - min) + min).toFixed(digit) - 0
+}
 
 /**A revised version will be released soon.
  * 
@@ -508,13 +580,8 @@ function Random(min, max, digit) { if (!digit) digit = 0; return (Math.random() 
 
 function RandFn(now, min, max) { return now >= Random(min, max) ? true : false; }*/
 
-function sfHelp(command) {
-    if (!command) { return sfhelpData.map(_E0 => _E0.name) }
-    else { return sfhelpData.filter(_E0 => _E0.name == command)[0].explanatory }
-}
-
 //-Loaded--------------------
-console.log("Seifuncs ver.1.5.0 for JS was completely loaded.")
+console.log("Seifuncs ver.1.6.0 for JS was completely loaded.")
 if (/^(?=.*Chrome)(?!.*Edge)/.test(window.navigator.userAgent)) {
     console.log("%c %c Seifuncs for JS %c \n%c %c Developer : Seizya \n%c %c GitHub : https://github.com/Seizya \n%c %c Special Thanks : omasakun (github.com/omasakun)",
         "background-color:#165e83;border-bottom:solid #f0f 2px", "border-bottom:solid #f0f 2px", "", "background-color:#165e83", "", "background-color:#165e83", "", "background-color:#165e83", "color: transparent")

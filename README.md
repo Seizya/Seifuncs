@@ -6,7 +6,8 @@ This is usefull corection of JavaScript Function.
 0. Download this.
 1. Put and unzip downloaded folder into your folder you want use.
 2. Rename Folder "Seifuncs"
-3. Write `<script src="./Seifuncs/trigger.js"></script>` to will be loaded before others JS Funcs.
+3. Write `<script src="./Seifuncs/main.js"></script>` to will be loaded before others JS Funcs.
+4. Write `<script src="./Seifuncs/help.js"></script>` if you want to use help.
 
 # Contents
 Do `SeHelp( command )`
@@ -29,7 +30,8 @@ Seifuncs は, Programming を簡単にすることを目的に Seizya が製作�
 
 ### 使用方法
 Download した Folder を Seifuncs と改名して, 使用予定の HTMLfile と同世代の Folder に解凍してください。  
-`<script src="./Seifuncs/trigger.js"></script>`を他のJS関数より早く読み込むことで, 動作します。
+`<script src="./Seifuncs/main.js"></script>`を他のJS関数より早く読み込むことで, 動作します。
+`<script src="./Seifuncs/help.js"></script>`を読み込むことで, Helpを使用できます。
 
 ### 内容 (後日実装予定)
 `SeHelpJp( Command )`を実行してください。
