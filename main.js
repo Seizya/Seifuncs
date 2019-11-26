@@ -15,12 +15,12 @@ import-htmlタグを追加します。
 もし、それ以外のタイミングで import-html タグの解釈をさせたい場合、 importHTMLs 関数を引数無しで読んでください。
 
 このスクリプトが読み込まれてから window の load イベントが発火するまでに追加された load イベントハンドラーは、importHTMLs 実行後に呼び出されます。
-
 */
 
 //Config---------------------
-const sfuserconfig = {
-    TaskWork: false
+const sfconfig = {
+    TaskInterval: 1000,
+    AlwaysTasksWork: false
 };
 
 //Maindish-------------------
@@ -384,27 +384,28 @@ function Aom(proto, name, func, method) {
     }
 };
 
+//同名被り対策
 note.cset("Aomadds", Array);
 [
-    [Array, "flat", function () {
+    [Array, "flatA", function () {
         return (A2A = _A0 => _A0.flatMap(_E0 => Array.isArray(_E0) ? A2A(_E0) : _E0))(this)
     }],
-    [Array, "unDup", function /**Duplicate */ (back) {
+    [Array, "unDupA", function /**Duplicate */ (back) {
         return this.filter((x, i, self) => (back ? self.lastIndexOf(x) : self.indexOf(x)) === i);
     }],
-    [Object, "is", function () {
+    [Object, "isO", function () {
         return (this instanceof Object && !(this instanceof Array)) ? true : false;
     }, true],
-    [Object, "forEach", function (fn) {
+    [Object, "forEachO", function (fn) {
         Object.keys(this).forEach(key => {
             let val = this[key];
             fn(key, val);
         }, this)
     }],
-    [String, "comprise", function (string) {
+    [String, "compriseS", function (string) {
         return [string].concat().filter(_E0 => new RegExp(_E0.toLowerCase()).test(this.toLowerCase())).length > 0 ? true : false;
     }],
-    [Math, "zeroPadding", function (num, dig) {
+    [Math, "zeroPaddingM", function (num, dig) {
         const AddZero = (_num, _dig) => _num.length < (_num.indexOf(".") == -1 ? _dig : _dig + 1) ? AddZero("0" + _num, _dig) : _num;
         if (String(dig).indexOf(".") == -1) {
             if (String(num).length < (String(num).indexOf(".") == -1 ? dig : dig + 1)) {
@@ -415,6 +416,9 @@ note.cset("Aomadds", Array);
         } else {
             throw new Error("Digit must be natural number")
         }
+    }],
+    [HTMLElement, "addEventListenersE", function (type, listener, name) {
+        note.get("EventListeners").cset("Element", "Event", "Function", "Name", this, type, listener, name);
     }]
 ].forEach((_E0) => Aom(..._E0));
 
@@ -428,7 +432,6 @@ function Optionalys(...args) {
 
 //-Calculation---------------
 note.cset("OmitFn", Map);
-//BookTag("note", "note.get("OmitFn")")
 OmitFunctionName("OmitFunctionName", "OmitFn")
 OmitFn("DeriveElements", "Derie")
 OmitFn("GetStyle", "Getsy")
@@ -446,7 +449,6 @@ function OmitFunctionName(base, abbr, Postscript) {
 
 // 要改良 言語識別効率化
 note.cset("TextSize", Map)
-//BookTag("note", "note.get("TextSize")");
 
 function TextSize(elem, Wper, Hper, redo) {
     if (!note.get("TextSize").has(elem)) note.get("TextSize").cset(elem, baser("height", "width", 100, 100))
@@ -489,24 +491,6 @@ window.addEventListener("load", () => {
     })
 })
 
-// function Nomall(str) {
-//     let tmp = Array.from(str).slice().filter(_E0 => _E0 == ((0 || 1 || 2 || 3 || 4 || 5 || 6 || 7 || 8 || 9) || _E0.charCodeAt(0) <= 122)).length
-//     return tmp * GVP(small_rem) + (str.length - tmp) * GVP(rem)
-// }
-
-function zeroPadding(num, dig) {
-    const AddZero = (_num, _dig) => _num.length < (_num.indexOf(".") == -1 ? _dig : _dig + 1) ? AddZero("0" + _num, _dig) : _num;
-    if (String(dig).indexOf(".") == -1) {
-        if (String(num).length < (String(num).indexOf(".") == -1 ? dig : dig + 1)) {
-            return AddZero(String(num), dig /**(String(num).indexOf(".") == -1 ? dig : dig + 1)*/ );
-        } else {
-            throw new Error("Digit must be bigger than digit of number")
-        }
-    } else {
-        throw new Error("Digit must be natural number")
-    }
-}
-
 //-Auto Process--------------
 //Puppeteer
 note.cset("sfwindow");
@@ -536,28 +520,58 @@ function rewindow(width, height, size) {
     _F0()
 }
 
-note.cset("doTasks").cset(sfuserconfig.TaskWork)
-note.cset("Tasks", Array)
+//note.cset("test").cset(false)
+//Tasks(()=>note.get("test").self,()=>{console.log("test")})
 
-const Tasks = {
-    add: function (equa, fn, id) {
-        note.get("TasksList").cset(baser("If", "Fn", "Id", equa, fn, (id ? id : undefined)))
-    },
-    remove: function (id) {
-        note.get("TasksList").forEach((_E0, _E1, _E2) => {
-            if (_E0["Id"] == id) _E2.splice(_E1, 1)
-        })
-    },
-    start: () => note.get("doTasks") = true,
-    stop: () => note.get("doTasks") = false,
-    call: () => {
-        note.get("TasksList").forEach(_E0 => {
-            new Function(`if (${_E0["If"]}) ${_E0["Fn"]}()`)()
-        })
-        if (didTadwork) requestAnimationFrame(arguments.callee);
-    }
+note.cset("TasksInterval").cset(sfconfig.TaskInterval)
+note.cset("Tasks", Array)
+Tasks("start");
+
+function Tasks(_A0, _A1, ..._A2) /**(If, Function, Arguments) */ {
+    switch (_A0) {
+        case "remove":
+            note.get("Tasks").forEach((_E0, _E1, _E2) => {
+                if (_E0["Id"] == _A1) _E2.splice(_E1, 1)
+            })
+            break;
+        case "start":
+            if (sfconfig.TaskInterval == 0) {
+                note.get("TasksInterval").cset(sfconfig.TaskInterval)
+                Tasks("call");
+            } else if (sfconfig.TaskInterval > 0) {
+                if (sfconfig.TaskInterval < 1) {
+                    console.error("Task Interval must be 0, -1 or a positive natural number.")
+                } else {
+                    note.get("TasksInterval").cset(window.setInterval(Tasks, sfconfig.TaskInterval, "call"));
+                }
+            };
+            break;
+        case "stop":
+            if (sfconfig.TAskInterval == 0) {
+                note.cset("TasksInterval").cset(-1)
+            } else if (sfconfig.TaskInterval > 0) {
+                window.clearInterval(note.get("TasksInterval"));
+            };
+            break;
+        case "call":
+            note.get("Tasks").forEach(_E0 => {
+                if (_E0["If"]() && _E0["Work"]) {
+                    _E0["Function"](..._E0["Arguments"])
+                    if (!sfconfig.AlwaysTasksWork) {
+                        _E0["Work"] = false;
+                    }
+                } else if (!_E0["If"]() && !_E0["Work"]) {
+                    _E0["Work"] = true;
+                }
+                if (note.get("TasksInterval").self == 0) requestAnimationFrame(Tasks.bind(null, "call"))
+            })
+            break;
+        default:
+            let id = Symbol();
+            note.get("Tasks").cset(baser("Work", "Id", "If", "Function", "Arguments", true, id, _A0, _A1, _A2))
+            return id;
+    };
 }
-// Tasks.call()
 
 function FuncProgeny(_E0, fn) {
     (Array.isArray(_E0) ? _E0 : Array.from(_E0)).flatMap(_E1 => _E1 instanceof HTMLElement ? _E1 : (document.querySelectorAll(_E1).length == 0 ? undefined : Array.from(document.querySelectorAll(_E1)))).filter(_E1 => _E1 != undefined).forEach(_E1 => _E1.fn())
