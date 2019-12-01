@@ -19,9 +19,19 @@ import-htmlタグを追加します。
 
 //Config---------------------
 const sfconfig = {
-    TaskInterval: 1000,
+    TaskInterval: 0,
     AlwaysTasksWork: false
 };
+
+//CSS load-------------------
+window.addEventListener("load", function () {
+    const sfcss = document.createElement('link');
+    sfcss.setAttribute("id", "SeifuncCSS");
+    sfcss.setAttribute("rel", "stylesheet");
+    sfcss.setAttribute("type", "text/css");
+    sfcss.setAttribute("href", "./Seifuncs/sfstyle.css");
+    Derie('script[src="./Seifuncs/main.js"]')[0].parentNode.insertBefore(sfcss, Derie('script[src="./Seifuncs/main.js"]')[0]);
+});
 
 //Maindish-------------------
 (() => {
@@ -124,13 +134,13 @@ function DeriveElements(id, option) {
                 case undefined:
                     return Array.from(document.querySelectorAll(_id));
                 case "$class":
-                    return Array.from(document.querySelectorAll(_id)).filter(_E0 => _E0.className != "").flatMap(_E0 => document.getElementsByClassName(_E0))[UnDup]();
+                    return Array.from(document.querySelectorAll(_id)).filter(_E0 => _E0.className != "").flatMap(_E0 => document.getElementsByClassName(_E0))[unDupA]();
                 case "$relative":
-                    return Array.from(document.querySelectorAll(_id)).flatMap(_E0 => document.getElementsByTagName(_E0.tagName)).filter(_E0 => Array.from(document.querySelectorAll(_id))).some(_E1 => _E0.parentNode == _E1.parentNode)[UnDup]();
+                    return Array.from(document.querySelectorAll(_id)).flatMap(_E0 => document.getElementsByTagName(_E0.tagName)).filter(_E0 => Array.from(document.querySelectorAll(_id))).some(_E1 => _E0.parentNode == _E1.parentNode)[unDupA]();
                 default:
                     return (function CQgeny(pare, arr) {
                         arr = [...arr, ...pare.slice().filter(_E0 => Array.from(document.querySelectorAll(_id)).some(_E1 => window.getComputedStyle(_E0).getPropertyValue(option) == window.getComputedStyle(_E1).getPropertyValue(option)))];
-                        return pare.filter(_E0 => _E0.hasChildNodes()).flatMap(_E1 => _E1.child).length != 0 ? CQgeny(pare, arr) : arr[unDup]();
+                        return pare.filter(_E0 => _E0.hasChildNodes()).flatMap(_E1 => _E1.child).length != 0 ? CQgeny(pare, arr) : arr[unDupA]();
                     })(Array.from(document.getElementsByTagName("HTML")), []);
             }
         } else {
@@ -150,20 +160,20 @@ class Getsies extends Array {
     compute(_A0, _A1) {
         return this.map(_E0 => {
             if (_E0 === window) {
-                if (_A0[comprise]("min")) {
+                if (_A0[compriseS]("min")) {
                     return window.innerHeight < window.innerWidth ? window.innerHeight : window.innerWidth;
-                } else if (_A0[comprise]("max", false)) {
+                } else if (_A0[compriseS]("max", false)) {
                     return window.innerHeight > window.innerWidth ? window.innerHeight : window.innerWidth;
-                } else if (_A0[comprise]("height", false)) {
+                } else if (_A0[compriseS]("height", false)) {
                     return window.innerHeight;
-                } else if (_A0[comprise]("width", false)) {
+                } else if (_A0[compriseS]("width", false)) {
                     return window.innerWidth;
-                } else if (_A0.includes("rem") && !point[comprise]("small", false)) {
+                } else if (_A0.includes("rem") && !point[compriseS]("small", false)) {
                     return window.getComputedStyle(Derie("html")).getPropertyValue("font-size");
                 }
-            } else if (_A0[comprise]("min", false)) {
+            } else if (_A0[compriseS]("min", false)) {
                 return Getsytmp(_E0, true)
-            } else if (_A0[comprise]("max", false)) {
+            } else if (_A0[compriseS]("max", false)) {
                 return Getsytmp(_E0, false)
             } else {
                 return !~_A0.indexOf(":") ? window.getComputedStyle(_E0).getPropertyValue(_A0) : window.getComputedStyle(_E0, _A0).getPropertyValue(_A1);
@@ -210,10 +220,6 @@ function MsChainFunctions(obj) {
     return fn => fn ? MsCF(fn(obj)) : obj
 }
 
-//- Confing -----------------
-
-//- Data --------------------
-//共通UI
 class Note extends Map {
     constructor() {
         super();
@@ -265,6 +271,10 @@ class Docarr extends Array {
             if (_E0 == arg) super.splice(_E1, 1)
         })
     }
+    replace(arg) {
+        super.splice(0);
+        arg.forEach(_E0 => super.cset(_E0))
+    }
 }
 
 class Docobj extends Object {
@@ -280,6 +290,13 @@ class Docobj extends Object {
             if (_E0 != property) super.cset(property, arg)
         })
     }
+    remove(property) {
+        delete super[property];
+    }
+    replace(arg) {
+        Object.keys(this).forEach(_E0 => delete super[_E0]);
+        Object.keys(arg).forEach(_E0 => this.cset(_E0, arg[_E0]));
+    }
 }
 
 class Docmap extends Map {
@@ -291,6 +308,10 @@ class Docmap extends Map {
     }
     aset(key, arg) {
         if (!super.has(key)) super.cset(key, arg)
+    }
+    replace(arg) {
+        super.keys().forEach(_E0 => super.delete(_E0))
+        arg.keys().forEach(_E0 => super.cset(_E0, arg.get(_E0)))
     }
 }
 
@@ -327,20 +348,22 @@ function baser(...args) {
 note.cset("KeyHold", Map);
 note.cset("KeyCount", Map);
 note.cset("KeyCode").cset(false)
-const keys = {
-    hold: function (code) {
-        return note.get("KeyHold").get(code)
-    },
-    count: function (code, clear) {
-        if (clear) {
-            note.get("KeyCount").set(code, 0)
-        } else {
-            return note.get("KeyCount").get(code)
-        }
-    },
-    code: function () {
-        note.get("KeyCode").cset(!note.get("KeyCode").self)
-        return "KeyCode : " + note.get("KeyCode").self;
+
+function Keys(type, code, clear) {
+    switch (type) {
+        case "hold":
+            return note.get("KeyHold").get(code)
+        case "count":
+            if (!code) note.get("KeyCount")
+            if (clear) {
+                note.get("KeyCount").set(code, 0)
+                break;
+            } else {
+                return note.get("KeyCount").get(code)
+            };
+        case "code":
+            note.get("KeyCode").cset(!note.get("KeyCode").self)
+            return "KeyCode : " + note.get("KeyCode").self;
     }
 }
 
@@ -384,8 +407,8 @@ function Aom(proto, name, func, method) {
     }
 };
 
-//同名被り対策
 note.cset("Aomadds", Array);
+note.cset("EventListeners", Map);
 [
     [Array, "flatA", function () {
         return (A2A = _A0 => _A0.flatMap(_E0 => Array.isArray(_E0) ? A2A(_E0) : _E0))(this)
@@ -417,10 +440,29 @@ note.cset("Aomadds", Array);
             throw new Error("Digit must be natural number")
         }
     }],
-    [HTMLElement, "addEventListenersE", function (type, listener, name) {
-        note.get("EventListeners").cset("Element", "Event", "Function", "Name", this, type, listener, name);
+    [HTMLElement, "addEventListenersE", function (type, listener, ...args) {
+        switch (type) {
+            case "scroll":
+                let symscroll = Symbol();
+                note.get("EventListeners").cset(symscroll, [this.scrollLeft, this.scrollTop]);
+                return Tasks(() => {
+                    let _T0 = note.get("EventListeners").get(symscroll)[0] !== this.scrollLeft || note.get("EventListeners").get(symscroll)[1] !== this.scrollTop;
+                    if (_T0) note.get("EventListeners").cset(symscroll, [this.scrollLeft, this.scrollTop]);
+                    return _T0;
+                }, listener, ...args);
+            case "resize":
+                let symresize = Symbol();
+                note.get("EventListeners").cset(symresize, [parseInt(Getsy(this).compute("width")[0]), parseInt(Getsy(this).compute("height")[0])]);
+                return Tasks(() => {
+                    let _T1 = note.get("EventListeners").get(symresize)[0] !== parseInt(Getsy(this).compute("width")[0]) || note.get("EventListeners").get(symresize)[1] !== parseInt(Getsy(this).compute("height")[0]);
+                    if (_T1) note.get("EventListeners").cset(symresize, [parseInt(Getsy(this).compute("width")[0]), parseInt(Getsy(this).compute("height")[0])]);
+                    return _T1;
+                }, listener, ...args);
+        }
     }]
 ].forEach((_E0) => Aom(..._E0));
+
+function Sem(){}
 
 function Optionalys(...args) {
     if (args.length == 0 || args[0] == undefined || args.some(_E0 => typeof _E0 == "number")) return false;
@@ -437,6 +479,7 @@ OmitFn("DeriveElements", "Derie")
 OmitFn("GetStyle", "Getsy")
 OmitFn("SeChainArguments", "Cag")
 OmitFn("MsChainfunctions", "Cfn")
+OmitFn("ExeFuncAftLoad", "Efal");
 
 function OmitFunctionName(base, abbr, Postscript) {
     if (!Postscript) {
@@ -469,10 +512,10 @@ function TextSize(elem, Wper, Hper, redo) {
             parseInt(Getsy(elem).compute("height")[0]) / parseInt(_TH) * parseInt(Getsy(elem).compute("font-size")[0]) * Number(note.get("TextSize").get(Derie(elem)[0])["height"]) * 0.01) + "px"
 
         Derie("body")[0].removeChild(Derie(".sfget_ew")[0]);
-    } else if (Wper[comprise]("add", false)) {
+    } else if (Wper[compriseS]("add", false)) {
         elem.classList.add("text_contain")
         elem.addEventListener("resize", TextSize)
-    } else if (Wper[comprise]("remove", false)) {
+    } else if (Wper[compriseS]("remove", false)) {
         elem.classList.remove("text_contain")
         elem.removeEventListener("resize", TextSize)
     } else {
@@ -489,6 +532,22 @@ window.addEventListener("load", () => {
     Derie(".text_contain").forEach(_E0 => {
         TextSize(_E0);
     })
+})
+
+Efal(
+    (() => note.cset("CSSPoint", Object).replace({
+        vwwos: () => Derie(":root")[0].style.setProperty('--vwwos', document.body.clientWidth / 100 + "px"),
+        vhwos: () => Derie(":root")[0].style.setProperty('--vhwos', document.body.clientHeight / 100 + "px")
+    }))
+)
+
+function CSSPoint(id) {
+    note.get("CSSPoint")[id]()
+}
+
+window.addEventListener("resize", () => {
+    CSSPoint("vwwos");
+    CSSPoint("vhwos");
 })
 
 //-Auto Process--------------
@@ -519,9 +578,6 @@ function rewindow(width, height, size) {
     } catch {}
     _F0()
 }
-
-//note.cset("test").cset(false)
-//Tasks(()=>note.get("test").self,()=>{console.log("test")})
 
 note.cset("TasksInterval").cset(sfconfig.TaskInterval)
 note.cset("Tasks", Array)
@@ -563,14 +619,18 @@ function Tasks(_A0, _A1, ..._A2) /**(If, Function, Arguments) */ {
                 } else if (!_E0["If"]() && !_E0["Work"]) {
                     _E0["Work"] = true;
                 }
-                if (note.get("TasksInterval").self == 0) requestAnimationFrame(Tasks.bind(null, "call"))
             })
+            if (note.get("TasksInterval").self == 0) window.requestAnimationFrame(Tasks.bind(null, "call"))
             break;
         default:
             let id = Symbol();
             note.get("Tasks").cset(baser("Work", "Id", "If", "Function", "Arguments", true, id, _A0, _A1, _A2))
             return id;
     };
+}
+
+function ExeFuncAftLoad(Func) {
+    window.addEventListener("load", Func)
 }
 
 function FuncProgeny(_E0, fn) {

@@ -1,11 +1,26 @@
-/* * {
+ * {
     padding: 0;
     margin: 0;
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center center;
     box-sizing: border-box;
-} */
+} 
+
+html{
+    height:100vh;
+    width:100vw;
+}
+
+body{
+    height:100%;
+    width:100%;
+}
+
+:root{
+    --vwwos:0;
+    --vhwos:0;
+}
 
 .sfget_ew {
     position: fixed;
