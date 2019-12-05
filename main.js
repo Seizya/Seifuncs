@@ -140,7 +140,7 @@ function DeriveElements(id, option) {
                 default:
                     return (function CQgeny(pare, arr) {
                         arr = [...arr, ...pare.slice().filter(_E0 => Array.from(document.querySelectorAll(_id)).some(_E1 => window.getComputedStyle(_E0).getPropertyValue(option) == window.getComputedStyle(_E1).getPropertyValue(option)))];
-                        return pare.filter(_E0 => _E0.hasChildNodes()).flatMap(_E1 => _E1.child).length != 0 ? CQgeny(pare, arr) : arr[unDupA]();
+                        return pare.filter(_E0 => _E0.hasChildNodes()).flatMap(_E1 => _E1.child).length != 0 ? CQgeny(pare, arr) : Aom(arr).unDup();
                     })(Array.from(document.getElementsByTagName("HTML")), []);
             }
         } else {
@@ -155,25 +155,25 @@ function GetStyle(_A0) {
 
 class Getsies extends Array {
     constructor(_A0) {
-        Aom(_A0) == "Array" ? super(..._A0) : super(_A0)
+        Sem(_A0) == "Array" ? super(..._A0) : super(_A0)
     }
     compute(_A0, _A1) {
         return this.map(_E0 => {
             if (_E0 === window) {
-                if (_A0[compriseS]("min")) {
+                if (Aom(_A0).comprise("min")) {
                     return window.innerHeight < window.innerWidth ? window.innerHeight : window.innerWidth;
-                } else if (_A0[compriseS]("max", false)) {
+                } else if (Aom(_A0).comprise("max")) {
                     return window.innerHeight > window.innerWidth ? window.innerHeight : window.innerWidth;
-                } else if (_A0[compriseS]("height", false)) {
+                } else if (Aom(_A0).comprise("height")) {
                     return window.innerHeight;
-                } else if (_A0[compriseS]("width", false)) {
+                } else if (Aom(_A0).comprise("width")) {
                     return window.innerWidth;
-                } else if (_A0.includes("rem") && !point[compriseS]("small", false)) {
+                } else if (_A0.includes("rem") && !poAom(int).comprise("small")) {
                     return window.getComputedStyle(Derie("html")).getPropertyValue("font-size");
                 }
-            } else if (_A0[compriseS]("min", false)) {
+            } else if (Aom(_A0).comprise("min")) {
                 return Getsytmp(_E0, true)
-            } else if (_A0[compriseS]("max", false)) {
+            } else if (Aom(_A0).comprise("max")) {
                 return Getsytmp(_E0, false)
             } else {
                 return !~_A0.indexOf(":") ? window.getComputedStyle(_E0).getPropertyValue(_A0) : window.getComputedStyle(_E0, _A0).getPropertyValue(_A1);
@@ -195,7 +195,7 @@ class Getsies extends Array {
 function potopx(A0) {
     let rems = document.createElement('span');
     rems.setAttribute("class", "sfget_ew");
-    rems.style.width = Aom(A0) == "Number" ? A0 + "px" : A0;
+    rems.style.width = Sem(A0) == "Number" ? A0 + "px" : A0;
     Derie("body")[0].insertBefore(rems, Derie("body")[0].firstChild);
 
     let _T0 = parseFloat(Getsy(Derie(".sfget_ew")[0]).compute("width"));
@@ -256,7 +256,7 @@ class Note extends Map {
 }
 
 class Docarr extends Array {
-    constructor(args) {
+    constructor() {
         super()
     }
     cset(arg) {
@@ -379,60 +379,65 @@ window.addEventListener('keyup', (event) => {
 })
 
 //-Object--------------------
-function Aom(proto, name, func, method) {
-    if (!name) {
-        try {
-            return proto.constructor.name;
-        } catch {
-            return undefined
-        }
+note.cset("Aomadds", Object).replace({
+    Aomarr: {},
+    Aomobj: {},
+    Aommap: {},
+    Aomwea: {},
+    Aomstr: {},
+    Aomnum: {},
+    Aomboo: {},
+    Aomhtm: {},
+    Aomfun: {},
+    Aomreg: {},
+    Aomdat: {}
+});
+
+function Aom(proto, name, func) {
+    if (name) {
+        note.get("Aomadds")["Aom" + (proto === HTMLElement ? "htm" : Sem(new proto).toLowerCase().substr(0, 3))][name] = func;
     } else {
-        note.get("Aomadds").cset(baser("Prototype", "Name", "Function", (() => {
-            try {
-                return new proto;
-            } catch {
-                return String(proto)
-            }
-        })(), name, func))
-        window[name] = name = Symbol();
-        if (method) {
-            proto[name] = func;
-            return true;
-        }
-        try {
-            proto.prototype[name] = func;
-        } catch {
-            proto[name] = func
-        }
+        let reobj = {};
+        Object.keys(note.get("Aomadds")["Aom" + Sem(proto).toLowerCase().substr(0, 3)]).forEach(_E0 => reobj[_E0] = note.get("Aomadds")["Aom" + Sem(proto).toLowerCase().substr(0, 3)][_E0].bind(proto))
+        return reobj;
     }
 };
 
-note.cset("Aomadds", Array);
 note.cset("EventListeners", Map);
 [
-    [Array, "flatA", function () {
+    [Array, "flat", function () {
         return (A2A = _A0 => _A0.flatMap(_E0 => Array.isArray(_E0) ? A2A(_E0) : _E0))(this)
     }],
-    [Array, "unDupA", function /**Duplicate */ (back) {
+    [Array, "unDup", function /**Duplicate */ (back) {
         return this.filter((x, i, self) => (back ? self.lastIndexOf(x) : self.indexOf(x)) === i);
     }],
-    [Object, "isO", function () {
-        return (this instanceof Object && !(this instanceof Array)) ? true : false;
-    }, true],
-    [Object, "forEachO", function (fn) {
+    [Object, "is", function (arg) {
+        return (arg instanceof Object && !(arg instanceof Array)) ? true : false;
+    }],
+    [Object, "forEach", function (fn) {
         Object.keys(this).forEach(key => {
             let val = this[key];
             fn(key, val);
         }, this)
     }],
-    [String, "compriseS", function (string) {
-        return [string].concat().filter(_E0 => new RegExp(_E0.toLowerCase()).test(this.toLowerCase())).length > 0 ? true : false;
+    [Object, "deepCopy", function () {
+        let reobj = {};
+        Object.keys(this).forEach(key => {
+            reobj[key] = this[key]
+        })
+        return reobj;
     }],
-    [Math, "zeroPaddingM", function (num, dig) {
+    [String, "comprise", function (string) {
+        return this.match(new RegExp(string.toLowerCase())) !== null ? true : false
+    }],
+    [Number, "that", function () {
+        return this
+    }],
+    [Number, "zeroPadding", function (dig) {
         const AddZero = (_num, _dig) => _num.length < (_num.indexOf(".") == -1 ? _dig : _dig + 1) ? AddZero("0" + _num, _dig) : _num;
         if (String(dig).indexOf(".") == -1) {
-            if (String(num).length < (String(num).indexOf(".") == -1 ? dig : dig + 1)) {
-                return AddZero(String(num), dig /**(String(num).indexOf(".") == -1 ? dig : dig + 1)*/ );
+            if (String(this).length < (String(this).indexOf(".") == -1 ? dig : dig + 1)) {
+                return AddZero(String(this), dig /**(String(num).indexOf(".") == -1 ? dig : dig + 1)*/ );
             } else {
                 throw new Error("Digit must be bigger than digit of number")
             }
@@ -440,7 +445,11 @@ note.cset("EventListeners", Map);
             throw new Error("Digit must be natural number")
         }
     }],
-    [HTMLElement, "addEventListenersE", function (type, listener, ...args) {
+    [Function, "bind", function (that) {
+        let it = this;
+        return it.bind(that)
+    }],
+    [HTMLElement, "addEventListener", function (type, listener, ...args) {
         switch (type) {
             case "scroll":
                 let symscroll = Symbol();
@@ -459,10 +468,27 @@ note.cset("EventListeners", Map);
                     return _T1;
                 }, listener, ...args);
         }
+    }],
+    [HTMLElement, "removeEventListener", function (id) {
+        Tasks("remove", id);
     }]
 ].forEach((_E0) => Aom(..._E0));
 
-function Sem(){}
+const aom = Symbol();
+[Array, Object, Map, WeakMap, String, Number, Boolean, Function, RegExp, Date].forEach(_E0 => _E0.prototype[aom] = function () {
+    return Aom(this);
+})
+HTMLElement[aom] = function () {
+    return Aom(this)
+}
+
+function Sem(proto) {
+    try {
+        return proto.constructor.name;
+    } catch {
+        return undefined
+    }
+}
 
 function Optionalys(...args) {
     if (args.length == 0 || args[0] == undefined || args.some(_E0 => typeof _E0 == "number")) return false;
@@ -493,7 +519,7 @@ function OmitFunctionName(base, abbr, Postscript) {
 // 要改良 言語識別効率化
 note.cset("TextSize", Map)
 
-function TextSize(elem, Wper, Hper, redo) {
+function TextSize(elem, Wper, Hper) {
     if (!note.get("TextSize").has(elem)) note.get("TextSize").cset(elem, baser("height", "width", 100, 100))
     if (Wper === undefined && Wper !== null) {
         let rems = document.createElement('span');
@@ -507,30 +533,28 @@ function TextSize(elem, Wper, Hper, redo) {
         Derie(".sfget_ew")[0].style.lineHeight = Getsy(elem).compute("line-height")[0]
         let [_TH, _TW] = [Derie(".sfget_ew")[0].offsetHeight, Derie(".sfget_ew")[0].offsetWidth]
         // let [_TH, _TW] = [Getsy(Derie(".sfget_ew")[0]).compute("height")[0], Getsy(Derie(".sfget_ew")[0]).compute("width")[0]]
-        elem.style.fontSize = (parseInt(Getsy(elem).compute("width")[0]) - parseInt(_TW) <= parseInt(Getsy(elem).compute("height")[0]) - parseInt(_TH) ?
+        elem.style.fontSize = (parseInt(Getsy(elem).compute("width")[0]) / parseInt(_TW) <= parseInt(Getsy(elem).compute("height")[0]) / parseInt(_TH) ?
             parseInt(Getsy(elem).compute("width")[0]) / parseInt(_TW) * parseInt(Getsy(elem).compute("font-size")[0]) * Number(note.get("TextSize").get(Derie(elem)[0])["width"]) * 0.01 :
             parseInt(Getsy(elem).compute("height")[0]) / parseInt(_TH) * parseInt(Getsy(elem).compute("font-size")[0]) * Number(note.get("TextSize").get(Derie(elem)[0])["height"]) * 0.01) + "px"
 
         Derie("body")[0].removeChild(Derie(".sfget_ew")[0]);
-    } else if (Wper[compriseS]("add", false)) {
+    } else if (Aom(Wper).comprise("add")) {
         elem.classList.add("text_contain")
-        elem.addEventListener("resize", TextSize)
-    } else if (Wper[compriseS]("remove", false)) {
+        Aom(elem).addEventListener("resize", TextSize, _E0)
+    } else if (Aom(Wper).comprise("remove")) {
         elem.classList.remove("text_contain")
-        elem.removeEventListener("resize", TextSize)
+        Aom(elem).removeEventListener("resize", TextSize, _E0)
     } else {
         Wper = Wper === null ? note.get("TextSize").get(elem)["width"] : Wper;
         Hper = Hper === null ? note.get("TextSize").get(elem)["height"] : (Hper === undefined ? Wper : Hper);
-        // Wper = Wper === undefined ? Hper : Wper;
-        // Wper = Wper === null ? (!note.get("TextSize").has(Aom.E.from(elem)[0] || !note.get("TextSize").get(Aom.E.from(elem)[0]).hasOwnProperty("width")) ? Hper : note.get("TextSize").get(Aom.E.from(elem)[0])["width"]) : Wper;
         note.get("TextSize").cset(elem, baser("height", "width", Wper, Hper))
-        if (redo) TextSize(elem);
     }
 }
 
 window.addEventListener("load", () => {
     Derie(".text_contain").forEach(_E0 => {
         TextSize(_E0);
+        Aom(_E0).addEventListener("resize", TextSize, _E0)
     })
 })
 
@@ -559,13 +583,13 @@ function rewindow(width, height, size) {
         note.get("sfwindow").cset(undefined);
         return false
     }
-    if (Aom(width) != Aom(height)) {
+    if (Sem(width) != Sem(height)) {
         console.log("The first and second arguments must have the same type.");
         return false
     }
     _F0 = () => {
-        note.get("sfwindow").cset(window.open(location.href, "sfwindow", `width=${Aom(width) == "Number" ? size ? potopx(size) + "px" : "300px" : width},\
-                height=${Aom(height) == "Number" ? size ? potopx(size) * height / width + "px" : 300 * height / width : height}`));
+        note.get("sfwindow").cset(window.open(location.href, "sfwindow", `width=${Sem(width) == "Number" ? size ? potopx(size) + "px" : "300px" : width},\
+                height=${Sem(height) == "Number" ? size ? potopx(size) * height / width + "px" : 300 * height / width : height}`));
         let _T0 = setInterval(() => {
             if (!note.get("sfwindow") || note.get("sfwindow").closed) {
                 clearInterval(_T0);
@@ -655,7 +679,7 @@ function Random(min, max, digit) {
 function RandFn(now, min, max) { return now >= Random(min, max) ? true : false; }*/
 
 //-Loaded--------------------
-console.log("Seifuncs ver.1.6.0 for JS was completely loaded.")
+console.log("Seifuncs ver.1.6.1 for JS was completely loaded.")
 if (/^(?=.*Chrome)(?!.*Edge)/.test(window.navigator.userAgent)) {
     console.log("%c %c Seifuncs for JS %c \n%c %c Developer : Seizya \n%c %c GitHub : https://github.com/Seizya \n%c %c Special Thanks : omasakun (github.com/omasakun)",
         "background-color:#165e83;border-bottom:solid #f0f 2px", "border-bottom:solid #f0f 2px", "", "background-color:#165e83", "", "background-color:#165e83", "", "background-color:#165e83", "color: transparent")

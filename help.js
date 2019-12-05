@@ -34,16 +34,19 @@ function sfHelp(command) {
         explanatory: "Standard shorthand for MsChainfunctions."
     }, {
         name: "Note",
-        explanatory: "It's class for managing listdata.「note」is Seifuncs's default.\n note.cset(name,prototype,args・・・) : create new List. If there is same name list, overwrite. You can choose prototype in Array, Object, Map or variable. \n note.aset(name,prototype,args・・・) : This function has a function similar to 'note.cset'. If there is same List, Note don't create new List.\n note.join = value : Fuse two notes. The source property is not overwritten if there is a property with the same name at the destination.\n note.assign = value : marge two notes. The destination property is overwritten if there is a property with the same name at the source."
+        explanatory: "It's class for managing listdata.「note」is Seifuncs's default.\n note.cset(name,prototype,...args) : create new List. If there is same name list, overwrite. You can choose prototype in Array, Object, Map or variable. \n note.aset(name,prototype,...args) : This function has a function similar to 'note.cset'. If there is same List, Note don't create new List.\n note.join = value : Fuse two notes. The source property is not overwritten if there is a property with the same name at the destination.\n note.assign = value : marge two notes. The destination property is overwritten if there is a property with the same name at the source."
     }, {
         name: "BookTag",
         explanatory: "Put the candy anywhere you like on the notebook.\n Create a global variable that directly accesses the specific page of the note that was created.\n For the first argument, enter the name of the note that you want to sandwich, and for the second argument, enter the name of the page you want to sandwich."
     }, {
         name: "keys",
-        explanatory: "This is an object that contains key functions.\n keys.hold() : Returns a Blooen value whether the key of the keycode argument is pressed.\n keys.count() : Returns the number of times the key with the keycode specified in the argument was pressed. \n	If a value that is determined to be true is entered in the second argument, the count of the key specified in the first argument will be zero.\n keys.code() : console.log(keyCode you push)"
+        explanatory: "This is an object that contains key functions.\n keys('hold') : Returns a Bloolen value whether the key of the keycode argument(Second Arg) is pressed.\n keys('count') : Returns the number of times the key with the keycode specified in the argument(Second Arg) was pressed. \n	If a value that is determined to be true is entered in the third argument, the count of the key specified in the second argument will be zero.\n keys('code') : console.log(keyCode you push)"
     }, {
         name: "Aom",
-        explanatory: "This Fucntion can return Prototype of first Argument.\n IF arg is args, First arg mean prototype, Second one do name and Third one do Function.\n Default : Array[flat] : Converts to an array with no descendants.\n	Array[unDup] : Converts to an array without the same elements.\n\n Object[is] : Determine if it is an Object.\n Object[forEach] : The function of the second argument is executed for all values of the first argument Object.\n\n String[comprise] : Shows the same behavior as Optionalys(hogehoge,hugahuga,false)\n\n Math[zeroPadding] : Shows the same behavior as zeroPadding();"
+        explanatory: "A function that adds or uses a method to a specific type. \nIf only one variable is assigned and executed, an associative array containing a group of functions corresponding to that variable is returned. \n\nWhen entering two or more arguments, substitute the type, function name, and function to be executed (function executed with the Aom argument as this).\n\nThis function cannot be used continuously in a chain. \nHowever, in a type with prototype, the same return value as Aom (~) can be obtained by executing ~ [aom] ()."
+    }, {
+        name: "Sem",
+        explanatory: "This Fucntion can return Prototype of first Argument."
     }, {
         name: "Optionalys",
         explanatory: "Returns a boolean value indicating whether the second argument string is included in the first argument string. If the third argument is given a value that is determined to be False, it is not case sensitive."
@@ -64,13 +67,19 @@ function sfHelp(command) {
         explanatory: "A function that opens a child window with the desired size and ratio. The first argument is x size and the second argument is y size.\n If a number is assigned, it indicates the ratio, and the length in the x direction can be specified with the third argument."
     }, {
         name: "Tasks",
-        explanatory: "An object with functions related to automatic Tasks. A function is automatically executed when a specific situation occurs, but it is impossible to give an argument to the function. Use variables.\n I want to be able to pass arguments in the near future.\n add: Enter the conditional expression for the first argument, the name of the function you want to execute for the second argument, and the ID for the third argument.The third argument is optional.\n remove: Only tasks that have IDs entered can be excluded from automatic tasks by entering IDs.\n	start: Starts automatic processing.\n stop: Pauses automatic processing.\n call: A function for internal processing."
+        explanatory: "This function manages automatic processing.\nTasks ('remove'): Removes the function whose ID matches the second argument from automatic processing.\nTasks ('Start'): Starts function execution.\nTasks ('Stop'): Stops function execution.\nTasks ('call'): Call automatic task processing at the time.\n\nTasks (if, function, ... args): Add a new automated task. \nAssign if and function in function format. \nThe arguments specified after the third argument are passed as arguments when the function is executed. \nThe return value is a Symbol type ID."
+    }, {
+        name: "ExeFuncAfterLoad",
+        explanatory: "Execute Function After Window load completelty"
+    }, {
+        name: "Efal",
+        explanatory: "Standard shorthand for ExeFuncAfterLoad."
     }, {
         name: "FuncProgeny",
         explanatory: "The function of the second argument is executed for all descendant elements including the element given as the first argument."
     }, {
         name: "Random",
-        explanatory: "This is a function that generates pseudo-random numbers within a specified range.\n Enter the maximum and minimum values for the first and second arguments.The third argument can specify the number of digits after the decimal point.\n If the range includes a number including a decimal point, 0 is returned unless the third argument is 1 or greater."
+        explanatory: "This is a function that generates pseudo-random numbers within a specified range.\n Enter the maximum and minimum values for the first and second arguments.\nThe third argument can specify the number of digits after the decimal point.\n If the range includes a number including a decimal point, 0 is returned unless the third argument is 1 or greater."
     }];
 
     if (!command) {
