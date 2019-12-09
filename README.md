@@ -1,6 +1,6 @@
 # Seifuncs
 This is usefull corection of JavaScript Function.  
-*caution* : Developper only think good for Seizya because they are Seizya alone.  
+*caution* : Developer only think good for Seizya because they are Seizya alone.  
 
 # How use
 0. Download this.
@@ -10,13 +10,13 @@ This is usefull corection of JavaScript Function.
 4. Write `<script src="./Seifuncs/help.js"></script>` if you want to use help.
 
 # Contents
-Do `SeHelp( command )`
-I am not an English speaker, so I use translation software. So there are many incorrect translations and grammars. Maybe you will come back.
+Do `SeHelp( command )`<br/>
+I am not an English speaker, so I use translation software. -> there are many incorrect translations and grammars.
 ### Command 
 Blank : Func List.  
 Func Name : Explanatory text
   
-# license
+# License
 It is basically free only for redistribution and use other than commercial purpose use.  
 If you want to use it for commercial purposes, please contact my e-mail.
 Do not modify the last 8 lines.
