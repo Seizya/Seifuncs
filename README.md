@@ -25,5 +25,5 @@ Do not modify the last 8 lines.
 Issue or Pullrequest on Github;
 
 # Caution 
- Developper never like `IE` and `like IE`.  
- So, they aren't  supported at all.
+ Developer never like `IE` and `like IE`.  
+ -> they aren't  supported at all.
