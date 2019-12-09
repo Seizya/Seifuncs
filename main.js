@@ -126,17 +126,17 @@ function CSS(elements) {
 }
 
 function DeriveElements(id, option) {
-    return [id].flat().flatMap(_E0 => _E0 instanceof HTMLElement ? _E0 : CQgeny(_E0)).filter(_E0 => _E0)
+    return [id].flat()[aom]().flat().flatMap(_E0 => _E0 instanceof HTMLElement ? _E0 : CQgeny(_E0)).filter(_E0 => _E0);
 
     function CQgeny(_id) {
         if (document.querySelectorAll(_id).length >= 1) {
             switch (option) {
                 case undefined:
                     return Array.from(document.querySelectorAll(_id));
-                case "$class":
-                    return Array.from(document.querySelectorAll(_id)).filter(_E0 => _E0.className != "").flatMap(_E0 => document.getElementsByClassName(_E0))[unDupA]();
-                case "$relative":
-                    return Array.from(document.querySelectorAll(_id)).flatMap(_E0 => document.getElementsByTagName(_E0.tagName)).filter(_E0 => Array.from(document.querySelectorAll(_id))).some(_E1 => _E0.parentNode == _E1.parentNode)[unDupA]();
+                case "$SameClass":
+                    return Array.from(document.querySelectorAll(_id)).filter(_E0 => _E0.className != "").flatMap(_E0 => _E0.className.split(" ").flatMap(_E1 => document.getElementsByClassName(_E1)))[aom]().unDupA();
+                case "$Relative":
+                    return Array.from(document.querySelectorAll(_id)).flatMap(_E0 => document.getElementsByTagName(_E0.tagName)).filter(_E0 => Array.from(document.querySelectorAll(_id))).some(_E1 => _E0.parentNode == _E1.parentNode)[aom]().unDupA();
                 default:
                     return (function CQgeny(pare, arr) {
                         arr = [...arr, ...pare.slice().filter(_E0 => Array.from(document.querySelectorAll(_id)).some(_E1 => window.getComputedStyle(_E0).getPropertyValue(option) == window.getComputedStyle(_E1).getPropertyValue(option)))];
@@ -144,6 +144,16 @@ function DeriveElements(id, option) {
                     })(Array.from(document.getElementsByTagName("HTML")), []);
             }
         } else {
+            switch (option) {
+                case "$Descendant":
+                    if (Aom(_id).comprise("#")) {
+                        return Aom(document.querySelectorAll("html")[0]).DescendantFlat().filter(_E0 => Aom(_E0.id).comprise(_id.replace(/#/g, "")))
+                    } else if (Aom(_id).comprise(".")) {
+                        return Aom(document.querySelectorAll("html")[0]).DescendantFlat().filter(_E0 => _E0.className.split(" ").filter(_E1 => _E1.match(new RegExp(_id.replace(/[\.]+/g, "")))).length > 0)
+                    } else {
+                        return Aom(document.querySelectorAll("html")[0]).DescendantFlat().filter(_E0 => Aom(_E0.tagName).comprise(_id.replace(/#/g, "")))
+                    }
+            }
             return undefined;
         }
     }
@@ -345,38 +355,22 @@ function baser(...args) {
     return _T0;
 }
 
-note.cset("KeyHold", Map);
-note.cset("KeyCount", Map);
-note.cset("KeyCode").cset(false)
+note.cset("OmitFn", Map);
+OmitFunctionName("OmitFunctionName", "OmitFn")
+OmitFn("DeriveElements", "Derie")
+OmitFn("GetStyle", "Getsy")
+OmitFn("SeChainArguments", "Cag")
+OmitFn("MsChainfunctions", "Cfn")
+OmitFn("ExeFuncAftLoad", "Efal");
 
-function Keys(type, code, clear) {
-    switch (type) {
-        case "hold":
-            return note.get("KeyHold").get(code)
-        case "count":
-            if (!code) note.get("KeyCount")
-            if (clear) {
-                note.get("KeyCount").set(code, 0)
-                break;
-            } else {
-                return note.get("KeyCount").get(code)
-            };
-        case "code":
-            note.get("KeyCode").cset(!note.get("KeyCode").self)
-            return "KeyCode : " + note.get("KeyCode").self;
+function OmitFunctionName(base, abbr, Postscript) {
+    if (!Postscript) {
+        note.get("OmitFn").set(base, [abbr])
+    } else {
+        note.get("OmitFn").set(base, note.get("OmitFn").get(base) ? [...note.get("OmitFn").get(base), abbr] : [abbr])
     }
+    window[abbr] = new Function("...arg", `return ${Array.from(note.get("OmitFn").entries()).filter(_E0 => _E0[1].some(_E1 => _E1 == abbr))[0][0]}(...arg)`);
 }
-
-window.addEventListener('keydown', (event) => {
-    if (!event.repeat) note.get("KeyCount").set(event.keyCode, note.get("KeyCount").get(event.keyCode) == undefined ? 1 : note.get("KeyCount").get(event.keyCode) + 1)
-    if (note.get("KeyCode").self) console.log(event.keyCode);
-})
-window.addEventListener('keydown', (event) => {
-    if (!event.repeat) note.get("KeyHold").set(event.keyCode, true)
-})
-window.addEventListener('keyup', (event) => {
-    if (!event.repeat) note.get("KeyHold").set(event.keyCode, false)
-})
 
 //-Object--------------------
 note.cset("Aomadds", Object).replace({
@@ -471,6 +465,15 @@ note.cset("EventListeners", Map);
     }],
     [HTMLElement, "removeEventListener", function (id) {
         Tasks("remove", id);
+    }],
+    [HTMLElement, "DescendantFlat", function () {
+        return Aom(child(this)).unDup();
+
+        function child(elem) {
+            return elem.children.length > 0 ? Array.from(elem.children).flatMap(_E0 => {
+                return [elem].concat(child(_E0));
+            }) : elem;
+        }
     }]
 ].forEach((_E0) => Aom(..._E0));
 
@@ -497,24 +500,40 @@ function Optionalys(...args) {
     //_T0 = new Array(args[1].filter(_E0 => new RegExp(_E0).test(args[0]))).flat();
 }
 
+note.cset("KeyHold", Map);
+note.cset("KeyCount", Map);
+note.cset("KeyCode").cset(false)
+
+function Keys(type, code, clear) {
+    switch (type) {
+        case "hold":
+            return note.get("KeyHold").get(code)
+        case "count":
+            if (!code) note.get("KeyCount")
+            if (clear) {
+                note.get("KeyCount").set(code, 0)
+                break;
+            } else {
+                return note.get("KeyCount").get(code)
+            };
+        case "code":
+            note.get("KeyCode").cset(!note.get("KeyCode").self)
+            return "KeyCode : " + note.get("KeyCode").self;
+    }
+}
+
+window.addEventListener('keydown', (event) => {
+    if (!event.repeat) note.get("KeyCount").set(event.keyCode, note.get("KeyCount").get(event.keyCode) == undefined ? 1 : note.get("KeyCount").get(event.keyCode) + 1)
+    if (note.get("KeyCode").self) console.log(event.keyCode);
+})
+window.addEventListener('keydown', (event) => {
+    if (!event.repeat) note.get("KeyHold").set(event.keyCode, true)
+})
+window.addEventListener('keyup', (event) => {
+    if (!event.repeat) note.get("KeyHold").set(event.keyCode, false)
+})
 
 //-Calculation---------------
-note.cset("OmitFn", Map);
-OmitFunctionName("OmitFunctionName", "OmitFn")
-OmitFn("DeriveElements", "Derie")
-OmitFn("GetStyle", "Getsy")
-OmitFn("SeChainArguments", "Cag")
-OmitFn("MsChainfunctions", "Cfn")
-OmitFn("ExeFuncAftLoad", "Efal");
-
-function OmitFunctionName(base, abbr, Postscript) {
-    if (!Postscript) {
-        note.get("OmitFn").set(base, [abbr])
-    } else {
-        note.get("OmitFn").set(base, note.get("OmitFn").get(base) ? [...note.get("OmitFn").get(base), abbr] : [abbr])
-    }
-    window[abbr] = new Function("...arg", `return ${Array.from(note.get("OmitFn").entries()).filter(_E0 => _E0[1].some(_E1 => _E1 == abbr))[0][0]}(...arg)`);
-}
 
 // 要改良 言語識別効率化
 note.cset("TextSize", Map)
@@ -657,10 +676,17 @@ function ExeFuncAftLoad(Func) {
     window.addEventListener("load", Func)
 }
 
-function FuncProgeny(_E0, fn) {
-    (Array.isArray(_E0) ? _E0 : Array.from(_E0)).flatMap(_E1 => _E1 instanceof HTMLElement ? _E1 : (document.querySelectorAll(_E1).length == 0 ? undefined : Array.from(document.querySelectorAll(_E1)))).filter(_E1 => _E1 != undefined).forEach(_E1 => _E1.fn())
-    if (_E0.filter(_E0 => _E0.hasChildNodes()).map(_E0 => _E0.child).length != 0) FuncProgeny(_E0, fn)
-}
+/*function FuncProgeny(_E0, fn) {
+    return Derie(_E0).map(_E1 => {
+        if (_E1.hasChildNodes().length != 0) {
+            return Array.from(_E1.childNodes).map(_E2 => {
+                return FuncProgeny(_E2, fn)
+            })
+        } else {
+            return fn(_E1);
+        }
+    })
+}*/
 
 //-Item Function-------------
 function Random(min, max, digit) {
