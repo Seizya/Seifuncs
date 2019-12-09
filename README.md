@@ -17,8 +17,8 @@ Blank : Func List.
 Func Name : Explanatory text
   
 # License
-It is basically free only for redistribution and use other than commercial purpose use.  
-If you want to use it for commercial purposes, please contact my e-mail.
+It is basically free only for redistribution and use other than commercial purpose use.<br/>  
+If you want to use it for commercial purposes, please contact my e-mail.<br/>
 Do not modify the last 8 lines.
 
 # Bug report
