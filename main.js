@@ -676,17 +676,9 @@ function ExeFuncAftLoad(Func) {
     window.addEventListener("load", Func)
 }
 
-/*function FuncProgeny(_E0, fn) {
-    return Derie(_E0).map(_E1 => {
-        if (_E1.hasChildNodes().length != 0) {
-            return Array.from(_E1.childNodes).map(_E2 => {
-                return FuncProgeny(_E2, fn)
-            })
-        } else {
-            return fn(_E1);
-        }
-    })
-}*/
+function FuncProgeny(elem, fn) {
+    return Aom(elem).DescendantFlat().map(_E0 => fn(_E0));
+}
 
 //-Item Function-------------
 function Random(min, max, digit) {
