@@ -388,16 +388,21 @@ note.cset("Aomadds", Object).replace({
 });
 
 function Aom(proto, name, func) {
-    if (name) {
-        note.get("Aomadds")["Aom" + (proto === HTMLElement ? "htm" : Sem(new proto).toLowerCase().substr(0, 3))][name] = func;
-    } else {
-        let reobj = {};
-        Object.keys(note.get("Aomadds")["Aom" + Sem(proto).toLowerCase().substr(0, 3)]).forEach(_E0 => reobj[_E0] = note.get("Aomadds")["Aom" + Sem(proto).toLowerCase().substr(0, 3)][_E0].bind(proto))
-        return reobj;
+    try {
+        if (name) {
+            note.get("Aomadds")["Aom" + (proto === HTMLElement ? "htm" : Sem(new proto).toLowerCase().substr(0, 3))][name] = func;
+        } else {
+            let reobj = {};
+            Object.keys(note.get("Aomadds")["Aom" + Sem(proto).toLowerCase().substr(0, 3)]).forEach(_E0 => reobj[_E0] = note.get("Aomadds")["Aom" + Sem(proto).toLowerCase().substr(0, 3)][_E0].bind(proto))
+            return reobj;
+        }
+    } catch {
+        return undefined;
     }
 };
 
 note.cset("EventListeners", Map);
+note.cset("TextSize", Map);
 [
     [Array, "flat", function () {
         return (A2A = _A0 => _A0.flatMap(_E0 => Array.isArray(_E0) ? A2A(_E0) : _E0))(this)
@@ -474,6 +479,38 @@ note.cset("EventListeners", Map);
                 return [elem].concat(child(_E0));
             }) : elem;
         }
+    }],
+    [HTMLElement, "TextSize", function (Wper, Hper) {
+        if (!note.get("TextSize").has(this)) note.get("TextSize").cset(this, baser("height", "width", 100, 100))
+        if (Wper === undefined) {
+            let rems = document.createElement('span');
+            rems.setAttribute("class", "sfget_ew");
+            Derie("body")[0].insertBefore(rems, Derie("body")[0].firstChild);
+
+            Derie(".sfget_ew")[0].innerText = this.innerText;
+            Derie(".sfget_ew")[0].style.fontSize = Getsy(this).compute("font-size")[0]
+            Derie(".sfget_ew")[0].style.writingMode = Getsy(this).compute("writing-mode")[0]
+            Derie(".sfget_ew")[0].style.lineHeight = Getsy(this).compute("line-height")[0]
+            let [_TH, _TW] = [Derie(".sfget_ew")[0].offsetHeight, Derie(".sfget_ew")[0].offsetWidth]
+            // let [_TH, _TW] = [Getsy(Derie(".sfget_ew")[0]).compute("height")[0], Getsy(Derie(".sfget_ew")[0]).compute("width")[0]]
+            this.style.fontSize = (parseInt(Getsy(this).compute("width")[0]) / parseInt(_TW) <= parseInt(Getsy(this).compute("height")[0]) / parseInt(_TH) ?
+                parseInt(Getsy(this).compute("width")[0]) / parseInt(_TW) * parseInt(Getsy(this).compute("font-size")[0]) * potopx(note.get("TextSize").get(this)["width"]) * 0.01 :
+                parseInt(Getsy(this).compute("height")[0]) / parseInt(_TH) * parseInt(Getsy(this).compute("font-size")[0]) * potopx(note.get("TextSize").get(this)["height"]) * 0.01) + "px"
+
+            Derie("body")[0].removeChild(Derie(".sfget_ew")[0]);
+        } else if (Aom(Wper).comprise("add")) {
+            this.classList.add("text_contain")
+            Aom(this).addEventListener("resize", TextSize, _E0)
+        }
+        /*else if (Aom(Wper).comprise("remove")) {
+                   this.classList.remove("text_contain")
+                   Aom(this).removeEventListener("resize", TextSize, _E0)
+               } */
+        else {
+            Wper = Wper === null ? note.get("TextSize").get(this)["width"] : Wper;
+            Hper = Hper === null ? note.get("TextSize").get(this)["height"] : (Hper === undefined ? Wper : Hper);
+            note.get("TextSize").cset(this, baser("height", "width", Wper, Hper))
+        }
     }]
 ].forEach((_E0) => Aom(..._E0));
 
@@ -484,6 +521,15 @@ const aom = Symbol();
 HTMLElement[aom] = function () {
     return Aom(this)
 }
+
+Efal(
+    () => {
+        Derie(".text_contain").forEach(_E0 => {
+            Aom(_E0).TextSize();
+            Aom(_E0).addEventListener("resize", (() => Aom(_E0).TextSize()))
+        })
+    }
+)
 
 function Sem(proto) {
     try {
@@ -534,48 +580,6 @@ window.addEventListener('keyup', (event) => {
 })
 
 //-Calculation---------------
-
-// 要改良 言語識別効率化
-note.cset("TextSize", Map)
-
-function TextSize(elem, Wper, Hper) {
-    if (!note.get("TextSize").has(elem)) note.get("TextSize").cset(elem, baser("height", "width", 100, 100))
-    if (Wper === undefined && Wper !== null) {
-        let rems = document.createElement('span');
-        rems.setAttribute("class", "sfget_ew");
-        Derie("body")[0].insertBefore(rems, Derie("body")[0].firstChild);
-
-        elem = elem || elem.target;
-        Derie(".sfget_ew")[0].innerText = elem.innerText;
-        Derie(".sfget_ew")[0].style.fontSize = Getsy(elem).compute("font-size")[0]
-        Derie(".sfget_ew")[0].style.writingMode = Getsy(elem).compute("writing-mode")[0]
-        Derie(".sfget_ew")[0].style.lineHeight = Getsy(elem).compute("line-height")[0]
-        let [_TH, _TW] = [Derie(".sfget_ew")[0].offsetHeight, Derie(".sfget_ew")[0].offsetWidth]
-        // let [_TH, _TW] = [Getsy(Derie(".sfget_ew")[0]).compute("height")[0], Getsy(Derie(".sfget_ew")[0]).compute("width")[0]]
-        elem.style.fontSize = (parseInt(Getsy(elem).compute("width")[0]) / parseInt(_TW) <= parseInt(Getsy(elem).compute("height")[0]) / parseInt(_TH) ?
-            parseInt(Getsy(elem).compute("width")[0]) / parseInt(_TW) * parseInt(Getsy(elem).compute("font-size")[0]) * Number(note.get("TextSize").get(Derie(elem)[0])["width"]) * 0.01 :
-            parseInt(Getsy(elem).compute("height")[0]) / parseInt(_TH) * parseInt(Getsy(elem).compute("font-size")[0]) * Number(note.get("TextSize").get(Derie(elem)[0])["height"]) * 0.01) + "px"
-
-        Derie("body")[0].removeChild(Derie(".sfget_ew")[0]);
-    } else if (Aom(Wper).comprise("add")) {
-        elem.classList.add("text_contain")
-        Aom(elem).addEventListener("resize", TextSize, _E0)
-    } else if (Aom(Wper).comprise("remove")) {
-        elem.classList.remove("text_contain")
-        Aom(elem).removeEventListener("resize", TextSize, _E0)
-    } else {
-        Wper = Wper === null ? note.get("TextSize").get(elem)["width"] : Wper;
-        Hper = Hper === null ? note.get("TextSize").get(elem)["height"] : (Hper === undefined ? Wper : Hper);
-        note.get("TextSize").cset(elem, baser("height", "width", Wper, Hper))
-    }
-}
-
-window.addEventListener("load", () => {
-    Derie(".text_contain").forEach(_E0 => {
-        TextSize(_E0);
-        Aom(_E0).addEventListener("resize", TextSize, _E0)
-    })
-})
 
 Efal(
     (() => note.cset("CSSPoint", Object).replace({
@@ -635,7 +639,7 @@ function Tasks(_A0, _A1, ..._A2) /**(If, Function, Arguments) */ {
             break;
         case "start":
             if (sfconfig.TaskInterval == 0) {
-                note.get("TasksInterval").cset(sfconfig.TaskInterval)
+                note.get("TasksInterval").cset(sfconfig.TaskInterval);
                 Tasks("call");
             } else if (sfconfig.TaskInterval > 0) {
                 if (sfconfig.TaskInterval < 1) {
