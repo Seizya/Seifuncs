@@ -696,9 +696,9 @@ function Random(min, max, digit) {
     let [xx, yy] = [Random(xmin, xmax), Random(ymin, ymax)]
     let x = xx
     return new Function(`return ${graph}`)() >= yy ? yy : Funcrand(graph, xmin, xmax, ymin, ymax);
-}
+}*/
 
-function RandFn(now, min, max) { return now >= Random(min, max) ? true : false; }*/
+function RandFn(now, min, max) { return now >= Random(min, max) ? true : false; }
 
 //-Loaded--------------------
 console.log("Seifuncs ver.1.6.1 for JS was completely loaded.")
