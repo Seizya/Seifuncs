@@ -133,14 +133,14 @@ function DeriveElements(id, option) {
             switch (option) {
                 case undefined:
                     return Array.from(document.querySelectorAll(_id));
-                case "$SameClass":
-                    return Array.from(document.querySelectorAll(_id)).filter(_E0 => _E0.className != "").flatMap(_E0 => _E0.className.split(" ").flatMap(_E1 => document.getElementsByClassName(_E1)))[aom]().unDupA();
-                case "$Relative":
-                    return Array.from(document.querySelectorAll(_id)).flatMap(_E0 => document.getElementsByTagName(_E0.tagName)).filter(_E0 => Array.from(document.querySelectorAll(_id))).some(_E1 => _E0.parentNode == _E1.parentNode)[aom]().unDupA();
+                    // case "$SameClass":
+                    //   return Array.from(document.querySelectorAll(_id)).filter(_E0 => _E0.className != "").flatMap(_E0 => _E0.className.split(" ").flatMap(_E1 => document.getElementsByClassName(_E1)))[aom]().unDupA();
+                    // case "$Relative":
+                    //   return Array.from(document.querySelectorAll(_id)).flatMap(_E0 => document.getElementsByTagName(_E0.tagName)).filter(_E0 => Array.from(document.querySelectorAll(_id)).some(_E1 => _E0.parentNode == _E1.parentNode))[aom]().unDupA();
                 default:
                     return (function CQgeny(pare, arr) {
-                        arr = [...arr, ...pare.slice().filter(_E0 => Array.from(document.querySelectorAll(_id)).some(_E1 => window.getComputedStyle(_E0).getPropertyValue(option) == window.getComputedStyle(_E1).getPropertyValue(option)))];
-                        return pare.filter(_E0 => _E0.hasChildNodes()).flatMap(_E1 => _E1.child).length != 0 ? CQgeny(pare, arr) : Aom(arr).unDup();
+                        const arr2 = [...arr, ...pare.slice().filter(_E0 => Array.from(document.querySelectorAll(_id)).some(_E1 => window.getComputedStyle(_E0).getPropertyValue(option) == window.getComputedStyle(_E1).getPropertyValue(option)))];
+                        return pare.filter(_E0 => _E0.hasChildNodes()).flatMap(_E1 => _E1.children).length != 0 ? CQgeny(pare, arr2) : Aom(arr2).unDup();
                     })(Array.from(document.getElementsByTagName("HTML")), []);
             }
         } else {
@@ -255,12 +255,12 @@ class Note extends Map {
     }
     set join(newNote) {
         newNote.forEach((value, key) => {
-            if (!super.has(key)) super.set(key, value)
+            if (!super.has(key)) this.cset(key, value)
         })
         return this;
     }
     set assign(newNote) {
-        new Note.forEach((value, key) => super.set(key, value))
+        new Note.forEach((value, key) => this.cset(key, value))
         return this;
     }
 }
@@ -274,7 +274,7 @@ class Docarr extends Array {
         return this;
     }
     aset(arg) {
-        if (!arg.includes(arg)) super.push(arg)
+        return !arg.includes(arg) ? this.cset(arg) : this;
     }
     remove(arg) {
         super.forEach((_E0, _E1) => {
@@ -283,7 +283,8 @@ class Docarr extends Array {
     }
     replace(arg) {
         super.splice(0);
-        arg.forEach(_E0 => super.cset(_E0))
+        arg.forEach(_E0 => this.cset(_E0))
+        return this;
     }
 }
 
@@ -297,15 +298,18 @@ class Docobj extends Object {
     }
     aset(property, arg) {
         Object.keys(this).forEach((_E0) => {
-            if (_E0 != property) super.cset(property, arg)
+            if (_E0 != property) this.cset(property, arg)
         })
+        return this;
     }
     remove(property) {
         delete super[property];
+        return this;
     }
     replace(arg) {
         Object.keys(this).forEach(_E0 => delete super[_E0]);
         Object.keys(arg).forEach(_E0 => this.cset(_E0, arg[_E0]));
+        return this;
     }
 }
 
@@ -317,11 +321,12 @@ class Docmap extends Map {
         super.set(key, arg)
     }
     aset(key, arg) {
-        if (!super.has(key)) super.cset(key, arg)
+        return !super.has(key) ? this.cset(key, arg) : this;
     }
     replace(arg) {
         super.keys().forEach(_E0 => super.delete(_E0))
-        arg.keys().forEach(_E0 => super.cset(_E0, arg.get(_E0)))
+        arg.keys().forEach(_E0 => this.cset(_E0, arg.get(_E0)))
+        return this;
     }
 }
 
@@ -355,22 +360,28 @@ function baser(...args) {
     return _T0;
 }
 
+const Derie = DeriveElements;
+const Getsy = GetStyle;
+const Cag = SfChainArguments;
+const Cfn = MsChainFunctions;
+const Efal = ExeFuncAftLoad;
+/*
 note.cset("OmitFn", Map);
 OmitFunctionName("OmitFunctionName", "OmitFn")
 OmitFn("DeriveElements", "Derie")
 OmitFn("GetStyle", "Getsy")
-OmitFn("SeChainArguments", "Cag")
-OmitFn("MsChainfunctions", "Cfn")
+OmitFn("SfChainArguments", "Cag")
+OmitFn("MsChainFunctions", "Cfn")
 OmitFn("ExeFuncAftLoad", "Efal");
-
-function OmitFunctionName(base, abbr, Postscript) {
-    if (!Postscript) {
-        note.get("OmitFn").set(base, [abbr])
-    } else {
-        note.get("OmitFn").set(base, note.get("OmitFn").get(base) ? [...note.get("OmitFn").get(base), abbr] : [abbr])
-    }
-    window[abbr] = new Function("...arg", `return ${Array.from(note.get("OmitFn").entries()).filter(_E0 => _E0[1].some(_E1 => _E1 == abbr))[0][0]}(...arg)`);
+function OmitFunctionName(base, abbr, Postscript?) {
+  if (!Postscript) {
+    note.get("OmitFn").set(base, [abbr])
+  } else {
+    note.get("OmitFn").set(base, note.get("OmitFn").get(base) ? [...note.get("OmitFn").get(base), abbr] : [abbr])
+  }
+  window[abbr] = new Function("...arg", `return ${Array.from(note.get("OmitFn").entries()).filter(_E0 => _E0[1].some(_E1 => _E1 == abbr))[0][0]}(...arg)`);
 }
+*/
 
 //-Object--------------------
 note.cset("Aomadds", Object).replace({
@@ -698,7 +709,9 @@ function Random(min, max, digit) {
     return new Function(`return ${graph}`)() >= yy ? yy : Funcrand(graph, xmin, xmax, ymin, ymax);
 }*/
 
-function RandFn(now, min, max) { return now >= Random(min, max) ? true : false; }
+function RandFn(now, min, max) {
+    return now >= Random(min, max) ? true : false;
+}
 
 //-Loaded--------------------
 console.log("Seifuncs ver.1.6.1 for JS was completely loaded.")
