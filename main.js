@@ -404,7 +404,7 @@ function Aom(proto, name, func) {
             note.get("Aomadds")["Aom" + (proto === HTMLElement ? "htm" : Sem(new proto).toLowerCase().substr(0, 3))][name] = func;
         } else {
             let reobj = {};
-            Object.keys(note.get("Aomadds")["Aom" + Sem(proto).toLowerCase().substr(0, 3)]).forEach(_E0 => reobj[_E0] = note.get("Aomadds")["Aom" + Sem(proto).toLowerCase().substr(0, 3)][_E0].bind(proto))
+            Object.keys(note.get("Aomadds")["Aom" + (Sem(proto).includes("Doc") ? Sem(proto).replace(/Doc/g, "") : Sem(proto)).toLowerCase().substr(0, 3)]).forEach(_E0 => reobj[_E0] = note.get("Aomadds")["Aom" +  (Sem(proto).includes("Doc") ? Sem(proto).replace(/Doc/g, "") : Sem(proto)).toLowerCase().substr(0, 3)][_E0].bind(proto))
             return reobj;
         }
     } catch {
@@ -421,9 +421,9 @@ note.cset("TextSize", Map);
     [Array, "unDup", function /**Duplicate */ (back) {
         return this.filter((x, i, self) => (back ? self.lastIndexOf(x) : self.indexOf(x)) === i);
     }],
-    [Object, "is", function (arg) {
-        return (arg instanceof Object && !(arg instanceof Array)) ? true : false;
-    }],
+    // [Object, "is", function (arg) {
+    //     return (arg instanceof Object && !(arg instanceof Array)) ? true : false;
+    // }],
     [Object, "forEach", function (fn) {
         Object.keys(this).forEach(key => {
             let val = this[key];
@@ -439,9 +439,6 @@ note.cset("TextSize", Map);
     }],
     [String, "comprise", function (string) {
         return this.match(new RegExp(string.toLowerCase())) !== null ? true : false
-    }],
-    [Number, "that", function () {
-        return this
     }],
     [Number, "zeroPadding", function (dig) {
         const AddZero = (_num, _dig) => _num.length < (_num.indexOf(".") == -1 ? _dig : _dig + 1) ? AddZero("0" + _num, _dig) : _num;
