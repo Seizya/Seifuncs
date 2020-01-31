@@ -34,7 +34,7 @@ window.addEventListener("load", function () {
 });
 
 //Maindish-------------------
-(() => {
+/*(() => {
     var listeners = [];
     const tmp = window.addEventListener;
     window.addEventListener("load", (...args) => {
@@ -123,7 +123,7 @@ function CSS(elements) {
             throw errors;
         }
     });
-}
+}*/
 
 function DeriveElements(id, option) {
     return [id].flat()[aom]().flat().flatMap(_E0 => _E0 instanceof HTMLElement ? _E0 : CQgeny(_E0)).filter(_E0 => _E0);
