@@ -20,7 +20,8 @@ import-htmlタグを追加します。
 //Config---------------------
 const sfconfig = {
     TaskInterval: 0,
-    AlwaysTasksWork: false
+    AlwaysTasksWork: false,
+    MasterKey: Symbol()
 };
 
 //CSS load-------------------
@@ -30,11 +31,11 @@ window.addEventListener("load", function () {
     sfcss.setAttribute("rel", "stylesheet");
     sfcss.setAttribute("type", "text/css");
     sfcss.setAttribute("href", "./Seifuncs/sfstyle.css");
-    Derie('script[src="./Seifuncs/main.js"]')[0].parentNode.insertBefore(sfcss, Derie('script[src="./Seifuncs/main.js"]')[0]);
+    Subes('script[src="./Seifuncs/main.js"]')[0].parentNode.insertBefore(sfcss, Subes('script[src="./Seifuncs/main.js"]')[0]);
 });
 
 //Maindish-------------------
-(() => {
+/*(() => {
     var listeners = [];
     const tmp = window.addEventListener;
     window.addEventListener("load", (...args) => {
@@ -123,38 +124,30 @@ function CSS(elements) {
             throw errors;
         }
     });
-}
+}*/
 
-function DeriveElements(id, option) {
-    return [id].flat()[aom]().flat().flatMap(_E0 => _E0 instanceof HTMLElement ? _E0 : CQgeny(_E0)).filter(_E0 => _E0);
+function SublimateElements(id, option) {
+    return Aom([id]).fullFlat().flatMap(_E0 => Sem(id).includes("HTML") && Sem(id).includes("Element") ? _E0 : GetElement(id));
 
-    function CQgeny(_id) {
-        if (document.querySelectorAll(_id).length >= 1) {
+    function GetElement(_id) {
+        try {
             switch (option) {
-                case undefined:
-                    return Array.from(document.querySelectorAll(_id));
-                    // case "$SameClass":
-                    //   return Array.from(document.querySelectorAll(_id)).filter(_E0 => _E0.className != "").flatMap(_E0 => _E0.className.split(" ").flatMap(_E1 => document.getElementsByClassName(_E1)))[aom]().unDupA();
-                    // case "$Relative":
-                    //   return Array.from(document.querySelectorAll(_id)).flatMap(_E0 => document.getElementsByTagName(_E0.tagName)).filter(_E0 => Array.from(document.querySelectorAll(_id)).some(_E1 => _E0.parentNode == _E1.parentNode))[aom]().unDupA();
                 default:
-                    return (function CQgeny(pare, arr) {
-                        const arr2 = [...arr, ...pare.slice().filter(_E0 => Array.from(document.querySelectorAll(_id)).some(_E1 => window.getComputedStyle(_E0).getPropertyValue(option) == window.getComputedStyle(_E1).getPropertyValue(option)))];
-                        return pare.filter(_E0 => _E0.hasChildNodes()).flatMap(_E1 => _E1.children).length != 0 ? CQgeny(pare, arr2) : Aom(arr2).unDup();
-                    })(Array.from(document.getElementsByTagName("HTML")), []);
+                    return Array.from(document.querySelectorAll(_id));
             }
-        } else {
+        } catch (e) {
             switch (option) {
                 case "$Descendant":
                     if (Aom(_id).comprise("#")) {
-                        return Aom(document.querySelectorAll("html")[0]).DescendantFlat().filter(_E0 => Aom(_E0.id).comprise(_id.replace(/#/g, "")))
+                        return Aom(document.querySelectorAll("html")[0]).DescendantFlat().filter(_E0 => Aom(_E0.id).comprise(_id.replace(/#/g, "")));
                     } else if (Aom(_id).comprise(".")) {
-                        return Aom(document.querySelectorAll("html")[0]).DescendantFlat().filter(_E0 => _E0.className.split(" ").filter(_E1 => _E1.match(new RegExp(_id.replace(/[\.]+/g, "")))).length > 0)
+                        return Aom(document.querySelectorAll("html")[0]).DescendantFlat().filter(_E0 => _E0.className.split(" ").filter(_E1 => _E1.match(new RegExp(_id.replace(/[\.]+/g, "")))).length > 0);
                     } else {
-                        return Aom(document.querySelectorAll("html")[0]).DescendantFlat().filter(_E0 => Aom(_E0.tagName).comprise(_id.replace(/#/g, "")))
-                    }
+                        return Aom(document.querySelectorAll("html")[0]).DescendantFlat().filter(_E0 => Aom(_E0.tagName).comprise(_id.replace(/#/g, "")));
+                    };
+                default:
+                    return undefined;
             }
-            return undefined;
         }
     }
 }
@@ -179,7 +172,7 @@ class Getsies extends Array {
                 } else if (Aom(_A0).comprise("width")) {
                     return window.innerWidth;
                 } else if (_A0.includes("rem") && !poAom(int).comprise("small")) {
-                    return window.getComputedStyle(Derie("html")).getPropertyValue("font-size");
+                    return window.getComputedStyle(Subes("html")).getPropertyValue("font-size");
                 }
             } else if (Aom(_A0).comprise("min")) {
                 return Getsytmp(_E0, true)
@@ -206,11 +199,11 @@ function potopx(A0) {
     let rems = document.createElement('span');
     rems.setAttribute("class", "sfget_ew");
     rems.style.width = Sem(A0) == "Number" ? A0 + "px" : A0;
-    Derie("body")[0].insertBefore(rems, Derie("body")[0].firstChild);
+    Subes("body")[0].insertBefore(rems, Subes("body")[0].firstChild);
 
-    let _T0 = parseFloat(Getsy(Derie(".sfget_ew")[0]).compute("width"));
+    let _T0 = parseFloat(Getsy(Subes(".sfget_ew")[0]).compute("width"));
 
-    Derie("body")[0].removeChild(Derie(".sfget_ew")[0]);
+    Subes("body")[0].removeChild(Subes(".sfget_ew")[0]);
     return _T0;
 }
 
@@ -222,11 +215,11 @@ function potopx(A0) {
  * SeCA <Sei Chain Argument> SeCA(fn Name)(arg0)...(argn)() == fn(arg0,...,argn);
  * MsCF <Msy Chain Function> MsCF(obj)(fn0)...(fnn) => arg(obj) ... argn(arg(obj));
  */
-function SfChainArguments(fn) {
+function ChainArguments(fn) {
     return (tmp = args => arg => arg ? tmp([...args, ...arg]) : fn(...args))([])
 }
 
-function MsChainFunctions(obj) {
+function ChainFunctions(obj) {
     return fn => fn ? MsCF(fn(obj)) : obj
 }
 
@@ -234,122 +227,49 @@ class Note extends Map {
     constructor() {
         super();
     }
-    cset(name, proto) {
-        super.set(name, (() => {
-            switch (proto) {
-                case Array:
-                    return new Docarr()
-                case Object:
-                    return new Docobj()
-                case Map:
-                    return new Docmap()
-                default:
-                    return new Doclet()
-            }
-        })())
-        return super.get(name);
+    set(key, value) {
+         super.set(key, value || new letPage());
+         return this.get(key);
     }
     aset(name, arg) {
         if (super.has(name)) console.warn(name + " is already written in this Note.")
-        if (!super.has(name)) return this.cset(name, arg);
+        if (!super.has(name)) return this.set(name, arg);
     }
-    set join(newNote) {
+    join(newNote) {
         newNote.forEach((value, key) => {
-            if (!super.has(key)) this.cset(key, value)
+            if (!super.has(key)) this.set(key, value)
         })
         return this;
     }
-    set assign(newNote) {
-        new Note.forEach((value, key) => this.cset(key, value))
+    assign(newNote) {
+        newNote.forEach((value, key) => this.set(key, value))
         return this;
     }
 }
 
-class Docarr extends Array {
+class letPage {
     constructor() {
-        super()
+        this.data;
     }
-    cset(arg) {
-        super.push(arg)
+    set(input) {
+        this.data = input;
         return this;
     }
-    aset(arg) {
-        return !arg.includes(arg) ? this.cset(arg) : this;
-    }
-    remove(arg) {
-        super.forEach((_E0, _E1) => {
-            if (_E0 == arg) super.splice(_E1, 1)
-        })
-    }
-    replace(arg) {
-        super.splice(0);
-        arg.forEach(_E0 => this.cset(_E0))
-        return this;
-    }
-}
-
-class Docobj extends Object {
-    constructor() {
-        super()
-    }
-    cset(property, arg) {
-        super[property] = arg;
-        return this;
-    }
-    aset(property, arg) {
-        Object.keys(this).forEach((_E0) => {
-            if (_E0 != property) this.cset(property, arg)
-        })
-        return this;
-    }
-    remove(property) {
-        delete super[property];
-        return this;
-    }
-    replace(arg) {
-        Object.keys(this).forEach(_E0 => delete super[_E0]);
-        Object.keys(arg).forEach(_E0 => this.cset(_E0, arg[_E0]));
-        return this;
-    }
-}
-
-class Docmap extends Map {
-    constructor() {
-        super()
-    }
-    cset(key, arg) {
-        super.set(key, arg)
-    }
-    aset(key, arg) {
-        return !super.has(key) ? this.cset(key, arg) : this;
-    }
-    replace(arg) {
-        super.keys().forEach(_E0 => super.delete(_E0))
-        arg.keys().forEach(_E0 => this.cset(_E0, arg.get(_E0)))
-        return this;
-    }
-}
-
-class Doclet {
-    cset(arg) {
-        this.value = arg;
-        return this;
-    }
-    get self() {
-        return this.value;
+    get(input) {
+        return this.data;
     }
 }
 
 const note = new Note()
 
-function BookTag(book, page) {
-    window[page] = new Function(`return ${book}.self.get("${page}")`)()
-};
+// function BookTag(book, page) {
+//     window[page] = new Function(`return ${book}.self.get("${page}")`)()
+// };
 
 function baser(...args) {
     if (args.length % 2 != 0) {
         console.warn("length of args must be even");
-        return false
+        return false;
     }
     args = [args.slice(0, args.length / 2), args.slice(-args.length / 2)]
 
@@ -360,15 +280,19 @@ function baser(...args) {
     return _T0;
 }
 
-const Derie = DeriveElements;
+function cutter(input) {
+    return (input === HTMLElement ? "htm" : Sem(new input).toLowerCase().substr(0, 3))
+}
+
+const Subes = SublimateElements;
 const Getsy = GetStyle;
-const Cag = SfChainArguments;
-const Cfn = MsChainFunctions;
+const Cag = ChainArguments;
+const Cfn = ChainFunctions;
 const Efal = ExeFuncAftLoad;
 /*
-note.cset("OmitFn", Map);
+note.set("OmitFn", Map);
 OmitFunctionName("OmitFunctionName", "OmitFn")
-OmitFn("DeriveElements", "Derie")
+OmitFn("SublimateElements", "Subes")
 OmitFn("GetStyle", "Getsy")
 OmitFn("SfChainArguments", "Cag")
 OmitFn("MsChainFunctions", "Cfn")
@@ -384,27 +308,88 @@ function OmitFunctionName(base, abbr, Postscript?) {
 */
 
 //-Object--------------------
-note.cset("Aomadds", Object).replace({
-    Aomarr: {},
-    Aomobj: {},
-    Aommap: {},
-    Aomwea: {},
-    Aomstr: {},
-    Aomnum: {},
-    Aomboo: {},
-    Aomhtm: {},
-    Aomfun: {},
-    Aomreg: {},
-    Aomdat: {}
-});
+class Aomadds {
+    constructor() {
+        this.arr = {};
+        this.obj = {};
+        this.map = {};
+        this.wea = {};
+        this.str = {};
+        this.num = {};
+        this.boo = {};
+        this.htm = {};
+        this.fun = {};
+        this.reg = {};
+        this.dat = {};
+        this.master_data = [];
+    };
+    set(proto, name, func) {
+        if (this.master_data.filter(_E0 => _E0[0] == cutter(proto) && _E0[1] == name).length == 0) {
+            this[cutter(proto)][name] = func;
+        } else {
+            console.warn(proto + " was used by Developer on " + proto);
+        }
+        return this;
+    };
+    aset(proto, name, func) {
+        if (!Object.keys(this[cutter(proto)]).includes(name)) {
+            this.set(proto, name, func);
+        } else {
+            console.warn(proto + " was already used on " + proto);
+        }
+        return this;
+    };
+    get(proto) {
+        return this[proto];
+    };
+    has(proto, name) {
+        return !Object.keys(this[cutter(proto)]).includes(name);
+    };
+    delete(proto, name) {
+        if (this.master_data.filter(_E0 => _E0[0] == cutter(proto) && _E0[1] == name).length == 0) {
+            this[cutter(proto)][name] = undefined;
+        }
+        return this;
+    };
+    master(proto, name, func, key) {
+        if (key == sfconfig.MasterKey) {
+            if (this.master_data.filter(_E0 => _E0[0] == cutter(proto) && _E0[1] == name).length == 0) {
+                this[cutter(proto)][name] = func;
+                this.master_data.push([cutter(proto), name]);
+            } else {
+                console.warn(proto + " was already used on " + proto);
+            }
+        } else {
+            console.warn("I can't accept your order.")
+        }
+        return this;
+    };
+    backup() {
+        return baser("arr", "obj", "map", "wea", "str", "num", "boo", "htm", "fun", "reg", "dat", "master", this.arr, this.obj, this.map, this.wea, this.str, this.num, this.boo, this.htm, this.fun, this.reg, this.dat, this.master)
+    };
+    restore(data) {
+        Object.keys(data).forEach(key => this[key] = data[key]);
+        return this;
+    };
+    join(data) {
+        Object.keys(data).forEach(key => data[key].forEach(datakey => {
+            if (!this[key].hasOwnProperty(datakey)) this[key][datakey] = data[key][datakey]
+        }));
+        return this;
+    };
+    assign(data) {
+        Object.keys(data).forEach(key => data[key].forEach(datakey => this[key][datakey] = data[key][datakey]));
+        return this;
+    };
+}
 
-function Aom(proto, name, func) {
+function Aom(proto) {
     try {
-        if (name) {
-            note.get("Aomadds")["Aom" + (proto === HTMLElement ? "htm" : Sem(new proto).toLowerCase().substr(0, 3))][name] = func;
+        if (!proto) {
+            return note.get("Aomadds");
         } else {
             let reobj = {};
-            Object.keys(note.get("Aomadds")["Aom" + (Sem(proto).includes("Doc") ? Sem(proto).replace(/Doc/g, "") : Sem(proto)).toLowerCase().substr(0, 3)]).forEach(_E0 => reobj[_E0] = note.get("Aomadds")["Aom" +  (Sem(proto).includes("Doc") ? Sem(proto).replace(/Doc/g, "") : Sem(proto)).toLowerCase().substr(0, 3)][_E0].bind(proto))
+            Object.keys(note.get("Aomadds").get((Sem(proto).includes("Doc") ? Sem(proto).replace(/Doc/g, "") : Sem(proto)).toLowerCase().substr(0, 3))).forEach(_E0 => reobj[_E0] = note.get("Aomadds").get((Sem(proto).includes("Doc") ? Sem(proto).replace(/Doc/g, "") : Sem(proto)).toLowerCase().substr(0, 3))[_E0].bind(proto))
             return reobj;
         }
     } catch {
@@ -412,10 +397,12 @@ function Aom(proto, name, func) {
     }
 };
 
-note.cset("EventListeners", Map);
-note.cset("TextSize", Map);
+note.set("Aomadds", new Aomadds());
+
+note.set("EventListeners", new Map());
+note.set("TextSize", new Map());
 [
-    [Array, "flat", function () {
+    [Array, "fullFlat", function () {
         return (A2A = _A0 => _A0.flatMap(_E0 => Array.isArray(_E0) ? A2A(_E0) : _E0))(this)
     }],
     [Array, "unDup", function /**Duplicate */ (back) {
@@ -436,6 +423,9 @@ note.cset("TextSize", Map);
             reobj[key] = this[key]
         })
         return reobj;
+    }],
+    [Object, "toMap", function () {
+        return new Map(Object.entries(this));
     }],
     [String, "comprise", function (string) {
         return this.match(new RegExp(string.toLowerCase())) !== null ? true : false
@@ -493,19 +483,19 @@ note.cset("TextSize", Map);
         if (Wper === undefined) {
             let rems = document.createElement('span');
             rems.setAttribute("class", "sfget_ew");
-            Derie("body")[0].insertBefore(rems, Derie("body")[0].firstChild);
+            Subes("body")[0].insertBefore(rems, Subes("body")[0].firstChild);
 
-            Derie(".sfget_ew")[0].innerText = this.innerText;
-            Derie(".sfget_ew")[0].style.fontSize = Getsy(this).compute("font-size")[0]
-            Derie(".sfget_ew")[0].style.writingMode = Getsy(this).compute("writing-mode")[0]
-            Derie(".sfget_ew")[0].style.lineHeight = Getsy(this).compute("line-height")[0]
-            let [_TH, _TW] = [Derie(".sfget_ew")[0].offsetHeight, Derie(".sfget_ew")[0].offsetWidth]
-            // let [_TH, _TW] = [Getsy(Derie(".sfget_ew")[0]).compute("height")[0], Getsy(Derie(".sfget_ew")[0]).compute("width")[0]]
+            Subes(".sfget_ew")[0].innerText = this.innerText;
+            Subes(".sfget_ew")[0].style.fontSize = Getsy(this).compute("font-size")[0]
+            Subes(".sfget_ew")[0].style.writingMode = Getsy(this).compute("writing-mode")[0]
+            Subes(".sfget_ew")[0].style.lineHeight = Getsy(this).compute("line-height")[0]
+            let [_TH, _TW] = [Subes(".sfget_ew")[0].offsetHeight, Subes(".sfget_ew")[0].offsetWidth]
+            // let [_TH, _TW] = [Getsy(Subes(".sfget_ew")[0]).compute("height")[0], Getsy(Subes(".sfget_ew")[0]).compute("width")[0]]
             this.style.fontSize = (parseInt(Getsy(this).compute("width")[0]) / parseInt(_TW) <= parseInt(Getsy(this).compute("height")[0]) / parseInt(_TH) ?
                 parseInt(Getsy(this).compute("width")[0]) / parseInt(_TW) * parseInt(Getsy(this).compute("font-size")[0]) * potopx(note.get("TextSize").get(this)["width"]) * 0.01 :
                 parseInt(Getsy(this).compute("height")[0]) / parseInt(_TH) * parseInt(Getsy(this).compute("font-size")[0]) * potopx(note.get("TextSize").get(this)["height"]) * 0.01) + "px"
 
-            Derie("body")[0].removeChild(Derie(".sfget_ew")[0]);
+            Subes("body")[0].removeChild(Subes(".sfget_ew")[0]);
         } else if (Aom(Wper).comprise("add")) {
             this.classList.add("text_contain")
             Aom(this).addEventListener("resize", TextSize, _E0)
@@ -520,7 +510,7 @@ note.cset("TextSize", Map);
             note.get("TextSize").cset(this, baser("height", "width", Wper, Hper))
         }
     }]
-].forEach((_E0) => Aom(..._E0));
+].forEach((_E0) => Aom().master(_E0[0], _E0[1], _E0[2], sfconfig.MasterKey));
 
 const aom = Symbol();
 [Array, Object, Map, WeakMap, String, Number, Boolean, Function, RegExp, Date].forEach(_E0 => _E0.prototype[aom] = function () {
@@ -532,7 +522,7 @@ HTMLElement[aom] = function () {
 
 Efal(
     () => {
-        Derie(".text_contain").forEach(_E0 => {
+        Subes(".text_contain").forEach(_E0 => {
             Aom(_E0).TextSize();
             Aom(_E0).addEventListener("resize", (() => Aom(_E0).TextSize()))
         })
@@ -554,9 +544,9 @@ function Optionalys(...args) {
     //_T0 = new Array(args[1].filter(_E0 => new RegExp(_E0).test(args[0]))).flat();
 }
 
-note.cset("KeyHold", Map);
-note.cset("KeyCount", Map);
-note.cset("KeyCode").cset(false)
+note.set("KeyHold", new Map());
+note.set("KeyCount", new Map());
+note.set("KeyCode").set(false)
 
 function Keys(type, code, clear) {
     switch (type) {
@@ -571,8 +561,8 @@ function Keys(type, code, clear) {
                 return note.get("KeyCount").get(code)
             };
         case "code":
-            note.get("KeyCode").cset(!note.get("KeyCode").self)
-            return "KeyCode : " + note.get("KeyCode").self;
+            note.get("KeyCode").set(!note.get("KeyCode"))
+            return "KeyCode : " + note.get("KeyCode").get();
     }
 }
 
@@ -590,14 +580,14 @@ window.addEventListener('keyup', (event) => {
 //-Calculation---------------
 
 Efal(
-    (() => note.cset("CSSPoint", Object).replace({
-        vwwos: () => Derie(":root")[0].style.setProperty('--vwwos', document.body.clientWidth / 100 + "px"),
-        vhwos: () => Derie(":root")[0].style.setProperty('--vhwos', document.body.clientHeight / 100 + "px")
-    }))
+    (() => note.set("CSSPoint", Aom({
+        vwwos: () => Subes(":root")[0].style.setProperty('--vwwos', document.body.clientWidth / 100 + "px"),
+        vhwos: () => Subes(":root")[0].style.setProperty('--vhwos', document.body.clientHeight / 100 + "px")
+    }).toMap()))
 )
 
 function CSSPoint(id) {
-    note.get("CSSPoint")[id]()
+    note.get("CSSPoint").get(id)()
 }
 
 window.addEventListener("resize", () => {
@@ -607,11 +597,11 @@ window.addEventListener("resize", () => {
 
 //-Auto Process--------------
 //Puppeteer
-note.cset("sfwindow");
+note.set("sfwindow");
 
 function rewindow(width, height, size) {
     if (width == "close") {
-        note.get("sfwindow").cset(undefined);
+        note.get("sfwindow").set(undefined);
         return false
     }
     if (Sem(width) != Sem(height)) {
@@ -619,70 +609,88 @@ function rewindow(width, height, size) {
         return false
     }
     _F0 = () => {
-        note.get("sfwindow").cset(window.open(location.href, "sfwindow", `width=${Sem(width) == "Number" ? size ? potopx(size) + "px" : "300px" : width},\
+        note.get("sfwindow").set(window.open(location.href, "sfwindow", `width=${Sem(width) == "Number" ? size ? potopx(size) + "px" : "300px" : width},\
                 height=${Sem(height) == "Number" ? size ? potopx(size) * height / width + "px" : 300 * height / width : height}`));
         let _T0 = setInterval(() => {
-            if (!note.get("sfwindow") || note.get("sfwindow").closed) {
+            if (!note.get("sfwindow").get() || note.get("sfwindow").get().closed) {
                 clearInterval(_T0);
                 rewindow("close")
             }
         }, 1000);
     }
     try {
-        if (sfwindow && !sfwindow.closed) sfwindow.close();
+        if (note.get("sfwindow").get() && !note.get("sfwindow").get().closed) sfwindow.close();
     } catch {}
     _F0()
 }
 
-note.cset("TasksInterval").cset(sfconfig.TaskInterval)
-note.cset("Tasks", Array)
-Tasks("start");
+class TasksMember extends Array {
+    constructor() {
+        super();
+    }
+    add(If, Fn, ...Arguments) {
+        let id = Symbol();
+        this.push(baser("Work", "Id", "If", "Function", "Arguments", true, id, If, Fn, Arguments))
+        return id;
+    }
+    remove(id) {
+        this.forEach((_E0, _E1, _E2) => {
+            if (_E0["Id"] == id) _E2.splice(_E1, 1)
+        })
+        return this;
+    }
+    start() {
+        if (sfconfig.TaskInterval == 0) {
+            note.get("TasksInterval").set(sfconfig.TaskInterval);
+            Tasks("call");
+        } else if (sfconfig.TaskInterval > 0) {
+            if (sfconfig.TaskInterval < 1) {
+                console.error("Task Interval must be 0, -1 or a positive natural number.")
+            } else {
+                note.get("TasksInterval").set(window.setInterval(Tasks, sfconfig.TaskInterval, "call"));
+            }
+        };
+    }
+    stop() {
+        if (sfconfig.TAskInterval == 0) {
+            note.set("TasksInterval").set(-1)
+        } else if (sfconfig.TaskInterval > 0) {
+            window.clearInterval(note.get("TasksInterval").get());
+        };
+    }
+    call() {
+        this.forEach(_E0 => {
+            if (_E0["If"]() && _E0["Work"]) {
+                _E0["Function"](..._E0["Arguments"])
+                if (!sfconfig.AlwaysTasksWork) {
+                    _E0["Work"] = false;
+                }
+            } else if (!_E0["If"]() && !_E0["Work"]) {
+                _E0["Work"] = true;
+            }
+        })
+        if (note.get("TasksInterval").get() == 0) window.requestAnimationFrame(Tasks.bind(null, "call"))
+    }
+}
 
 function Tasks(_A0, _A1, ..._A2) /**(If, Function, Arguments) */ {
     switch (_A0) {
         case "remove":
-            note.get("Tasks").forEach((_E0, _E1, _E2) => {
-                if (_E0["Id"] == _A1) _E2.splice(_E1, 1)
-            })
-            break;
+            return note.get("Tasks").remove(_A0);
         case "start":
-            if (sfconfig.TaskInterval == 0) {
-                note.get("TasksInterval").cset(sfconfig.TaskInterval);
-                Tasks("call");
-            } else if (sfconfig.TaskInterval > 0) {
-                if (sfconfig.TaskInterval < 1) {
-                    console.error("Task Interval must be 0, -1 or a positive natural number.")
-                } else {
-                    note.get("TasksInterval").cset(window.setInterval(Tasks, sfconfig.TaskInterval, "call"));
-                }
-            };
-            break;
+            return note.get("Tasks").start();
         case "stop":
-            if (sfconfig.TAskInterval == 0) {
-                note.cset("TasksInterval").cset(-1)
-            } else if (sfconfig.TaskInterval > 0) {
-                window.clearInterval(note.get("TasksInterval"));
-            };
-            break;
+            return note.get("Tasks").stop();
         case "call":
-            note.get("Tasks").forEach(_E0 => {
-                if (_E0["If"]() && _E0["Work"]) {
-                    _E0["Function"](..._E0["Arguments"])
-                    if (!sfconfig.AlwaysTasksWork) {
-                        _E0["Work"] = false;
-                    }
-                } else if (!_E0["If"]() && !_E0["Work"]) {
-                    _E0["Work"] = true;
-                }
-            })
-            if (note.get("TasksInterval").self == 0) window.requestAnimationFrame(Tasks.bind(null, "call"))
-            break;
+            return note.get("Tasks").call();
         default:
-            let id = Symbol();
-            note.get("Tasks").cset(baser("Work", "Id", "If", "Function", "Arguments", true, id, _A0, _A1, _A2))
-            return id;
+            return note.get("Tasks").set(_A0, _A1, ..._A2);
     };
 }
+
+note.set("TasksInterval").set(sfconfig.TaskInterval)
+note.set("Tasks", new TasksMember());
+Tasks("start");
 
 function ExeFuncAftLoad(Func) {
     window.addEventListener("load", Func)
@@ -711,7 +719,7 @@ function RandFn(now, min, max) {
 }
 
 //-Loaded--------------------
-console.log("Seifuncs ver.1.6.1 for JS was completely loaded.")
+console.log("Seifuncs ver.1.7.β for JS was completely loaded.")
 if (/^(?=.*Chrome)(?!.*Edge)/.test(window.navigator.userAgent)) {
     console.log("%c %c Seifuncs for JS %c \n%c %c Developer : Seizya \n%c %c GitHub : https://github.com/Seizya \n%c %c Special Thanks : omasakun (github.com/omasakun)",
         "background-color:#165e83;border-bottom:solid #f0f 2px", "border-bottom:solid #f0f 2px", "", "background-color:#165e83", "", "background-color:#165e83", "", "background-color:#165e83", "color: transparent")
