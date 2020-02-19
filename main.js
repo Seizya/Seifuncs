@@ -1,12 +1,12 @@
-﻿/**It's JavaScript Function Library.
- * SeHelp() : Get Function List or help in rough english.
- * SeHelpJp() : 日本語での関数リストや, ヘルプを得られます。(後日実装予定)
- * 
- * Made by Seizya.
- * Special thanks : omasakun
- */
+﻿//Config---------------------
+const sfconfig = {
+    TaskInterval: 0,
+    AlwaysTasksWork: false,
+    MasterKey: Symbol()
+};
 
-/* 訳
+//Maindish-------------------
+/* 
 このスクリプトは、どのスクリプトよりも早く読み込まれるようにしてください。
 
 import-htmlタグを追加します。
@@ -17,24 +17,6 @@ import-htmlタグを追加します。
 このスクリプトが読み込まれてから window の load イベントが発火するまでに追加された load イベントハンドラーは、importHTMLs 実行後に呼び出されます。
 */
 
-//Config---------------------
-const sfconfig = {
-    TaskInterval: 0,
-    AlwaysTasksWork: false,
-    MasterKey: Symbol()
-};
-
-//CSS load-------------------
-window.addEventListener("load", function () {
-    const sfcss = document.createElement('link');
-    sfcss.setAttribute("id", "SeifuncCSS");
-    sfcss.setAttribute("rel", "stylesheet");
-    sfcss.setAttribute("type", "text/css");
-    sfcss.setAttribute("href", "./Seifuncs/sfstyle.css");
-    Subes('script[src="./Seifuncs/main.js"]')[0].parentNode.insertBefore(sfcss, Subes('script[src="./Seifuncs/main.js"]')[0]);
-});
-
-//Maindish-------------------
 /*(() => {
     var listeners = [];
     const tmp = window.addEventListener;
@@ -126,7 +108,7 @@ function CSS(elements) {
     });
 }*/
 
-function SublimateElements(id, option) {
+export function SublimateElements(id, option) {
     return Aom([id]).fullFlat().flatMap(_E0 => Sem(id).includes("HTML") && Sem(id).includes("Element") ? _E0 : GetElement(id));
 
     function GetElement(_id) {
@@ -152,7 +134,7 @@ function SublimateElements(id, option) {
     }
 }
 
-function GetStyle(_A0) {
+export function GetStyle(_A0) {
     return new Getsies(_A0);
 }
 
@@ -195,7 +177,7 @@ class Getsies extends Array {
     }
 }
 
-function potopx(A0) {
+export function potopx(A0) {
     let rems = document.createElement('span');
     rems.setAttribute("class", "sfget_ew");
     rems.style.width = Sem(A0) == "Number" ? A0 + "px" : A0;
@@ -215,15 +197,15 @@ function potopx(A0) {
  * SeCA <Sei Chain Argument> SeCA(fn Name)(arg0)...(argn)() == fn(arg0,...,argn);
  * MsCF <Msy Chain Function> MsCF(obj)(fn0)...(fnn) => arg(obj) ... argn(arg(obj));
  */
-function ChainArguments(fn) {
+export function ChainArguments(fn) {
     return (tmp = args => arg => arg ? tmp([...args, ...arg]) : fn(...args))([])
 }
 
-function ChainFunctions(obj) {
+export function ChainFunctions(obj) {
     return fn => fn ? MsCF(fn(obj)) : obj
 }
 
-class Note extends Map {
+export class Note extends Map {
     constructor() {
         super();
     }
@@ -266,7 +248,7 @@ const note = new Note()
 //     window[page] = new Function(`return ${book}.self.get("${page}")`)()
 // };
 
-function baser(...args) {
+export function baser(...args) {
     if (args.length % 2 != 0) {
         console.warn("length of args must be even");
         return false;
@@ -280,12 +262,12 @@ function baser(...args) {
     return _T0;
 }
 
-function cutter(input) {
+export function cutter(input) {
     return (input === HTMLElement ? "htm" : Sem(new input).toLowerCase().substr(0, 3))
 }
 
-const Subes = SublimateElements;
-const Getsy = GetStyle;
+export const Subes = SublimateElements;
+export const Getsy = GetStyle;
 const Cag = ChainArguments;
 const Cfn = ChainFunctions;
 const Efal = ExeFuncAftLoad;
@@ -383,7 +365,7 @@ class Aomadds {
     };
 }
 
-function Aom(proto) {
+export function Aom(proto) {
     try {
         if (!proto) {
             return note.get("Aomadds");
@@ -403,6 +385,7 @@ note.set("EventListeners", new Map());
 note.set("TextSize", new Map());
 [
     [Array, "fullFlat", function () {
+        let A2A;
         return (A2A = _A0 => _A0.flatMap(_E0 => Array.isArray(_E0) ? A2A(_E0) : _E0))(this)
     }],
     [Array, "unDup", function /**Duplicate */ (back) {
@@ -512,7 +495,7 @@ note.set("TextSize", new Map());
     }]
 ].forEach((_E0) => Aom().master(_E0[0], _E0[1], _E0[2], sfconfig.MasterKey));
 
-const aom = Symbol();
+export const aom = Symbol();
 [Array, Object, Map, WeakMap, String, Number, Boolean, Function, RegExp, Date].forEach(_E0 => _E0.prototype[aom] = function () {
     return Aom(this);
 })
@@ -529,12 +512,16 @@ Efal(
     }
 )
 
-function Sem(proto) {
+export function Sem(proto) {
     try {
         return proto.constructor.name;
     } catch {
         return undefined
     }
+}
+
+export function Sim(proto){
+    return typeof proto;
 }
 
 function Optionalys(...args) {
@@ -548,7 +535,7 @@ note.set("KeyHold", new Map());
 note.set("KeyCount", new Map());
 note.set("KeyCode").set(false)
 
-function Keys(type, code, clear) {
+export function Keys(type, code, clear) {
     switch (type) {
         case "hold":
             return note.get("KeyHold").get(code)
@@ -586,7 +573,7 @@ Efal(
     }).toMap()))
 )
 
-function CSSPoint(id) {
+export function CSSPoint(id) {
     note.get("CSSPoint").get(id)()
 }
 
@@ -599,7 +586,7 @@ window.addEventListener("resize", () => {
 //Puppeteer
 note.set("sfwindow");
 
-function rewindow(width, height, size) {
+export function rewindow(width, height, size) {
     if (width == "close") {
         note.get("sfwindow").set(undefined);
         return false
@@ -673,7 +660,7 @@ class TasksMember extends Array {
     }
 }
 
-function Tasks(_A0, _A1, ..._A2) /**(If, Function, Arguments) */ {
+export function Tasks(_A0, _A1, ..._A2) /**(If, Function, Arguments) */ {
     switch (_A0) {
         case "remove":
             return note.get("Tasks").remove(_A0);
@@ -692,16 +679,16 @@ note.set("TasksInterval").set(sfconfig.TaskInterval)
 note.set("Tasks", new TasksMember());
 Tasks("start");
 
-function ExeFuncAftLoad(Func) {
+export function ExeFuncAftLoad(Func) {
     window.addEventListener("load", Func)
 }
 
-function FuncProgeny(elem, fn) {
+export function FuncProgeny(elem, fn) {
     return Aom(elem).DescendantFlat().map(_E0 => fn(_E0));
 }
 
 //-Item Function-------------
-function Random(min, max, digit) {
+export function Random(min, max, digit) {
     if (!digit) digit = 0;
     return (Math.random() * (max - min) + min).toFixed(digit) - 0
 }
@@ -714,16 +701,6 @@ function Random(min, max, digit) {
     return new Function(`return ${graph}`)() >= yy ? yy : Funcrand(graph, xmin, xmax, ymin, ymax);
 }*/
 
-function RandFn(now, min, max) {
+export function RandFn(now, min, max) {
     return now >= Random(min, max) ? true : false;
 }
-
-//-Loaded--------------------
-console.log("Seifuncs ver.1.7.β for JS was completely loaded.")
-if (/^(?=.*Chrome)(?!.*Edge)/.test(window.navigator.userAgent)) {
-    console.log("%c %c Seifuncs for JS %c \n%c %c Developer : Seizya \n%c %c GitHub : https://github.com/Seizya \n%c %c Special Thanks : omasakun (github.com/omasakun)",
-        "background-color:#165e83;border-bottom:solid #f0f 2px", "border-bottom:solid #f0f 2px", "", "background-color:#165e83", "", "background-color:#165e83", "", "background-color:#165e83", "color: transparent")
-} else {
-    console.log("Seifuncs for JS \nDeveloper : Seizya \nGitHub : https://github.com/Seizya")
-}
-if (/MSIE|Trident|Edge/.test(window.navigator.userAgent)) console.warn("The use of Seifuncs in IE is not envisaged at all. \nPlease immediately stop using Seifucs and use another browser. \nThere are no plans to support IE.")
