@@ -32,6 +32,9 @@ import {
     RandFn
 } from "./main.js";
 
+import * as Sf from "./main.js"
+window["Sf"] = Sf;
+
 //-Loaded--------------------
 console.clear();
 console.log("Seifuncs ver.1.8.β for JS was completely loaded.")

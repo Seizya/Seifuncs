@@ -210,8 +210,8 @@ export class Note extends Map {
         super();
     }
     set(key, value) {
-         super.set(key, value || new letPage());
-         return this.get(key);
+        super.set(key, value || new letPage());
+        return this.get(key);
     }
     aset(name, arg) {
         if (super.has(name)) console.warn(name + " is already written in this Note.")
@@ -341,10 +341,10 @@ class Aomadds {
             } else {
                 console.warn(proto + " was already used on " + proto);
             }
+            return this;
         } else {
             console.warn("I can't accept your order.")
         }
-        return this;
     };
     backup() {
         return baser("arr", "obj", "map", "wea", "str", "num", "boo", "htm", "fun", "reg", "dat", "master", this.arr, this.obj, this.map, this.wea, this.str, this.num, this.boo, this.htm, this.fun, this.reg, this.dat, this.master)
@@ -520,7 +520,7 @@ export function Sem(proto) {
     }
 }
 
-export function Sim(proto){
+export function Sim(proto) {
     return typeof proto;
 }
 
