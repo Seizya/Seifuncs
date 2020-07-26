@@ -462,7 +462,7 @@ note.set("TextSize", new Map());
         }
     }],
     [HTMLElement, "TextSize", function (Wper, Hper) {
-        if (!note.get("TextSize").has(this)) note.get("TextSize").cset(this, baser("height", "width", 100, 100))
+        if (!note.get("TextSize").has(this)) note.get("TextSize").set(this, baser("height", "width", 100, 100))
         if (Wper === undefined) {
             let rems = document.createElement('span');
             rems.setAttribute("class", "sfget_ew");
@@ -472,6 +472,7 @@ note.set("TextSize", new Map());
             Subes(".sfget_ew")[0].style.fontSize = Getsy(this).compute("font-size")[0]
             Subes(".sfget_ew")[0].style.writingMode = Getsy(this).compute("writing-mode")[0]
             Subes(".sfget_ew")[0].style.lineHeight = Getsy(this).compute("line-height")[0]
+            Subes(".sfget_ew")[0].style.fontWeight = Getsy(this).compute("font-weight")[0]
             let [_TH, _TW] = [Subes(".sfget_ew")[0].offsetHeight, Subes(".sfget_ew")[0].offsetWidth]
             // let [_TH, _TW] = [Getsy(Subes(".sfget_ew")[0]).compute("height")[0], Getsy(Subes(".sfget_ew")[0]).compute("width")[0]]
             this.style.fontSize = (parseInt(Getsy(this).compute("width")[0]) / parseInt(_TW) <= parseInt(Getsy(this).compute("height")[0]) / parseInt(_TH) ?
