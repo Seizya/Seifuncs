@@ -1,707 +1,573 @@
-﻿//Config---------------------
-const sfconfig = {
-    TaskInterval: 0,
-    AlwaysTasksWork: false,
-    MasterKey: Symbol()
-};
-
-//Maindish-------------------
-/* 
-このスクリプトは、どのスクリプトよりも早く読み込まれるようにしてください。
-
-import-htmlタグを追加します。
-例えば、<import-html src="./button.html"></import-html> とすれば、 ./button.html の内容でそのタグが置き換えられます。
-なお、標準では、最初にページが読み込まれたときにのみ import-html タグの置き換えがされます。
-もし、それ以外のタイミングで import-html タグの解釈をさせたい場合、 importHTMLs 関数を引数無しで読んでください。
-
-このスクリプトが読み込まれてから window の load イベントが発火するまでに追加された load イベントハンドラーは、importHTMLs 実行後に呼び出されます。
-*/
-
-/*(() => {
-    var listeners = [];
-    const tmp = window.addEventListener;
-    window.addEventListener("load", (...args) => {
-        importHTMLs().then(() => {
-            listeners.forEach(_ => _[0](...args));
-            listeners.forEach(_ => tmp("load", ...args));
-            listeners = [];
-        });
-        window.addEventListener = tmp;
-    });
-    window.addEventListener = (type, ...args) => {
-        if (type == "load") listeners.push(args);
-        else tmp(type, ...args);
-    }
-})();
-
-function importHTMLs() {
-    const warn = (..._) => console.warn("[importHTMLs] ", ..._);
-    return Promise.all(Array.from(document.getElementsByTagName("import-html")).map(importElem => {
-        // This function returns whether the importHTMLs function needs to be re-called to read the newly added import-html tag.
-        const path = importElem.getAttribute("src");
-        if (!path) {
-            warn("There was an import-html tag for whose src does not specify the file path you want to load. Ignored.");
-            return false; // It is not necessary to re-call importHTMLs
-        }
-        return fetch(path)
-            .then(res => res.text())
-            .then(text => {
-                let shouldReCall = false; // Whether it is needed to re-call importHTMLs
-                let tmp = document.createElement("div");
-                tmp.innerHTML = text;
-                (function replaceScriptTag(elem) {
-                    elem.childNodes.forEach((child, index) => {
-                        if (child.tagName == "IMPORT-HTML") {
-                            shouldReCall = true;
-                        } else if (child.tagName == "SCRIPT") {
-                            let newElem = document.createElement("script");
-                            for (let i = 0; i < child.attributes.length; i++) {
-                                var attr = child.attributes.item(i);
-                                newElem.setAttribute(attr.nodeName, attr.nodeValue);
-                            }
-                            newElem.innerHTML = child.innerHTML;
-                            elem.replaceChild(newElem, child);
-                        } else {
-                            replaceScriptTag(child);
-                        }
-                    });
-                    return elem;
-                })(tmp);
-                tmp.childNodes.forEach(_ => importElem.parentElement.insertBefore(_, importElem));
-                importElem.parentElement.removeChild(importElem);
-                return shouldReCall;
-            })
-            .catch(err => warn("An error occurred while loading " + path + ". Detail...", err));
-    })).then(shouldRecall => {
-        if (shouldRecall.some(_ => _))
-            return importHTMLs();
-    });
-}
-
-function CSS(elements) {
-    if (typeof elements == "string") {
-        // Parse as querySelector
-        elements = document.querySelectorAll(elements);
-    }
-    elements = Array.from(elements);
-    // window.getComputedStyle(element).getPropertyValue(name);
-    return new Proxy({}, {
-        get: function (target, name) {
-            return elements.map(function (element) {
-                return window.getComputedStyle(element).getPropertyValue(name);
-            })
-        },
-        set: function (target, name, value) {
-            var errors = elements.map(function (element) {
-                try {
-                    element.style[name] = value;
-                } catch (e) {
-                    return e;
-                }
-                return undefined;
-            });
-            if (errors.reduce(function (pv, cv) {
-                    return pv + (cv ? 1 : 0);
-                }, 0) == 0) return true;
-            throw errors;
-        }
-    });
-}*/
-
-export function SublimateElements(id, option) {
-    return Aom([id]).fullFlat().flatMap(_E0 => Sem(id).includes("HTML") && Sem(id).includes("Element") ? _E0 : GetElement(id));
-
-    function GetElement(_id) {
-        try {
-            switch (option) {
+function Elm(...args) {
+    if (["Array", "Object", "String", "Map"].indexOf(Proto(args[0])) == -1) throw "args must be Array, Object, Map or String.";
+    if (Proto(args[0]) == "String") {
+        return document.querySelectorAll(args);
+    } else {
+        args = Baser(...args);
+        let _T0 = document.createElement(args.get("tag"));
+        args.forEach((value, key) => {
+            switch (key) {
+                case "tag":
+                    break;
+                case "addEventListener":
+                    _T0.addEventListener(value[0], value[1], value[2]);
+                    break;
+                case "classList":
+                    [value].flat().forEach(_E0 => _T0.classList.add(_E0));
+                    break;
+                case "innerText":
+                    _T0.innerText = value;
+                    break;
+                case "style":
+                    Baser(value).forEach((value1, key1) => _T0.style[key1] = value1);
+                    break;
                 default:
-                    return Array.from(document.querySelectorAll(_id));
-            }
-        } catch (e) {
-            switch (option) {
-                case "$Descendant":
-                    if (Aom(_id).comprise("#")) {
-                        return Aom(document.querySelectorAll("html")[0]).DescendantFlat().filter(_E0 => Aom(_E0.id).comprise(_id.replace(/#/g, "")));
-                    } else if (Aom(_id).comprise(".")) {
-                        return Aom(document.querySelectorAll("html")[0]).DescendantFlat().filter(_E0 => _E0.className.split(" ").filter(_E1 => _E1.match(new RegExp(_id.replace(/[\.]+/g, "")))).length > 0);
-                    } else {
-                        return Aom(document.querySelectorAll("html")[0]).DescendantFlat().filter(_E0 => Aom(_E0.tagName).comprise(_id.replace(/#/g, "")));
-                    };
-                default:
-                    return undefined;
-            }
-        }
-    }
-}
-
-export function GetStyle(_A0) {
-    return new Getsies(_A0);
-}
-
-class Getsies extends Array {
-    constructor(_A0) {
-        Sem(_A0) == "Array" ? super(..._A0) : super(_A0)
-    }
-    compute(_A0, _A1) {
-        return this.map(_E0 => {
-            if (_E0 === window) {
-                if (Aom(_A0).comprise("min")) {
-                    return window.innerHeight < window.innerWidth ? window.innerHeight : window.innerWidth;
-                } else if (Aom(_A0).comprise("max")) {
-                    return window.innerHeight > window.innerWidth ? window.innerHeight : window.innerWidth;
-                } else if (Aom(_A0).comprise("height")) {
-                    return window.innerHeight;
-                } else if (Aom(_A0).comprise("width")) {
-                    return window.innerWidth;
-                } else if (_A0.includes("rem") && !poAom(int).comprise("small")) {
-                    return window.getComputedStyle(Subes("html")).getPropertyValue("font-size");
-                }
-            } else if (Aom(_A0).comprise("min")) {
-                return Getsytmp(_E0, true)
-            } else if (Aom(_A0).comprise("max")) {
-                return Getsytmp(_E0, false)
-            } else {
-                return !~_A0.indexOf(":") ? window.getComputedStyle(_E0).getPropertyValue(_A0) : window.getComputedStyle(_E0, _A0).getPropertyValue(_A1);
+                    _T0.setAttribute(key, value);
             }
         })
-
-        function Getsytmp(that, _Ato) {
-            let width = that.clientWidth - (that.style.paddingLeft + that.style.paddingRight);
-            let height = that.clientHeight - (that.style.paddingTop + that.style.paddingBottom);
-
-            return _Ato ? (width < height ? width : height) : (width < height ? height : width)
-        }
-    }
-    style(_A0) {
-        return this.map(_E0 => _A0 ? new Function("_E1", `return _E1.style.${_A0}`)(_E0) : _E0.style)
+        return _T0;
     }
 }
 
-export function potopx(A0) {
-    let rems = document.createElement('span');
-    rems.setAttribute("class", "sfget_ew");
-    rems.style.width = Sem(A0) == "Number" ? A0 + "px" : A0;
-    Subes("body")[0].insertBefore(rems, Subes("body")[0].firstChild);
-
-    let _T0 = parseFloat(Getsy(Subes(".sfget_ew")[0]).compute("width"));
-
-    Subes("body")[0].removeChild(Subes(".sfget_ew")[0]);
-    return _T0;
-}
-
-/**
- * const SeCA = fn => (tmp = args => arg => arg ? tmp([...args, ...arg]) : fn(...args))([]);
- * const MsCF = obj => fn => fn ? MsCF(fn(obj)) : obj; 
- */
-/**
- * SeCA <Sei Chain Argument> SeCA(fn Name)(arg0)...(argn)() == fn(arg0,...,argn);
- * MsCF <Msy Chain Function> MsCF(obj)(fn0)...(fnn) => arg(obj) ... argn(arg(obj));
- */
-export function ChainArguments(fn) {
-    return (tmp = args => arg => arg ? tmp([...args, ...arg]) : fn(...args))([])
-}
-
-export function ChainFunctions(obj) {
-    return fn => fn ? MsCF(fn(obj)) : obj
-}
-
-export class Note extends Map {
-    constructor() {
+//必要に応じて Export.
+class Note extends Map {
+    constructor(name) {
         super();
+        this.name = name;
     }
-    set(key, value) {
-        super.set(key, value || new letPage());
-        return this.get(key);
+
+    cset(key, value) {
+        if (super.has(key)) throw key + " is already written in this Note."
+        return this.set(key, value);
     }
-    aset(name, arg) {
-        if (super.has(name)) console.warn(name + " is already written in this Note.")
-        if (!super.has(name)) return this.set(name, arg);
+
+    fset(key, value) {
+        if (!super.has(key)) this.set(key, value);
+        return this;
     }
+
+    oget(key, spare) {
+        return this[key] || spare;
+    }
+
     join(newNote) {
         newNote.forEach((value, key) => {
             if (!super.has(key)) this.set(key, value)
         })
         return this;
     }
+
     assign(newNote) {
         newNote.forEach((value, key) => this.set(key, value))
         return this;
     }
-}
 
-class letPage {
-    constructor() {
-        this.data;
+    //-Plus--------------------------------------
+
+    static json(url) {
+        const request = new XMLHttpRequest();
+        request.open("GET", url, false);
+        request.send();
+
+        // console.clear(); //It's for deleting log that warn using xMLHttpRequest.
+        return request.response;
     }
-    set(input) {
-        this.data = input;
+
+    save(key) { //localStorage 保存
+        if (!["Object", "Map"].includes(Proto(this.get(key)))) throw "Selected Value is not Object or Map";
+        let _T0 = (JSON.parse(localStorage.getItem(this.name)) || {});
+        _T0[key] = Proto(this.get(key)) == "Map" ? Object.fromEntries(this.get(key).entries()) : this.get(key);
+        localStorage.setItem(this.name, JSON.stringify(_T0));
         return this;
     }
-    get(input) {
-        return this.data;
+
+    restore(key) { //localStorage 解凍
+        this.set(key, JSON.parse(localStorage.getItem(this.name))[key]);
+        return this;
     }
-}
 
-const note = new Note()
-
-// function BookTag(book, page) {
-//     window[page] = new Function(`return ${book}.self.get("${page}")`)()
-// };
-
-export function baser(...args) {
-    if (args.length % 2 != 0) {
-        console.warn("length of args must be even");
-        return false;
+    saveReset() {
+        localStorage.removeItem(this.name)
     }
-    args = [args.slice(0, args.length / 2), args.slice(-args.length / 2)]
 
-    let _T0 = new Object()
-    args[0].forEach((_E0, _E1) => {
-        _T0[_E0] = args[1][_E1];
-    })
-    return _T0;
+    download(value) { //JSON 保存
+        Elm({
+            tag: "a",
+            download: this.name + String(new Date()).replace(new RegExp(" ", "g"), "-") + "." + "json",
+            href: "data:text/plain," + encodeURIComponent(JSON.stringify(value))
+        }).click();
+
+    }
+
+    upload(key, url) { //JSON 解凍
+        this.set(key, JSON.parse(Note.json(url)));
+    }
+
 }
 
-export function cutter(input) {
-    return (input === HTMLElement ? "htm" : Sem(new input).toLowerCase().substr(0, 3))
-}
+const note = new Note("Seifuncs");
+note.upload("config", "./config.json");
 
-export const Subes = SublimateElements;
-export const Getsy = GetStyle;
-const Cag = ChainArguments;
-const Cfn = ChainFunctions;
-const Efal = ExeFuncAftLoad;
-/*
-note.set("OmitFn", Map);
-OmitFunctionName("OmitFunctionName", "OmitFn")
-OmitFn("SublimateElements", "Subes")
-OmitFn("GetStyle", "Getsy")
-OmitFn("SfChainArguments", "Cag")
-OmitFn("MsChainFunctions", "Cfn")
-OmitFn("ExeFuncAftLoad", "Efal");
-function OmitFunctionName(base, abbr, Postscript?) {
-  if (!Postscript) {
-    note.get("OmitFn").set(base, [abbr])
-  } else {
-    note.get("OmitFn").set(base, note.get("OmitFn").get(base) ? [...note.get("OmitFn").get(base), abbr] : [abbr])
-  }
-  window[abbr] = new Function("...arg", `return ${Array.from(note.get("OmitFn").entries()).filter(_E0 => _E0[1].some(_E1 => _E1 == abbr))[0][0]}(...arg)`);
-}
-*/
+//-Chain---------------------------------------------------------------------------------------------
 
-//-Object--------------------
-class Aomadds {
+class Chainadds {
     constructor() {
-        this.arr = {};
-        this.obj = {};
-        this.map = {};
-        this.wea = {};
-        this.str = {};
-        this.num = {};
-        this.boo = {};
-        this.htm = {};
-        this.fun = {};
-        this.reg = {};
-        this.dat = {};
-        this.master_data = [];
-    };
+        this.Array = {};
+        this.Object = {};
+        this.Map = {};
+        this.WeakMap = {};
+        this.String = {};
+        this.Number = {};
+        this.Boolean = {};
+        this.HTMLElement = {};
+        this.Function = {};
+        this.RegExp = {};
+        this.Date = {};
+        this.Window = {};
+
+        this.support = {
+            Array: new Array(),
+            Object: new Object(),
+            Map: new Map(),
+            WeakMap: new WeakMap(),
+            String: new String(),
+            Number: new Number(),
+            Boolean: new Boolean(),
+            HTMLElement: Elm(["tag", "header"]),
+            Function: new Function(),
+            RegExp: new RegExp(),
+            Date: new Date(),
+            Window: window
+        };
+        // support schedule - Proxy, 
+
+        if ([2].includes(note.get("config").Chain.level)) {
+            this.restore = () => {
+                Object.values(this.support).forEach(_E0 => Chain(_E0).restore());
+                return this;
+            };
+
+            Object.values(this.support).map(_E0 => Proto(_E0).includes("HTML") ? "HTMLElement" : Proto(_E0)).forEach(_E0 => this
+                .set(_E0, "restore", function () {
+                    Object.entries(Object.getPrototypeOf(this)).map(_E0 => _E0[0]).forEach(_E0 => delete Object.getPrototypeOf(this)[_E0]);
+                    return this;
+                })
+            )
+        }
+
+        Object.values(this.support).map(_E0 => Proto(_E0).includes("HTML") ? "HTMLElement" : Proto(_E0)).forEach(_E0 => this
+            .set(_E0, "chain", function (...args) {
+                if (Proto(args[0]) == "Function") return args[0].bind(this)();
+                args = Proto(args[0][0]) == "String" ? args : args.flat();
+                return args.reduce((accumulator, currentValue) => accumulator[currentValue[0]](...args.slice(0, 1), this));
+            }).set(_E0, "branch", function (...args) {
+                this.chain(...args)[0];
+                return this;
+            }).set(_E0, "if", function (If, True, False) {
+                return If.bind(this)() ? True ? this.chain(True) : this : False ? this.chain(False) : this;
+            })
+        )
+    }
+
     set(proto, name, func) {
-        if (this.master_data.filter(_E0 => _E0[0] == cutter(proto) && _E0[1] == name).length == 0) {
-            this[cutter(proto)][name] = func;
-        } else {
-            console.warn(proto + " was used by Developer on " + proto);
-        }
+        if ([2].includes(note.get("config").Chain.level) && Object.getOwnPropertyNames(Object.getPrototypeOf(this.support[proto])).includes(name)) throw proto + " already has " + name;
+        if ([1].includes(note.get("config").Chain.level) && Object.getOwnPropertyNames(Object.getPrototypeOf(this.support[proto])).includes(name)) console.warn(proto + " already has " + name);
+        if (!note.get("config").Chain.exclude[proto].includes(name)) this[proto][name] = func;
+
+        if ([0, 1].includes(note.get("config").Chain.level)) Chain(this.support.proto);
         return this;
-    };
-    aset(proto, name, func) {
-        if (!Object.keys(this[cutter(proto)]).includes(name)) {
-            this.set(proto, name, func);
-        } else {
-            console.warn(proto + " was already used on " + proto);
-        }
+    }
+
+    cset(proto, name, func) {
+        if (!this[Proto(_E0).includes("HTML") ? "HTMLElement" : Proto(_E0)][name]) throw name + "is already  in " + proto + " of Chain.";
+        return this.set(proto, name, func);
+    }
+
+    fset(key, value) {
+        if (!this[key]) this[key] = value;
         return this;
-    };
+    }
+
     get(proto) {
-        return this[proto];
-    };
-    has(proto, name) {
-        return !Object.keys(this[cutter(proto)]).includes(name);
-    };
-    delete(proto, name) {
-        if (this.master_data.filter(_E0 => _E0[0] == cutter(proto) && _E0[1] == name).length == 0) {
-            this[cutter(proto)][name] = undefined;
-        }
+        return this[Proto(proto).includes("HTML") ? "HTMLElement" : Proto(proto)];
+    }
+
+    sync() {
+        Object.values(this.support).forEach(_E0 => Chain(_E0));
         return this;
-    };
-    master(proto, name, func, key) {
-        if (key == sfconfig.MasterKey) {
-            if (this.master_data.filter(_E0 => _E0[0] == cutter(proto) && _E0[1] == name).length == 0) {
-                this[cutter(proto)][name] = func;
-                this.master_data.push([cutter(proto), name]);
-            } else {
-                console.warn(proto + " was already used on " + proto);
-            }
-            return this;
-        } else {
-            console.warn("I can't accept your order.")
-        }
-    };
-    backup() {
-        return baser("arr", "obj", "map", "wea", "str", "num", "boo", "htm", "fun", "reg", "dat", "master", this.arr, this.obj, this.map, this.wea, this.str, this.num, this.boo, this.htm, this.fun, this.reg, this.dat, this.master)
-    };
-    restore(data) {
-        Object.keys(data).forEach(key => this[key] = data[key]);
-        return this;
-    };
-    join(data) {
-        Object.keys(data).forEach(key => data[key].forEach(datakey => {
-            if (!this[key].hasOwnProperty(datakey)) this[key][datakey] = data[key][datakey]
-        }));
-        return this;
-    };
-    assign(data) {
-        Object.keys(data).forEach(key => data[key].forEach(datakey => this[key][datakey] = data[key][datakey]));
-        return this;
-    };
+    }
 }
 
-export function Aom(proto) {
-    try {
-        if (!proto) {
-            return note.get("Aomadds");
-        } else {
-            let reobj = {};
-            Object.keys(note.get("Aomadds").get((Sem(proto).includes("Doc") ? Sem(proto).replace(/Doc/g, "") : Sem(proto)).toLowerCase().substr(0, 3))).forEach(_E0 => reobj[_E0] = note.get("Aomadds").get((Sem(proto).includes("Doc") ? Sem(proto).replace(/Doc/g, "") : Sem(proto)).toLowerCase().substr(0, 3))[_E0].bind(proto))
-            return reobj;
-        }
-    } catch {
-        return undefined;
-    }
+note.set("Chainadds", new Chainadds());
+
+export function Chain(input) {
+    return input ? Object.setPrototypeOf(input, Object.assign(Object.getPrototypeOf(input), note.get("Chainadds").get(input))) : note.get("Chainadds");
+    // Chain let you add new methods in dynamic but these isn't sync with prototype till executing Chain.
+    //You haven't to execute Chain after second time if you don't want dynamic sync.
 };
 
-note.set("Aomadds", new Aomadds());
-
-note.set("EventListeners", new Map());
-note.set("TextSize", new Map());
-[
-    [Array, "fullFlat", function () {
-        let A2A;
-        return (A2A = _A0 => _A0.flatMap(_E0 => Array.isArray(_E0) ? A2A(_E0) : _E0))(this)
+[ //TODO JSONによる選択を可能にする
+    ["Array", "fullFlat", function () {
+        let A2A = _A0 => _A0.flatMap(_E0 => Array.isArray(_E0) ? A2A(_E0) : _E0)
+        return A2A(this);
     }],
-    [Array, "unDup", function /**Duplicate */ (back) {
+    ["Array", "unDup", function (back) {
         return this.filter((x, i, self) => (back ? self.lastIndexOf(x) : self.indexOf(x)) === i);
     }],
-    // [Object, "is", function (arg) {
-    //     return (arg instanceof Object && !(arg instanceof Array)) ? true : false;
-    // }],
-    [Object, "forEach", function (fn) {
-        Object.keys(this).forEach(key => {
-            let val = this[key];
-            fn(key, val);
-        }, this)
+    ["Array", "to", function (proto) {
+        switch (proto) {
+            case "Object":
+                return Object.fromEntries(this);
+            case "Map":
+                return new Map(this);
+            default:
+                throw "Can't translate this array.";
+        }
     }],
-    [Object, "deepCopy", function () {
-        let reobj = {};
-        Object.keys(this).forEach(key => {
-            reobj[key] = this[key]
-        })
-        return reobj;
+    ["Array", "equal", function (check) {
+        return [...this.filter(_E0 => !check.indexOf(_E0) != -1), ...check.filter(_E0 => !this.indexOf(_E0) != -1)].length == 0;
     }],
-    [Object, "toMap", function () {
-        return new Map(Object.entries(this));
+    ["Array", "rap", function () {
+        return [this];
     }],
-    [String, "comprise", function (string) {
+    ["Object", "deepCopy", function () {
+        return Object.fromEntries(Object.entries(this));
+    }],
+    ["Object", "to", function (proto) {
+        switch (proto) {
+            case "Array":
+                return Object.entries(this);
+            case "Map":
+                return new Map(Object.entries(this));
+            default:
+                throw "Can't translate this object.";
+        }
+    }],
+    ["Map", "cset", function (key, value) {
+        if (this.has(key)) throw key + " is already written in this Map.";
+        return this.set(key, value);
+    }],
+    ["Map", "fset", function (key, value) {
+        if (!this.has(key)) this.set(key, value);
+        return this;
+    }],
+    ["Map", "to", function (proto) {
+        switch (proto) {
+            case "Array":
+                return this.entries();
+            case "Object":
+                return Object.fromEntries(this.entries());
+            default:
+                throw "Can't translate this map.";
+        }
+    }],
+    ["String", "comprise", function (string) {
         return this.match(new RegExp(string.toLowerCase())) !== null ? true : false
     }],
-    [Number, "zeroPadding", function (dig) {
-        const AddZero = (_num, _dig) => _num.length < (_num.indexOf(".") == -1 ? _dig : _dig + 1) ? AddZero("0" + _num, _dig) : _num;
-        if (String(dig).indexOf(".") == -1) {
-            if (String(this).length < (String(this).indexOf(".") == -1 ? dig : dig + 1)) {
-                return AddZero(String(this), dig /**(String(num).indexOf(".") == -1 ? dig : dig + 1)*/ );
-            } else {
-                throw new Error("Digit must be bigger than digit of number")
+    ["String", "potopx", function () {
+        let rems = Elm({
+            tag: "span",
+            style: {
+                width: this,
+                visibility: "hidden",
+                padding: 0,
+                margin: 0
+            }
+        })
+        Elm("body")[0].insertBefore(rems, Elm("body")[0].firstChild);
+
+        let _T0 = parseFloat(rems.css("width"));
+
+        Elm("body")[0].removeChild(rems);
+        return _T0;
+    }],
+    ["Number", "zeroPadding", function (dig) {
+        if (Proto(dig) != "Number" || String(dig).includes(".") || String(this).length > dig) throw "Dig isn't Appropriate.";
+        return "0".repeat(this < 1 ? dig - String(this).length - 1 : dig - String(this).length) + this;
+    }],
+    ["Window", "css", function (prop) {
+        switch (prop) {
+            case "max":
+                return Math.max(this.innerHeight, this.innerWidth);
+            case "min":
+                return Math.min(this.innerHeight, this.innerWidth);
+            case "width":
+                return this.innerWidth;
+            case "height":
+                return this.innerHeight;
+            default:
+                return window[prop];
+        }
+    }],
+    ["HTMLElement", "css", function (prop, value) {
+        if (!value) {
+            switch (prop) {
+                case "max":
+                    return Math.max(this.clientWidth - (parseInt(window.getComputedStyle(this).getPropertyValue("padding-left")) + parseInt(window.getComputedStyle(this).getPropertyValue("padding-right"))), this.clientHeight - (parseInt(window.getComputedStyle(this).getPropertyValue("padding-top")) + parseInt(window.getComputedStyle(this).getPropertyValue("padding-bottom"))));
+                case "min":
+                    return Math.min(this.clientWidth - (parseInt(window.getComputedStyle(this).getPropertyValue("padding-left")) + parseInt(window.getComputedStyle(this).getPropertyValue("padding-right"))), this.clientHeight - (parseInt(window.getComputedStyle(this).getPropertyValue("padding-top")) + parseInt(window.getComputedStyle(this).getPropertyValue("padding-bottom"))));
+                default:
+                    return window.getComputedStyle(this).getPropertyValue(prop);
             }
         } else {
-            throw new Error("Digit must be natural number")
+            this.style[prop] = value;
         }
+        return this;
     }],
-    [Function, "bind", function (that) {
-        let it = this;
-        return it.bind(that)
-    }],
-    [HTMLElement, "addEventListener", function (type, listener, ...args) {
+    ["HTMLElement", "addEventTask", function (type, listener, ...args) {
+        class EventTasksMember extends TasksMember {
+            constructor(Func, ...Arg) {
+                super();
+                this.func = Func;
+                this.args = Arg;
+                this.call = undefined;
+            }
+            remove() {
+                this.able = false;
+            }
+        }
+        let _Tm1 = new EventTasksMember(listener, args);
+
+        if (note.fset("EventTasks", new Map()).get("EventTasks").fset(type, new Map()).get(type).has(this)) {
+            note.get("EventTasks").get(type).get(this).list.push(_Tm1);
+            return _Tm1;
+        }
+
+        let TasksRegister = (State, If) => {
+            note.get("EventTasks").get(type).set(this, Baser(["state", State()], ["list", new Array(_Tm1)]).to("Object"));
+            return Tasks((task) => {
+                if (note.get("EventTasks").get(type).get(this).list.filter(_E0 => _E0.able).length == 0) {
+                    console.log("deleted")
+                    task.remove();
+                    note.get("EventTasks").get(type).delete(this);
+                    return false;
+                }
+                let _T1 = If();
+                if (_T1) note.get("EventTasks").get(type).get(this).state = State();
+                return _T1;
+            }, () => note.get("EventTasks").get(type).get(this).list.filter(_E0 => _E0.able).forEach(_E0 => _E0.func.bind(this)(...args)));
+
+        }
+
         switch (type) {
             case "scroll":
-                let symscroll = Symbol();
-                note.get("EventListeners").cset(symscroll, [this.scrollLeft, this.scrollTop]);
-                return Tasks(() => {
-                    let _T0 = note.get("EventListeners").get(symscroll)[0] !== this.scrollLeft || note.get("EventListeners").get(symscroll)[1] !== this.scrollTop;
-                    if (_T0) note.get("EventListeners").cset(symscroll, [this.scrollLeft, this.scrollTop]);
-                    return _T0;
-                }, listener, ...args);
+                return TasksRegister(() => Baser(["x", this.scrollTop], ["y", this.scrollLeft]).to("Object"), () => note.get("EventTasks").get("scroll").get(this).state.x !== this.scrollLeft || note.get("EventListeners").get("scroll").get(this).state.y !== this.scrollTop);
+
             case "resize":
-                let symresize = Symbol();
-                note.get("EventListeners").cset(symresize, [parseInt(Getsy(this).compute("width")[0]), parseInt(Getsy(this).compute("height")[0])]);
-                return Tasks(() => {
-                    let _T1 = note.get("EventListeners").get(symresize)[0] !== parseInt(Getsy(this).compute("width")[0]) || note.get("EventListeners").get(symresize)[1] !== parseInt(Getsy(this).compute("height")[0]);
-                    if (_T1) note.get("EventListeners").cset(symresize, [parseInt(Getsy(this).compute("width")[0]), parseInt(Getsy(this).compute("height")[0])]);
-                    return _T1;
-                }, listener, ...args);
+                return TasksRegister(() => Baser(["width", parseInt(this.css("width"))], ["height", parseInt(this.css("height"))]).to("Object"), () => note.get("EventTasks").get("resize").get(this).state.width !== parseInt(this.css("width")) || note.get("EventTasks").get("resize").get(this).state.height !== parseInt(this.css("height")));
+
+            case "classChange":
+                return TasksRegister(() => Array.from(this.classList), () => note.get("EventTasks").get("classChange").get(this).state.equal(Array.from(this.classList)));
+
+            default:
+                throw type + "isn't supported.";
         }
     }],
-    [HTMLElement, "removeEventListener", function (id) {
-        Tasks("remove", id);
+    ["HTMLElement", "descendantFlat", function () {
+        let E2E = _A0 => _A0.flatMap(_E0 => _E0.hasChildNodes() ? [_E0, ...E2E(Array.from(_E0.children))] : _E0);
+        return E2E([this]);
     }],
-    [HTMLElement, "DescendantFlat", function () {
-        return Aom(child(this)).unDup();
+    ["HTMLElement", "textContain", function (Wper, Hper) {
+        note.fset("TextContain", new Map()).get("TextContain").fset(this, Baser(["width", Wper || 100], ["height", Hper || 100]));
+        if (arguments.length == 0) {
+            let _Tm1 = () => {
+                let rems = Elm({
+                    tag: "span",
+                    innerText: this.innerText,
+                    style: {
+                        fontSize: this.css("font-size"),
+                        writingMode: this.css("writing-Mode"),
+                        lineHeight: this.css("line-height"),
+                        fontWeight: this.css("font-weight"),
+                        visibility: "hidden",
+                        padding: 0,
+                        margin: 0
+                    }
+                })
+                Elm("body")[0].insertBefore(rems, Elm("body")[0].firstChild);
 
-        function child(elem) {
-            return elem.children.length > 0 ? Array.from(elem.children).flatMap(_E0 => {
-                return [elem].concat(child(_E0));
-            }) : elem;
-        }
-    }],
-    [HTMLElement, "TextSize", function (Wper, Hper) {
-        if (!note.get("TextSize").has(this)) note.get("TextSize").set(this, baser("height", "width", 100, 100))
-        if (Wper === undefined) {
-            let rems = document.createElement('span');
-            rems.setAttribute("class", "sfget_ew");
-            Subes("body")[0].insertBefore(rems, Subes("body")[0].firstChild);
+                let [_TextW, _TextH] = [parseInt(rems.offsetWidth), parseInt(rems.offsetHeight)];
+                let [_ElemW, _ElemH] = [parseInt(this.css("width")), parseInt(this.css("height"))];
+                this.style.fontSize = (_ElemW / _TextW <= _ElemH / _TextH ?
+                    _ElemW / _TextW * parseInt(this.css("font-size")) * note.get("TextContain").get(this).get("width") * 0.01 :
+                    _ElemH / _TextH * parseInt(this.css("font-size")) * note.get("TextContain").get(this).get("height") * 0.01) + "px";
 
-            Subes(".sfget_ew")[0].innerText = this.innerText;
-            Subes(".sfget_ew")[0].style.fontSize = Getsy(this).compute("font-size")[0]
-            Subes(".sfget_ew")[0].style.writingMode = Getsy(this).compute("writing-mode")[0]
-            Subes(".sfget_ew")[0].style.lineHeight = Getsy(this).compute("line-height")[0]
-            Subes(".sfget_ew")[0].style.fontWeight = Getsy(this).compute("font-weight")[0]
-            let [_TH, _TW] = [Subes(".sfget_ew")[0].offsetHeight, Subes(".sfget_ew")[0].offsetWidth]
-            // let [_TH, _TW] = [Getsy(Subes(".sfget_ew")[0]).compute("height")[0], Getsy(Subes(".sfget_ew")[0]).compute("width")[0]]
-            this.style.fontSize = (parseInt(Getsy(this).compute("width")[0]) / parseInt(_TW) <= parseInt(Getsy(this).compute("height")[0]) / parseInt(_TH) ?
-                parseInt(Getsy(this).compute("width")[0]) / parseInt(_TW) * parseInt(Getsy(this).compute("font-size")[0]) * potopx(note.get("TextSize").get(this)["width"]) * 0.01 :
-                parseInt(Getsy(this).compute("height")[0]) / parseInt(_TH) * parseInt(Getsy(this).compute("font-size")[0]) * potopx(note.get("TextSize").get(this)["height"]) * 0.01) + "px"
-
-            Subes("body")[0].removeChild(Subes(".sfget_ew")[0]);
-        } else if (Aom(Wper).comprise("add")) {
-            this.classList.add("text_contain")
-            Aom(this).addEventListener("resize", TextSize, _E0)
-        }
-        /*else if (Aom(Wper).comprise("remove")) {
-                   this.classList.remove("text_contain")
-                   Aom(this).removeEventListener("resize", TextSize, _E0)
-               } */
-        else {
-            Wper = Wper === null ? note.get("TextSize").get(this)["width"] : Wper;
-            Hper = Hper === null ? note.get("TextSize").get(this)["height"] : (Hper === undefined ? Wper : Hper);
-            note.get("TextSize").cset(this, baser("height", "width", Wper, Hper))
-        }
-    }]
-].forEach((_E0) => Aom().master(_E0[0], _E0[1], _E0[2], sfconfig.MasterKey));
-
-export const aom = Symbol();
-[Array, Object, Map, WeakMap, String, Number, Boolean, Function, RegExp, Date].forEach(_E0 => _E0.prototype[aom] = function () {
-    return Aom(this);
-})
-HTMLElement[aom] = function () {
-    return Aom(this)
-}
-
-Efal(
-    () => {
-        Subes(".text_contain").forEach(_E0 => {
-            Aom(_E0).TextSize();
-            Aom(_E0).addEventListener("resize", (() => Aom(_E0).TextSize()))
-        })
-    }
-)
-
-export function Sem(proto) {
-    try {
-        return proto.constructor.name;
-    } catch {
-        return undefined
-    }
-}
-
-export function Sim(proto) {
-    return typeof proto;
-}
-
-function Optionalys(...args) {
-    if (args.length == 0 || args[0] == undefined || args.some(_E0 => typeof _E0 == "number")) return false;
-    args = [args[0], typeof args.slice(-1)[0] == "boolean" ? args.slice(1, -1) : args.slice(1), args.slice(-1)[0] == false ? false : true]
-    return args[1].concat().filter(_E0 => args[2] ? new RegExp(_E0).test(args[0]) : new RegExp(_E0.toLowerCase()).test(args[0].toLowerCase())).length > 0 ? true : false;
-    //_T0 = new Array(args[1].filter(_E0 => new RegExp(_E0).test(args[0]))).flat();
-}
-
-note.set("KeyHold", new Map());
-note.set("KeyCount", new Map());
-note.set("KeyCode").set(false)
-
-export function Keys(type, code, clear) {
-    switch (type) {
-        case "hold":
-            return note.get("KeyHold").get(code)
-        case "count":
-            if (!code) note.get("KeyCount")
-            if (clear) {
-                note.get("KeyCount").set(code, 0)
-                break;
-            } else {
-                return note.get("KeyCount").get(code)
-            };
-        case "code":
-            note.get("KeyCode").set(!note.get("KeyCode"))
-            return "KeyCode : " + note.get("KeyCode").get();
-    }
-}
-
-window.addEventListener('keydown', (event) => {
-    if (!event.repeat) note.get("KeyCount").set(event.keyCode, note.get("KeyCount").get(event.keyCode) == undefined ? 1 : note.get("KeyCount").get(event.keyCode) + 1)
-    if (note.get("KeyCode").self) console.log(event.keyCode);
-})
-window.addEventListener('keydown', (event) => {
-    if (!event.repeat) note.get("KeyHold").set(event.keyCode, true)
-})
-window.addEventListener('keyup', (event) => {
-    if (!event.repeat) note.get("KeyHold").set(event.keyCode, false)
-})
-
-//-Calculation---------------
-
-Efal(
-    (() => note.set("CSSPoint", Aom({
-        vwwos: () => Subes(":root")[0].style.setProperty('--vwwos', document.body.clientWidth / 100 + "px"),
-        vhwos: () => Subes(":root")[0].style.setProperty('--vhwos', document.body.clientHeight / 100 + "px")
-    }).toMap()))
-)
-
-export function CSSPoint(id) {
-    note.get("CSSPoint").get(id)()
-}
-
-window.addEventListener("resize", () => {
-    CSSPoint("vwwos");
-    CSSPoint("vhwos");
-})
-
-//-Auto Process--------------
-//Puppeteer
-note.set("sfwindow");
-
-export function rewindow(width, height, size) {
-    if (width == "close") {
-        note.get("sfwindow").set(undefined);
-        return false
-    }
-    if (Sem(width) != Sem(height)) {
-        console.log("The first and second arguments must have the same type.");
-        return false
-    }
-    _F0 = () => {
-        note.get("sfwindow").set(window.open(location.href, "sfwindow", `width=${Sem(width) == "Number" ? size ? potopx(size) + "px" : "300px" : width},\
-                height=${Sem(height) == "Number" ? size ? potopx(size) * height / width + "px" : 300 * height / width : height}`));
-        let _T0 = setInterval(() => {
-            if (!note.get("sfwindow").get() || note.get("sfwindow").get().closed) {
-                clearInterval(_T0);
-                rewindow("close")
+                Elm("body")[0].removeChild(rems);
             }
-        }, 1000);
-    }
-    try {
-        if (note.get("sfwindow").get() && !note.get("sfwindow").get().closed) sfwindow.close();
-    } catch {}
-    _F0()
-}
 
-class TasksMember extends Array {
-    constructor() {
-        super();
-    }
-    add(If, Fn, ...Arguments) {
-        let id = Symbol();
-        this.push(baser("Work", "Id", "If", "Function", "Arguments", true, id, If, Fn, Arguments))
-        return id;
-    }
-    remove(id) {
-        this.forEach((_E0, _E1, _E2) => {
-            if (_E0["Id"] == id) _E2.splice(_E1, 1)
+            _Tm1()
+
+            let _T0 = this.addEventTask("resize", _Tm1)
+
+            let _T1 = this.addEventTask("classChange", () => {
+                if (!this.classList.contains("text-contain")) {
+                    _T0.remove();
+                    _T1.remove();
+                    note.get("TextContain").delete(this);
+                };
+            })
+        } else {
+            [Wper, Hper] = [Wper || Hper, Hper || Wper];
+            note.get("TextContain").set(this, baser(["width", Wper], ["height", Hper]))
+        }
+        return this;
+    }],
+    ["HTMLElement", "textCenter", function () {
+        note.fset("TextCenter", new Array()).get("TextCenter").push(this);
+        let _Tm1 = () => {
+            this.css("lineHeight", (parseInt(["vertical-lr", "vertical-rl"].includes(this.css("writing-mode")) ? this.css("width") : this.css("height")) / (this.innerText.match(/\n/g) ? this.innerText.match(/\n/g).length + 1 : 1)) + "px");
+            this.css("textAlign", "center");
+        }
+
+        _Tm1()
+
+        let _T0 = this.addEventTask("resize", _Tm1);
+
+        let _T1 = this.addEventTask("classChange", () => {
+            if (!this.classList.contains("text-center")) {
+                _T0.remove();
+                _T1.remove();
+                note.get("TextCenter").splice(note.get("TextCenter").indexOf(this), 1);
+            };
         })
         return this;
+    }],
+    ["HTMLElement", "squareX", function () {
+        return this.css("height", this.css("width"));
+    }],
+    ["HTMLElement", "squareY", function () {
+        return this.css("width", this.css("height"));
+    }]
+].forEach(_E0 => Chain().set(_E0[0], _E0[1], _E0[2]).sync());
+
+
+//-Bundle-----------------------------------------------------------------------------------------
+//TODO release soon
+class Ringadds {}
+
+export function Ring(input) {}
+
+//-Tasks-------------------------------------------------------------------------------------------
+
+class TasksMember {
+    constructor(If, Func, Arg) {
+        this.if = If;
+        this.func = Func;
+        this.arg = Arg;
+        this.exe = true; //Execute now?
+        this.able = true; // Once Executed?
     }
+
     start() {
-        if (sfconfig.TaskInterval == 0) {
-            note.get("TasksInterval").set(sfconfig.TaskInterval);
-            Tasks("call");
-        } else if (sfconfig.TaskInterval > 0) {
-            if (sfconfig.TaskInterval < 1) {
-                console.error("Task Interval must be 0, -1 or a positive natural number.")
-            } else {
-                note.get("TasksInterval").set(window.setInterval(Tasks, sfconfig.TaskInterval, "call"));
-            }
-        };
+        this.exe = true;
     }
+
     stop() {
-        if (sfconfig.TAskInterval == 0) {
-            note.set("TasksInterval").set(-1)
-        } else if (sfconfig.TaskInterval > 0) {
-            window.clearInterval(note.get("TasksInterval").get());
-        };
+        this.exe = false;
     }
+
     call() {
-        this.forEach(_E0 => {
-            if (_E0["If"]() && _E0["Work"]) {
-                _E0["Function"](..._E0["Arguments"])
-                if (!sfconfig.AlwaysTasksWork) {
-                    _E0["Work"] = false;
-                }
-            } else if (!_E0["If"]() && !_E0["Work"]) {
-                _E0["Work"] = true;
-            }
-        })
-        if (note.get("TasksInterval").get() == 0) window.requestAnimationFrame(Tasks.bind(null, "call"))
+        if (this.exe && this.if(this) && this.able) {
+            this.func(...this.arg)
+            if (note.get("config").Tasks.exeOnce) this.able = false;
+        } else if (!this.able && !this.if(this)) {
+            this.able = true;
+        }
+        if (this.exe) note.get("config").Tasks.exeInterval == 0 ? window.requestAnimationFrame(this.call.bind(this)) : setTimeout(this.call.bind(this), note.get("config").Tasks.exeInterval);
+    }
+
+    remove() {
+        note.get("Tasks").splice(note.get("Tasks").indexOf(this), 1);
+        this.exe = false;
+    }
+
+}
+
+function Tasks(If, Func, ...Arg) {
+    note.fset("Tasks", new Array());
+    if (arguments.length == 1) {
+        switch (If) {
+            case "start":
+                note.get("Tasks").forEach(_E0 => _E0.start());
+            case "stop":
+                note.get("Tasks").forEach(_E0 => _E0.stop());
+        }
+    } else {
+        let _T0 = new TasksMember(If, Func, Arg);
+        note.get("Tasks").push(_T0);
+        _T0.call();
+        return _T0;
     }
 }
 
-export function Tasks(_A0, _A1, ..._A2) /**(If, Function, Arguments) */ {
-    switch (_A0) {
-        case "remove":
-            return note.get("Tasks").remove(_A0);
-        case "start":
-            return note.get("Tasks").start();
-        case "stop":
-            return note.get("Tasks").stop();
-        case "call":
-            return note.get("Tasks").call();
+//Auto Tasks Register----------------------------
+Tasks(() => true, function () {
+    Array.from(Elm(".text-contain")).filter(_E0 => !note.oget("TextContain", new Map()).has(_E0)).forEach(_E0 => _E0.textContain());
+    Array.from(Elm(".text-center")).filter(_E0 => !note.oget("TextCenter", new Array()).includes(_E0)).forEach(_E0 => _E0.textCenter());
+});
+
+//-Input-------------------------------------------------------------------------------------------
+
+note.set("Keys", new Map());
+
+function Keys(number) {
+    switch (number) {
+        case "list":
+            return Array.from(note.get("Keys").entries()).filter(_E0 => _E0[1]).map(_E0 => _E0[0]);
         default:
-            return note.get("Tasks").set(_A0, _A1, ..._A2);
-    };
+            return note.get("Keys").get(number);
+    }
 }
 
-note.set("TasksInterval").set(sfconfig.TaskInterval)
-note.set("Tasks", new TasksMember());
-Tasks("start");
+window.addEventListener('keydown', (event) => {
+    if (!event.repeat) note.get("Keys").set(event.keyCode, true);
+})
+window.addEventListener('keyup', (event) => {
+    if (!event.repeat) note.get("Keys").set(event.keyCode, false);
+})
 
-export function ExeFuncAftLoad(Func) {
-    window.addEventListener("load", Func)
+//-Tools-------------------------------------------------------------------------------------------
+
+function Proto(arg) {
+    try {
+        return arg.constructor.name;
+    } catch (e) {
+        return e;
+    }
 }
 
-export function FuncProgeny(elem, fn) {
-    return Aom(elem).DescendantFlat().map(_E0 => fn(_E0));
+function Baser(...args) {
+    if (["Array", "Object", "Map"].indexOf(Proto(args[0])) == -1) throw "args must be Array, Object or Map.";
+    if (args.length == 1) args = args[0];
+    if (Proto(args) == "Object") args = new Map(Object.entries(args))
+    if (Proto(args) == "Array") {
+        try {
+            args = new Map(args);
+        } catch (e) {
+            args = new Map(new Array(args));
+        }
+    }
+    return args;
 }
 
-//-Item Function-------------
-export function Random(min, max, digit) {
-    if (!digit) digit = 0;
-    return (Math.random() * (max - min) + min).toFixed(digit) - 0
+// TODO Rework before long.
+// function reWindow(Wper, Hper, size) {
+//     return window.open(location.href, "sfWindow", `width=${Chain(size).potopx()}, height=${Hper/Wper*parseInt(size.potopx())+"px"}`);
+// }
+
+function Efal() {
+    return document.addEventListener(...arguments);
 }
 
-/**A revised version will be released soon.
- * 
- * function Funcrand(graph, xmin, xmax, ymin, ymax) {
-    let [xx, yy] = [Random(xmin, xmax), Random(ymin, ymax)]
-    let x = xx
-    return new Function(`return ${graph}`)() >= yy ? yy : Funcrand(graph, xmin, xmax, ymin, ymax);
-}*/
+//-Test Area-----------------
+console.log();
 
-export function RandFn(now, min, max) {
-    return now >= Random(min, max) ? true : false;
+//-Loaded--------------------
+// console.log("Seifuncs ver.2.0 for JS was completely loaded.");
+if (/^(?=.*Chrome)(?!.*Edge)/.test(window.navigator.userAgent)) {
+    console.log("%c %c Seifuncs for JS / ver.2.0%c \n%c %c Developer : Seizya \n%c %c GitHub : https://github.com/Seizya",
+        "background-color:#165e83;border-bottom:solid #f0f 2px", "border-bottom:solid #f0f 2px", "", "background-color:#165e83", "", "background-color:#165e83", "")
+} else {
+    console.log("Seifuncs for JS \nDeveloper : Seizya \nGitHub : https://github.com/Seizya")
 }
+if (/MSIE|Trident|Edge/.test(window.navigator.userAgent)) console.warn("Seifuncs doesn't support IE.")

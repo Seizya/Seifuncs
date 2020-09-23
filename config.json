@@ -1,0 +1,23 @@
+{
+    "Tasks": {
+        "exeOnce": true,
+        "exeInterval": 0
+    },
+    "Chain": {
+        "level": 2,
+        "exclude": {
+            "Array": [],
+            "Object": [],
+            "Map": [],
+            "WeakMap": [],
+            "String": [],
+            "Number": [],
+            "Boolean": [],
+            "HTMLElement": [],
+            "Function": [],
+            "RegExp": [],
+            "Date": [],
+            "Window": []
+        }
+    }
+}
