@@ -1,6 +1,6 @@
 # Seifuncs
 This is usefull corection of JavaScript Functions.  
-This improves method chain.
+This improves method chain.</br>
 *caution* : Developer only think good for Seizya because they are Seizya alone.  
 
 # How use
@@ -43,7 +43,7 @@ or e-mail.
 ### Map
 0. **cset** / if key is not in map, key is set. / arg : like Map.set
 1. **fset** / key is set only once. / arg : like Map.set
-2. **to** / literally.
+2. **to** / like above.
 
 ### String
  0. **comprise** / whether string has arged string without distinction.   / arg0 : string
