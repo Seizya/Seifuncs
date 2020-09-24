@@ -106,7 +106,8 @@ class Note extends Map {
 }
 
 const note = new Note("Seifuncs");
-note.upload("config", "./config.json");
+note.upload("config", "./Seifuncs/config.json");
+// note.upload("config", "./config.json");
 
 //-Chain---------------------------------------------------------------------------------------------
 
@@ -387,7 +388,7 @@ export function Chain(input) {
                 Elm("body")[0].insertBefore(rems, Elm("body")[0].firstChild);
 
                 let [_TextW, _TextH] = [parseInt(rems.offsetWidth), parseInt(rems.offsetHeight)];
-                let [_ElemW, _ElemH] = [parseInt(this.css("width")), parseInt(this.css("height"))];
+                let [_ElemW, _ElemH] = [parseInt(this.offsetWidth) - parseInt(this.css("padding-left")) - parseInt(this.css("padding-right")), parseInt(this.offsetHeight) - parseInt(this.css("padding-top")) - parseInt(this.css("padding-bottom"))];
                 this.style.fontSize = (_ElemW / _TextW <= _ElemH / _TextH ?
                     _ElemW / _TextW * parseInt(this.css("font-size")) * note.get("TextContain").get(this).get("width") * 0.01 :
                     _ElemH / _TextH * parseInt(this.css("font-size")) * note.get("TextContain").get(this).get("height") * 0.01) + "px";
