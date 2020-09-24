@@ -557,7 +557,7 @@ function Baser(...args) {
 // }
 
 function Efal() {
-    return document.addEventListener(...arguments);
+    return document.addEventListener("load", ...arguments);
 }
 
 //-Test Area-----------------
