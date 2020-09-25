@@ -562,6 +562,7 @@ function Efal() {
 
 //-Test Area-----------------
 console.log();
+Elm("#header")[0].css("color", "red")
 
 //-Loaded--------------------
 // console.log("Seifuncs ver.2.0 for JS was completely loaded.");
