@@ -106,11 +106,8 @@ class Note extends Map {
 }
 
 const note = new Note("Seifuncs");
-try {
-    note.upload("config", "./config.json");
-} catch (e) {
-    note.upload("config", "./Seifuncs/config.json");
-}
+note.upload("config", "./Seifuncs/config.json");
+// note.upload("config", "./config.json"); //for Test.html
 
 //-Chain---------------------------------------------------------------------------------------------
 
