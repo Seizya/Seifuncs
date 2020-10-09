@@ -402,9 +402,9 @@ export function Chain(input) {
                         fire: false,
                         listener: () => {
                             let _T0 = setTimeout(() => target.state.fire = true, ["Number", "Object"].includes(Proto(option)) ? (Proto(option) == "Number" ? option : option.time) : note.get("config").Touch.time);
-                            document.addEventListener("touchend", () => clearTimeout(_T0), Baser(["once", false]).to("Object"))
+                            document.addEventListener("touchend", () => clearTimeout(_T0), Baser(["once", false]).to("Object"));
                         }
-                    }
+                    };
                     this.addEventListener("touchstart", target.state.listener, new Array(["passive", (!option || option.passive == undefined) ? true : option.passive]).to("Object"));
                 }, () => {
                     this.removeEventListener("touchstart", target.state.listener, new Array(["passive", (!option || option.passive == undefined) ? true : option.passive]).to("Object"));
