@@ -106,8 +106,8 @@ class Note extends Map {
 }
 
 const note = new Note("Seifuncs");
-note.upload("config", "./Seifuncs/config.json");
-// note.upload("config", "./config.json");
+// note.upload("config", "./Seifuncs/config.json");
+note.upload("config", "./config.json");
 
 //-Chain---------------------------------------------------------------------------------------------
 
@@ -158,9 +158,9 @@ class Chainadds {
 
         Object.values(this.support).map(_E0 => Proto(_E0).includes("HTML") ? "HTMLElement" : Proto(_E0)).forEach(_E0 => this
             .set(_E0, "chain", function (...args) {
-                if (Proto(args[0]) == "Function") return args[0].bind(this)();
-                args = Proto(args[0][0]) == "String" ? args : args.flat();
-                return args.reduce((accumulator, currentValue) => accumulator[currentValue[0]](...args.slice(0, 1), this));
+                if (Proto(args[0]) == "Function") return args[0].bind(this)(...args(0, 1));
+                if (Proto(args[0]) == "String") return this[args[0]](...args.slice(0, 1));
+                return args.reduce((accumulator, currentValue) => accumulator[currentValue[0]](...currentValue.slice(0, 1), this));
             }).set(_E0, "branch", function (...args) {
                 this.chain(...args)[0];
                 return this;
@@ -315,50 +315,103 @@ export function Chain(input) {
         }
         return this;
     }],
-    ["HTMLElement", "addEventTask", function (type, listener, ...args) {
-        class EventTasksMember extends TasksMember {
-            constructor(Func, ...Arg) {
-                super();
+    ["HTMLElement", "addEventTask", function (type, listener, option) {
+        class EventTasksMember {
+            constructor(Func) {
                 this.func = Func;
-                this.args = Arg;
-                this.call = undefined;
+                this.able = true;
+                this.ended = false;
             }
-            remove() {
+
+            start() {
+                this.able = true;
+            }
+
+            stop() {
                 this.able = false;
             }
-        }
-        let _Tm1 = new EventTasksMember(listener, args);
 
-        if (note.fset("EventTasks", new Map()).get("EventTasks").fset(type, new Map()).get(type).has(this)) {
-            note.get("EventTasks").get(type).get(this).list.push(_Tm1);
-            return _Tm1;
-        }
+            remove() {
+                this.ended = true;
+            }
 
-        let TasksRegister = (State, If) => {
-            note.get("EventTasks").get(type).set(this, Baser(["state", State()], ["list", new Array(_Tm1)]).to("Object"));
+            call() {
+                this.func(this);
+            }
+        }
+        let _Tm1 = new EventTasksMember(listener);
+
+        note.fset("EventTasks", new Map()).get("EventTasks").fset(type, new Map()) //Target
+
+        let TasksRegister = (Target, If, Start, End) => {
+            if (Target.has(this)) {
+                Target.get(this).list.push(_Tm1);
+                return _Tm1;
+            }
+            Target.set(this, Baser(["state", undefined], ["list", new Array(_Tm1)]).to("Object"));
+            if (Start) Start(Target.get(this));
             return Tasks((task) => {
-                if (note.get("EventTasks").get(type).get(this).list.filter(_E0 => _E0.able).length == 0) {
-                    console.log("deleted")
+                if (Target.get(this).list.filter(_E0 => !_E0.ended).length == 0) {
+                    if (End) End(Target.get(this));
                     task.remove();
-                    note.get("EventTasks").get(type).delete(this);
+                    Target.delete(this);
                     return false;
                 }
-                let _T1 = If();
-                if (_T1) note.get("EventTasks").get(type).get(this).state = State();
-                return _T1;
-            }, () => note.get("EventTasks").get(type).get(this).list.filter(_E0 => _E0.able).forEach(_E0 => _E0.func.bind(this)(...args)));
+                return If(Target.get(this));
+            }, () => Target.get(this).list.filter(_E0 => _E0.able).forEach(_E0 => _E0.call()));
 
         }
 
         switch (type) {
             case "scroll":
-                return TasksRegister(() => Baser(["x", this.scrollTop], ["y", this.scrollLeft]).to("Object"), () => note.get("EventTasks").get("scroll").get(this).state.x !== this.scrollLeft || note.get("EventListeners").get("scroll").get(this).state.y !== this.scrollTop);
+                return TasksRegister(note.get("EventTasks").get("scroll"), (target) => {
+                    let _T0 = target.state.x !== this.scrollLeft || target.state.y !== this.scrollTop;
+                    if (_T0) target.state = Baser(["x", this.scrollTop], ["y", this.scrollLeft]).to("Object");
+                    return _T0;
+                }, (target) => {
+                    target.state = Baser(["x", this.scrollTop], ["y", this.scrollLeft]).to("Object");
+                });
 
             case "resize":
-                return TasksRegister(() => Baser(["width", parseInt(this.css("width"))], ["height", parseInt(this.css("height"))]).to("Object"), () => note.get("EventTasks").get("resize").get(this).state.width !== parseInt(this.css("width")) || note.get("EventTasks").get("resize").get(this).state.height !== parseInt(this.css("height")));
+                return TasksRegister(note.get("EventTasks").get("resize"), (target) => {
+                    let _T0 = target.state.width !== parseInt(this.css("width")) || target.state.height !== parseInt(this.css("height"));
+                    if (_T0) target.state = Baser(["width", parseInt(this.css("width"))], ["height", parseInt(this.css("height"))]).to("Object");
+                    return _T0;
+                }, (target) => {
+                    target.state = Baser(["width", parseInt(this.css("width"))], ["height", parseInt(this.css("height"))]).to("Object");
+                });
 
             case "classChange":
-                return TasksRegister(() => Array.from(this.classList), () => note.get("EventTasks").get("classChange").get(this).state.equal(Array.from(this.classList)));
+                return TasksRegister(note.get("EventTasks").get("classChange"), (target) => {
+                    let _T0 = target.state.equal(Array.from(this.classList));
+                    if (_T0) target.state = Array.from(this.classList);
+                    return _T0;
+                }, (target) => {
+                    target.state = Array.from(this.classList);
+                });
+
+            case "touchlong":
+                return TasksRegister(note.get("EventTasks").get("touchlong").fset(["Number", "Object"].includes(Proto(option)) ? (Proto(option) == "Number" ? option : option.time) : note.get("config").Touch.time + "", new Map()).get(["Number", "Object"].includes(Proto(option)) ? (Proto(option) == "Number" ? option : option.time) : note.get("config").Touch.time + ""), (target) => {
+                    if (target.state.fire) {
+                        target.state.fire = false;
+                        return true;
+                    }
+                    return false;
+                }, (target) => {
+                    target.state = {
+                        fire: false,
+                        listener: () => {
+                            let _T0 = setTimeout(() => target.state.fire = true, ["Number", "Object"].includes(Proto(option)) ? (Proto(option) == "Number" ? option : option.time) : note.get("config").Touch.time);
+                            document.addEventListener("touchend", () => clearTimeout(_T0), Baser(["once", false]).to("Object"))
+                        }
+                    }
+                    this.addEventListener("touchstart", target.state.listener, new Array(["passive", (!option || option.passive == undefined) ? true : option.passive]).to("Object"));
+                }, () => {
+                    this.removeEventListener("touchstart", target.state.listener, new Array(["passive", (!option || option.passive == undefined) ? true : option.passive]).to("Object"));
+                })
+
+            case "touchslide":
+                return 0;
 
             default:
                 throw type + "isn't supported.";
@@ -461,6 +514,7 @@ class TasksMember {
 
     start() {
         this.exe = true;
+        this.call();
     }
 
     stop() {
@@ -469,7 +523,7 @@ class TasksMember {
 
     call() {
         if (this.exe && this.if(this) && this.able) {
-            this.func(...this.arg)
+            this.func(this)
             if (note.get("config").Tasks.exeOnce) this.able = false;
         } else if (!this.able && !this.if(this)) {
             this.able = true;

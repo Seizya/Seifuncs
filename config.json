@@ -19,5 +19,8 @@
             "Date": [],
             "Window": []
         }
+    },
+    "Touch": {
+        "time": 500
     }
 }
