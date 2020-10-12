@@ -332,6 +332,7 @@ export function Chain(input) {
             }
 
             remove() {
+                this.able = false;
                 this.ended = true;
             }
 
@@ -358,8 +359,10 @@ export function Chain(input) {
                     return false;
                 }
                 return If(Target.get(this));
-            }, () => Target.get(this).list.filter(_E0 => _E0.able).forEach(_E0 => _E0.call()));
-
+            }, () => {
+                Target.get(this).list.filter(_E0 => _E0.able).forEach(_E0 => _E0.call());
+                if (Proto(option) == "Object" && option.once) Target.get(this).list.forEach(_E0 => _E0.remove());
+            });
         }
 
         switch (type) {
@@ -390,19 +393,17 @@ export function Chain(input) {
                     target.state = Array.from(this.classList);
                 });
 
-            case "touchlong":
-                return TasksRegister(note.get("EventTasks").get("touchlong").fset(["Number", "Object"].includes(Proto(option)) ? (Proto(option) == "Number" ? option : option.time) : note.get("config").Touch.time + "", new Map()).get(["Number", "Object"].includes(Proto(option)) ? (Proto(option) == "Number" ? option : option.time) : note.get("config").Touch.time + ""), (target) => {
-                    if (target.state.fire) {
-                        target.state.fire = false;
-                        return true;
-                    }
+            case "touchlong": //option : time - Number
+                return TasksRegister(note.get("EventTasks").get("touchlong").fset((Proto(option) == "Number" ? option : (Proto(option) == "Object" && option.time ? option.time : note.get("config").Touch.time)) + "", new Map()).get((Proto(option) == "Number" ? option : (Proto(option) == "Object" && option.time ? option.time : note.get("config").Touch.time)) + ""), (target) => {
                     return false;
                 }, (target) => {
                     target.state = {
-                        fire: false,
                         listener: () => {
-                            let _T0 = setTimeout(() => target.state.fire = true, ["Number", "Object"].includes(Proto(option)) ? (Proto(option) == "Number" ? option : option.time) : note.get("config").Touch.time);
-                            document.addEventListener("touchend", () => clearTimeout(_T0), Baser(["once", false]).to("Object"));
+                            let _T0 = setTimeout(() => {
+                                target.list.filter(_E0 => _E0.able).forEach(_E0 => _E0.call());
+                                if (Proto(option) == "Object" && option.once) target.list.forEach(_E0 => _E0.remove());
+                            }, Proto(option) == "Number" ? option : (Proto(option) == "Object" && option.time ? option.time : note.get("config").Touch.time));
+                            this.addEventListener("touchend", () => clearTimeout(_T0), Baser(["once", true]).to("Object"));
                         }
                     };
                     this.addEventListener("touchstart", target.state.listener, new Array(["passive", (!option || option.passive == undefined) ? true : option.passive]).to("Object"));
@@ -410,8 +411,54 @@ export function Chain(input) {
                     this.removeEventListener("touchstart", target.state.listener, new Array(["passive", (!option || option.passive == undefined) ? true : option.passive]).to("Object"));
                 })
 
-            case "touchslide":
-                return 0;
+            case "touchslide": //option : direction
+                return TasksRegister(note.get("EventTasks").get("touchslide"), (target) => {
+                    return false;
+                }, (target) => {
+                    target.state = {
+                        coordinate: [],
+                        listener: (event) => { //TODO 四捨五入用Round関数
+                            let passive = true;
+                            // event.preventDefault();
+                            target.state.coordinate = [event.changedTouches[0].pageX, event.changedTouches[0].pageY];
+                            let _T0 = (event1) => { //touchmove
+                                if (Math.sqrt(Math.pow(target.state.coordinate[0] - event1.changedTouches[0].pageX, 2) + Math.pow(target.state.coordinate[1] - event1.changedTouches[0].pageY, 2)) >= note.get("config").Touch.slide) {
+                                    if ((() => {
+                                            switch (Proto(option) == "Object " ? option.slide : option) {
+                                                case "x":
+                                                    return Math.abs(target.state.coordinate[0] - event1.changedTouches[0].pageX) > Math.abs(target.state.coordinate[1] - event1.changedTouches[0].pageY) ? true : false;
+                                                case "y":
+                                                    return Math.abs(target.state.coordinate[0] - event1.changedTouches[0].pageX) < Math.abs(target.state.coordinate[1] - event1.changedTouches[0].pageY) ? true : false;
+                                                case "right":
+                                                    return -1 * (target.state.coordinate[0] - event1.changedTouches[0].pageX) > Math.abs(target.state.coordinate[1] - event1.changedTouches[0].pageY) ? true : false;
+                                                case "left":
+                                                    return (target.state.coordinate[0] - event1.changedTouches[0].pageX) > Math.abs(target.state.coordinate[1] - event1.changedTouches[0].pageY) ? true : false;
+                                                case "top":
+                                                    return Math.abs(target.state.coordinate[0] - event1.changedTouches[0].pageX) < (target.state.coordinate[1] - event1.changedTouches[0].pageY) ? true : false;
+                                                case "bottom":
+                                                    return Math.abs(target.state.coordinate[0] - event1.changedTouches[0].pageX) < -1 * (target.state.coordinate[1] - event1.changedTouches[0].pageY) ? true : false;
+                                                default:
+                                                    return true;
+                                            }
+                                        })()) {
+                                        target.list.filter(_E0 => _E0.able).forEach(_E0 => _E0.call())
+                                        if (Proto(option) == "Object" && option.once) target.list.forEach(_E0 => _E0.remove());
+                                    }
+                                    target.state.coordinate = [event1.changedTouches[0].pageX, event1.changedTouches[0].pageY];
+                                }
+                            }
+                            this.addEventListener("touchmove", _T0, new Array(["passive", (!option || option.passive == undefined) ? passive : option.passive]).to("Object"));
+                            this.addEventListener("touchend", () => {
+                                this.removeEventListener("touchmove", _T0, new Array(["passive", (!option || option.passive == undefined) ? passive : option.passive]).to("Object"));
+                                target.state.coordinate = [];
+                                return false;
+                            }, Baser(["once", true]).to("Object"));
+                        }
+                    };
+                    this.addEventListener("touchstart", target.state.listener, new Array(["passive", (!option || option.passive == undefined) ? true : option.passive]).to("Object"));
+                }, () => {
+                    this.removeEventListener("touchstart", target.state.listener, new Array(["passive", (!option || option.passive == undefined) ? true : option.passive]).to("Object"));
+                })
 
             default:
                 throw type + "isn't supported.";
@@ -603,6 +650,15 @@ function Baser(...args) {
         }
     }
     return args;
+}
+
+function Baser1(...args) {
+    if (args.length == 1) args[0];
+    let proto = args.slice(0, args.length / 2);
+    let value = args.slice(args.length / 2, args.length);
+    let map = new Map();
+    proto.forEach((_E0, _E1) => map.set(_E0, value[_E1]));
+    return map;
 }
 
 // TODO Rework before long.
