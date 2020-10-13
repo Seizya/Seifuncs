@@ -248,7 +248,7 @@ export function Chain(input) {
         if (this.has(key)) throw key + " is already written in this Map.";
         return this.set(key, value);
     }],
-    ["Map", "fset", function (key, value) {
+    ["Map", "fset", function (key, value) { //TODO fset大幅拡張
         if (!this.has(key)) this.set(key, value);
         return this;
     }],
@@ -317,8 +317,9 @@ export function Chain(input) {
     }],
     ["HTMLElement", "addEventTask", function (type, listener, option) {
         class EventTasksMember {
-            constructor(Func) {
-                this.func = Func;
+            constructor() {
+                this.func = listener;
+                this.option = option;
                 this.able = true;
                 this.ended = false;
             }
@@ -340,7 +341,7 @@ export function Chain(input) {
                 this.func(this);
             }
         }
-        let _Tm1 = new EventTasksMember(listener);
+        let _Tm1 = new EventTasksMember();
 
         note.fset("EventTasks", new Map()).get("EventTasks").fset(type, new Map()) //Target
 
@@ -394,7 +395,7 @@ export function Chain(input) {
                 });
 
             case "touchlong": //option : time - Number
-                return TasksRegister(note.get("EventTasks").get("touchlong").fset((Proto(option) == "Number" ? option : (Proto(option) == "Object" && option.time ? option.time : note.get("config").Touch.time)) + "", new Map()).get((Proto(option) == "Number" ? option : (Proto(option) == "Object" && option.time ? option.time : note.get("config").Touch.time)) + ""), (target) => {
+                return TasksRegister(note.get("EventTasks").get("touchlong").fset(Proto1("Number", Baser1("time", option).get("time"), note.get("config").Touch.time) + "", new Map()).get(Proto1("Number", Baser1("time", option).get("time"), note.get("config").Touch.time) + ""), (target) => {
                     return false;
                 }, (target) => {
                     target.state = {
@@ -402,17 +403,17 @@ export function Chain(input) {
                             let _T0 = setTimeout(() => {
                                 target.list.filter(_E0 => _E0.able).forEach(_E0 => _E0.call());
                                 if (Proto(option) == "Object" && option.once) target.list.forEach(_E0 => _E0.remove());
-                            }, Proto(option) == "Number" ? option : (Proto(option) == "Object" && option.time ? option.time : note.get("config").Touch.time));
+                            }, Proto1("Number", Baser1("time", option).get("time"), note.get("config").Touch.time));
                             this.addEventListener("touchend", () => clearTimeout(_T0), Baser(["once", true]).to("Object"));
                         }
                     };
-                    this.addEventListener("touchstart", target.state.listener, new Array(["passive", (!option || option.passive == undefined) ? true : option.passive]).to("Object"));
-                }, () => {
-                    this.removeEventListener("touchstart", target.state.listener, new Array(["passive", (!option || option.passive == undefined) ? true : option.passive]).to("Object"));
+                    this.addEventListener("touchstart", target.state.list, new Array(["passive", (!option || option.passive == undefined) ? true : option.passive]).to("Object"));
+                }, (target) => {
+                    this.removeEventListener("touchstart", target.state.list, new Array(["passive", (!option || option.passive == undefined) ? true : option.passive]).to("Object"));
                 })
 
             case "touchslide": //option : direction
-                return TasksRegister(note.get("EventTasks").get("touchslide"), (target) => {
+                return TasksRegister(note.get("EventTasks").get("touchslide").fset(Baser1("direction", option).get("direction"), new Map()).get(Baser1("direction", option).get("direction")), (target) => {
                     return false;
                 }, (target) => {
                     target.state = {
@@ -455,14 +456,34 @@ export function Chain(input) {
                             }, Baser(["once", true]).to("Object"));
                         }
                     };
-                    this.addEventListener("touchstart", target.state.listener, new Array(["passive", (!option || option.passive == undefined) ? true : option.passive]).to("Object"));
-                }, () => {
-                    this.removeEventListener("touchstart", target.state.listener, new Array(["passive", (!option || option.passive == undefined) ? true : option.passive]).to("Object"));
+                    this.addEventListener("touchstart", target.state.list, new Array(["passive", (!option || option.passive == undefined) ? true : option.passive]).to("Object"));
+                }, (target) => {
+                    this.removeEventListener("touchstart", target.state.list, new Array(["passive", (!option || option.passive == undefined) ? true : option.passive]).to("Object"));
                 })
 
             default:
                 throw type + "isn't supported.";
         }
+    }],
+    ["HTMLElement", "removeEventTask", function (type, listener, option) {
+        console.log(note.get("EventTasks").get("touchslide").get(Baser1("direction", option).get("direction")).get(this).list[0].func == listener)
+        switch (type) {
+            case "scroll":
+                note.get("EventTasks").get("scroll").get(this).list.filter(_E0 => _E0.func == listener && _E0.option == option).forEach(_E0 => _E0.remove());
+                break;
+            case "resize":
+                note.get("EventTasks").get("resize").get(this).list.filter(_E0 => _E0.func == listener && _E0.option == option).forEach(_E0 => _E0.remove());
+                break;
+            case "classChange":
+                note.get("EventTasks").get("classChange").get(this).list.filter(_E0 => _E0.func == listener && _E0.option == option).forEach(_E0 => _E0.remove());
+                break;
+            case "touchlong":
+                note.get("EventTasks").get("touchlong").get(Proto1("Number", Baser1("time", option).get("time"), note.get("config").Touch.time) + "").get(this).list.filter(_E0 => _E0.func == listener && _E0.option == option).forEach(_E0 => _E0.remove());
+                break;
+            case "touchslide":
+                note.get("EventTasks").get("touchslide").get(Baser1("direction", option).get("direction")).get(this).list.filter(_E0 => _E0.func == listener && _E0.option == option).forEach(_E0 => _E0.remove());
+        }
+        return this;
     }],
     ["HTMLElement", "descendantFlat", function () {
         let E2E = _A0 => _A0.flatMap(_E0 => _E0.hasChildNodes() ? [_E0, ...E2E(Array.from(_E0.children))] : _E0);
@@ -636,6 +657,10 @@ function Proto(arg) {
     } catch (e) {
         return e;
     }
+}
+
+function Proto1(proto, True, False) {
+    return Proto(True) == proto ? True : False;
 }
 
 function Baser(...args) {
