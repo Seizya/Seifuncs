@@ -106,8 +106,8 @@ export class Note extends Map {
 }
 
 const note = new Note("Seifuncs");
-// note.upload("config", "./Seifuncs/config.json");
-note.upload("config", "./config.json"); //for Test.html
+note.upload("config", "./Seifuncs/config.json");
+// note.upload("config", "./config.json"); //for Test.html
 
 //-Chain---------------------------------------------------------------------------------------------
 
