@@ -63,3 +63,18 @@ or e-mail.
 4. **textCenter** / literally 
 5. **squareX** / make element square base on X.
 6. **squareY** / like above.
+
+
+## 1. Note
+### method
+0. **cset** / like above.
+1.  **fset** / like above.
+2. **oget** / Not being first argument key, return second argument. / args : any
+3. **join** / merge two note. Being same key, set this note's value. / arg : note
+4. **assign** / merge two note. Being same key, set argument note's value. / arg : note
+5. **json** / return json object. / static function. / arg : URL (string)
+6. **save** / save arg's key's value into localstorage. / arg : any
+7. **restore** / restore from localstorage. / arg : string (keyname)
+8. **saveReset** / delete saved data. / arg : any (keyname)
+9. **download** / download json argument key. / static function / arg : any (keyname)
+10. **upload** / upload json as argument key. / arg0 : any (keyname) - arg1 URL (string)

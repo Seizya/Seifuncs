@@ -30,7 +30,7 @@ function Elm(...args) {
 }
 
 //必要に応じて Export.
-class Note extends Map {
+export class Note extends Map {
     constructor(name) {
         super();
         this.name = name;
@@ -74,7 +74,7 @@ class Note extends Map {
     }
 
     save(key) { //localStorage 保存
-        if (!["Object", "Map"].includes(Proto(this.get(key)))) throw "Selected Value is not Object or Map";
+        // if (!["Object", "Map"].includes(Proto(this.get(key)))) throw "Selected Value is not Object or Map";
         let _T0 = (JSON.parse(localStorage.getItem(this.name)) || {});
         _T0[key] = Proto(this.get(key)) == "Map" ? Object.fromEntries(this.get(key).entries()) : this.get(key);
         localStorage.setItem(this.name, JSON.stringify(_T0));
@@ -90,11 +90,11 @@ class Note extends Map {
         localStorage.removeItem(this.name)
     }
 
-    download(value) { //JSON 保存
+    download(key, name) { //JSON 保存
         Elm({
             tag: "a",
-            download: this.name + String(new Date()).replace(new RegExp(" ", "g"), "-") + "." + "json",
-            href: "data:text/plain," + encodeURIComponent(JSON.stringify(value))
+            download: this.name + "-" + name ? name : "" + "-" + String(new Date()).replace(new RegExp(" ", "g"), "-") + "." + "json",
+            href: "data:text/plain," + encodeURIComponent(JSON.stringify(this.get(key)))
         }).click();
 
     }
@@ -106,8 +106,8 @@ class Note extends Map {
 }
 
 const note = new Note("Seifuncs");
-note.upload("config", "./Seifuncs/config.json");
-// note.upload("config", "./config.json"); //for Test.html
+// note.upload("config", "./Seifuncs/config.json");
+note.upload("config", "./config.json"); //for Test.html
 
 //-Chain---------------------------------------------------------------------------------------------
 
@@ -466,7 +466,6 @@ export function Chain(input) {
         }
     }],
     ["HTMLElement", "removeEventTask", function (type, listener, option) {
-        console.log(note.get("EventTasks").get("touchslide").get(Baser1("direction", option).get("direction")).get(this).list[0].func == listener)
         switch (type) {
             case "scroll":
                 note.get("EventTasks").get("scroll").get(this).list.filter(_E0 => _E0.func == listener && _E0.option == option).forEach(_E0 => _E0.remove());
