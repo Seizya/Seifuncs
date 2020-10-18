@@ -75,7 +75,7 @@ export class Note extends Map {
 
     save(key) { //localStorage 保存
         // if (!["Object", "Map"].includes(Proto(this.get(key)))) throw "Selected Value is not Object or Map";
-        let _T0 = (JSON.parse(localStorage.getItem(this.name)) || {});
+        let _T0 = JSON.parse(localStorage.getItem(this.name)) || {};
         _T0[key] = Proto(this.get(key)) == "Map" ? Object.fromEntries(this.get(key).entries()) : this.get(key);
         localStorage.setItem(this.name, JSON.stringify(_T0));
         return this;
@@ -87,7 +87,18 @@ export class Note extends Map {
     }
 
     saveReset() {
-        localStorage.removeItem(this.name)
+        localStorage.removeItem(this.name);
+        return this;
+    }
+
+    saveRemove(key) {
+        let _T0 = JSON.parse(localStorage.getItem(this.name)) || {};
+        delete _T0.key;
+        localStorage.setItem(this.name, JSON.stringify(_T0));
+    }
+
+    savehas(key) {
+        return Object.keys(JSON.parse(localStorage.getItem(this.name)) || {}).includes(key);
     }
 
     download(key, name) { //JSON 保存
