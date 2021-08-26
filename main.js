@@ -1,65 +1,8 @@
-function Elm(...args) {
-    if (["Array", "Object", "String", "Map"].indexOf(Proto(args[0])) == -1) throw "args must be Array, Object, Map or String.";
-    if (Proto(args[0]) == "String") {
-        return document.querySelectorAll(args);
-    } else {
-        args = Baser(...args);
-        let _T0 = document.createElement(args.get("tag"));
-        args.forEach((value, key) => {
-            switch (key) {
-                case "tag":
-                    break;
-                case "addEventListener":
-                    _T0.addEventListener(value[0], value[1], value[2]);
-                    break;
-                case "classList":
-                    [value].flat().forEach(_E0 => _T0.classList.add(_E0));
-                    break;
-                case "innerText":
-                    _T0.innerText = value;
-                    break;
-                case "style":
-                    Baser(value).forEach((value1, key1) => _T0.style[key1] = value1);
-                    break;
-                default:
-                    _T0.setAttribute(key, value);
-            }
-        })
-        return _T0;
-    }
-}
-
-//必要に応じて Export.
-export class Note extends Map {
+//-Note--------------------------------------------------------------------------------------------
+class Note extends Map {
     constructor(name) {
         super();
         this.name = name;
-    }
-
-    cset(key, value) {
-        if (super.has(key)) throw key + " is already written in this Note."
-        return this.set(key, value);
-    }
-
-    fset(key, value) {
-        if (!super.has(key)) this.set(key, value);
-        return this;
-    }
-
-    oget(key, spare) {
-        return this[key] || spare;
-    }
-
-    join(newNote) {
-        newNote.forEach((value, key) => {
-            if (!super.has(key)) this.set(key, value)
-        })
-        return this;
-    }
-
-    assign(newNote) {
-        newNote.forEach((value, key) => this.set(key, value))
-        return this;
     }
 
     //-Plus--------------------------------------
@@ -67,653 +10,851 @@ export class Note extends Map {
     static json(url) {
         const request = new XMLHttpRequest();
         request.open("GET", url, false);
+        // request.responseType = 'json';
         request.send();
 
         // console.clear(); //It's for deleting log that warn using xMLHttpRequest.
         return request.response;
     }
 
-    save(key, value) { //localStorage 保存
-        // if (!["Object", "Map"].includes(Proto(this.get(key)))) throw "Selected Value is not Object or Map";
-        let _T0 = JSON.parse(localStorage.getItem(this.name)) || {};
-        // _T0[key] = Proto(this.get(key)) == "Map" ? Object.fromEntries(this.get(key).entries()) : this.get(key);
-        _T0[key] = value;
-        localStorage.setItem(this.name, JSON.stringify(_T0));
-        return this;
+    saveSave(key, value) { //localStorage 保存
+        let save = JSON.parse(localStorage.getItem(this.name + "_Note_Seifuncs")) || {};
+        if (arguments.length > 0) {
+            if (!this.has(key) && !value) return false;
+            save[key] = value || (Chain().proto(this.get(key)) == "Map" ? Object.fromEntries(this.get(key).entries()) : this.get(key));
+        } else {
+            this.forEach((saveValue, saveKey) => save[saveKey] = Chain().proto(saveValue) == "Map" ? Object.fromEntries(saveValue.entries()) : saveValue);
+        }
+        localStorage.setItem(this.name + "_Note_Seifuncs", JSON.stringify(save));
+        return true;
     }
 
-    restore(key) { //localStorage 解凍
-        return JSON.parse(localStorage.getItem(this.name))[key];
+    saveRestore(key) {
+        let save = JSON.parse(localStorage.getItem(this.name + "_Note_Seifuncs")) || {};
+        if (key) {
+            if (!save.hasOwnProperty(key)) return false;
+            if (!(this.has(key) && this.get("config").Note.save.restoreLevel == 0)) this.set(key, save[key]);
+        } else {
+            Object.entries(save).forEach(([saveKey, saveValue]) => {
+                if (!(this.has(saveKey) && this.get("config").Note.save.restoreLevel == 0)) this.set(saveKey, saveValue);
+            });
+        }
+        return true;
     }
 
-    saveReset() {
-        localStorage.removeItem(this.name);
-        return this;
-    }
-
-    saveRemove(key) {
-        let _T0 = JSON.parse(localStorage.getItem(this.name)) || {};
-        delete _T0.key;
-        localStorage.setItem(this.name, JSON.stringify(_T0));
+    saveGet(key) {
+        return key ? JSON.parse(localStorage.getItem(this.name + "_Note_Seifuncs"))[key] : JSON.parse(localStorage.getItem(this.name + "_Note_Seifuncs"));
     }
 
     saveHas(key) {
-        return Object.keys(JSON.parse(localStorage.getItem(this.name)) || {}).includes(key);
+        return Object.keys(JSON.parse(localStorage.getItem(this.name + "_Note_Seifuncs")) || {}).includes(key);
     }
 
-    download(key, name) { //JSON 保存
-        Elm({
+    saveRemove(key) {
+        let save = JSON.parse(localStorage.getItem(this.name + "_Note_Seifuncs")) || {};
+        if (key) {
+            if (!save.hasOwnProperty(key)) return false;
+            delete save[key];
+            localStorage.setItem(this.name + "_Note_Seifuncs", JSON.stringify(save));
+        } else {
+            localStorage.removeItem(this.name + "_Note_Seifuncs");
+        }
+        return true;
+    }
+
+    upload(url, key) { //JSON 解凍
+        fetch(url).then(response => response.json()).then(result => {
+            if (key) {
+                if (!result.hasOwnProperty(key)) return false;
+                if (!(this.has(key) && this.get("config").Note.UDload.uploadLevel == 0)) this.set(key, result);
+            } else {
+                Object.entries(result).forEach(([resultKey, resultValue]) => {
+                    if (!(this.has(resultKey) && this.get("config").Note.UDload.uploadLevel == 0)) this.set(resultKey, resultValue);
+                });
+            }
+        });
+        return true;
+    }
+
+    download(key) { //JSON 保存
+        let download = {};
+        if (key) {
+            if (!this.has(key)) return false;
+            download[key] = Chain().proto(this.get(key)) == "Map" ? Object.fromEntries(this.get(key).entries()) : this.get(key);
+        } else {
+            this.forEach((saveValue, saveKey) => save[saveKey] = Chain().proto(saveValue) == "Map" ? Object.fromEntries(saveValue.entries()) : saveValue);
+        }
+
+        Element({
             tag: "a",
-            download: this.name + "-" + name ? name : "" + "-" + String(new Date()).replace(new RegExp(" ", "g"), "-") + "." + "json",
-            href: "data:text/plain," + encodeURIComponent(JSON.stringify(this.get(key)))
+            download: this.name + ("_" + key || "") + "_Note_Seifuncs" + "-" + String(new Date()).replace(new RegExp(" ", "g"), "-") + "." + "json",
+            href: "data:text/plain," + encodeURIComponent(JSON.stringify(download))
         }).click();
 
     }
-
-    upload(key, url) { //JSON 解凍
-        this.set(key, JSON.parse(Note.json(url)));
-    }
-
 }
 
 const note = new Note("Seifuncs");
-note.upload("config", "./Seifuncs/config.json");
-// note.upload("config", "./config.json"); //for Test.html
+try {
+    note.set("config", JSON.parse(Note.json("./config.json"))); //for Test.html
+} catch (e) {
+    note.set("config", JSON.parse(Note.json("./Seifuncs/config.json")));
+}
 
 //-Chain---------------------------------------------------------------------------------------------
 
-class Chainadds {
+export default function Chain(input) {
+    return arguments.length >= 1 ? note.get("ChainMethod").use(input) : note.get("ChainMethod");
+}
+
+class ChainMethod {
     constructor() {
-        this.Array = {};
-        this.Object = {};
-        this.Map = {};
-        this.WeakMap = {};
-        this.String = {};
-        this.Number = {};
-        this.Boolean = {};
-        this.HTMLElement = {};
-        this.Function = {};
-        this.RegExp = {};
-        this.Date = {};
-        this.Window = {};
-
-        this.support = {
-            Array: new Array(),
-            Object: new Object(),
-            Map: new Map(),
-            WeakMap: new WeakMap(),
-            String: new String(),
-            Number: new Number(),
-            Boolean: new Boolean(),
-            HTMLElement: Elm(["tag", "header"]),
-            Function: new Function(),
-            RegExp: new RegExp(),
-            Date: new Date(),
-            Window: window
-        };
-        // support schedule - Proxy, 
-
-        if ([2].includes(note.get("config").Chain.level)) {
-            this.restore = () => {
-                Object.values(this.support).forEach(_E0 => Chain(_E0).restore());
-                return this;
-            };
-
-            Object.values(this.support).map(_E0 => Proto(_E0).includes("HTML") ? "HTMLElement" : Proto(_E0)).forEach(_E0 => this
-                .set(_E0, "restore", function () {
-                    Object.entries(Object.getPrototypeOf(this)).map(_E0 => _E0[0]).forEach(_E0 => delete Object.getPrototypeOf(this)[_E0]);
-                    return this;
-                })
-            )
+        this.support = ["Array", "Object", "Map", "WeakMap", "String", "Number", "Boolean", "HTMLElement", "Function", "RegExp", "Date", "Window", "NodeList"];
+        this.support = Object.fromEntries(this.support.map(protoName => [protoName, {
+            "Default": {},
+            "Method": []
+        }]));
+        /*
+        //this.support =
+        {
+            prototypeName: {
+                Default: {
+                    Name:naitive_function
+				},
+                Method: [{
+                    Prototype: String,
+                    Name: String,
+                    Function: Function
+                }, ...]
+            }
         }
-
-        Object.values(this.support).map(_E0 => Proto(_E0).includes("HTML") ? "HTMLElement" : Proto(_E0)).forEach(_E0 => this
-            .set(_E0, "chain", function (...args) {
-                if (Proto(args[0]) == "Function") return args[0].bind(this)(...args(0, 1));
-                if (Proto(args[0]) == "String") return this[args[0]](...args.slice(0, 1));
-                return args.reduce((accumulator, currentValue) => accumulator[currentValue[0]](...currentValue.slice(0, 1), this));
-            }).set(_E0, "branch", function (...args) {
-                this.chain(...args)[0];
-                return this;
-            }).set(_E0, "if", function (If, True, False) {
-                return If.bind(this)() ? True ? this.chain(True) : this : False ? this.chain(False) : this;
-            })
-        )
+        */
     }
 
-    set(proto, name, func) {
-        if ([2].includes(note.get("config").Chain.level) && Object.getOwnPropertyNames(Object.getPrototypeOf(this.support[proto])).includes(name)) throw proto + " already has " + name;
-        if ([1].includes(note.get("config").Chain.level) && Object.getOwnPropertyNames(Object.getPrototypeOf(this.support[proto])).includes(name)) console.warn(proto + " already has " + name);
-        if (!note.get("config").Chain.exclude[proto].includes(name)) this[proto][name] = func;
-
-        if ([0, 1].includes(note.get("config").Chain.level)) Chain(this.support.proto);
+    set(obj) {
+        this.delete(obj);
+        switch (obj.Prototype) {
+            case "*":
+                Object.values(this.support).forEach(protoObj => protoObj.Method.push(obj));
+                break;
+            default:
+                this.support[obj.Prototype].Method.push(obj);
+        }
+        if (note.get("config").Chain.sync.auto) this.sync(obj);
         return this;
     }
 
-    cset(proto, name, func) {
-        if (!this[Proto(_E0).includes("HTML") ? "HTMLElement" : Proto(_E0)][name]) throw name + "is already  in " + proto + " of Chain.";
-        return this.set(proto, name, func);
+    add(obj) {
+        if ((obj.Prototype == "*" && Object.values(this.support).flatMap(ptotoObj => ptotoObj.Method).some(methodObj => methodObj.Name == obj.Name)) ||
+            (obj.Prototype != "*" && obj.Prototype != "Summon" && this.support[obj.Prototype].Method.some(methodObj => methodObj.Name == obj.Name)))
+            throw obj.Name + " is already used. / Seifuncs";
+        return this.set(obj);
     }
 
-    fset(key, value) {
-        if (!this[key]) this[key] = value;
+    delete(obj) {
+        let delList;
+        switch (obj.Prototype) {
+            case "*":
+                delList = Object.values(this.support).flatMap(ptotoObj => ptotoObj.Method).some(methodObj => methodObj.Name == obj.Name);
+                Object.entries(this.support).forEach(([key, value]) => value.Method.filter(methodObj => methodObj.Name == obj.Name).forEach(delObj => this.support[key].splice(this.indexOf(delObj), 1)));
+                return delList;
+            default:
+                delList = this.support[obj.Prototype].Method.filter(methodObj => methodObj.Name == obj.Name);
+                delList.forEach(delObj => this.support[obj.Prototype].Method.splice(this.support[obj.Prototype].Method.indexOf(delObj), 1));
+                return delList;
+        }
+    }
+
+    use(input) {
+        return Object.fromEntries(this.pickup(input).Method.map(_obj => [_obj.Name, _obj.Function.bind(input)]));
+    }
+
+    pickup(proto) {
+        return this.support[this.proto(proto).includes("HTML") ? "HTMLElement" : this.proto(proto)];
+    }
+
+    proto(input) {
+        try {
+            return input.constructor.name;
+        } catch (e) {
+            return e;
+        }
+    }
+
+    summon(name) {
+        switch (name.toLowerCase()) {
+            case "note":
+                return new Note();
+            case "task":
+                return new TaskObject();
+            case "keys":
+                return new KeysObject();
+            default:
+                return {
+                    array: [],
+                        object: {},
+                        map: new Map(),
+                        weakmap: new WeakMap(),
+                        string: String(),
+                        number: Number(),
+                        boolean: Boolean(),
+                        htmlelement: Element("header")[0],
+                        function: () => {},
+                        regexp: new RegExp(),
+                        date: new Date(),
+                        window: window,
+                        nodelist: document.querySelectorAll("Seifuncs_" + Math.random().toString(36).slice(-8))
+                } [name.toLowerCase()];
+        }
+    }
+
+    generate(name) {
+        return (arg) => {
+            switch (name.toLowerCase()) {
+                case "note":
+                    return new Note(arg);
+                case "element":
+                    return Element(arg);
+                case "task":
+                    return new TaskObject(arg);
+                case "keys":
+                    if (!arg) return note.get("Keys");
+                    return note.get("Keys").entry(arg);
+            }
+        };
+    }
+
+    sync(obj) { //TODO Property Value (Array)
+        let syncObject = Object.entries(this.support).reduce((accumulator, [currentKey, currentValue]) => {
+            if (!obj || !obj.Prototype || obj.Prototype == "*" ? false : currentKey != obj.Prototype) return accumulator;
+            let syncMethods = currentValue.Method.filter(methodObj => !obj || !obj.Name || obj.Name == "*" ? true : methodObj.Name == obj.Name);
+            if (note.get("config").Chain.sync.level == 0) syncMethods = syncMethods.filter(methodObj => !Object.getPrototypeOf(this.summon(currentKey)).hasOwnProperty(methodObj.Name));
+            if (syncMethods.length >= 1) accumulator[currentKey] = syncMethods;
+            return accumulator;
+        }, {});
+
+        // syncObject = {
+        //     Prototype:[...Methods]
+        // };
+
+        Object.keys(syncObject).forEach(prototype => syncObject[prototype].forEach(methods => {
+            if (Object.getPrototypeOf(this.summon(prototype)).hasOwnProperty(methods.Name)) this.support[prototype].Default[methods.Name] = Object.getPrototypeOf(this.summon(prototype))[methods.Name];
+            Object.setPrototypeOf(this.summon(prototype), Object.assign(Object.getPrototypeOf(this.summon(prototype)), Object.fromEntries(new Array([methods.Name, methods.Function]))));
+        }));
+
         return this;
     }
 
-    get(proto) {
-        return this[Proto(proto).includes("HTML") ? "HTMLElement" : Proto(proto)];
+    restore(obj) {
+        let restoreObject = Object.entries(this.support).reduce((accumulator, [currentKey, currentValue]) => {
+            if (!obj || !obj.Prototype || obj.Prototype == "*" ? false : currentKey != obj.Prototype) return accumulator;
+
+            let restoreMethods = currentValue.Method.reduce((methodsAcc, methodsCur) => (!obj || !obj.Name || obj.Name == "*" ? true : methodsCur.Name == obj.Name) ? [...methodsAcc, methodsCur.Name] : methodsAcc, []);
+            if (restoreMethods.length == 0) return accumulator;
+
+            accumulator[currentKey] = {};
+            accumulator[currentKey].list = restoreMethods;
+            accumulator[currentKey].default = restoreMethods.reduce((methodAcc, methodCur) => currentValue.Default.hasOwnProperty(methodCur) ? Chain(methodAcc).define(methodCur, currentValue.Default[methodsAcc]) : methodAcc, {});
+
+            return accumulator;
+        }, {});
+
+        // restoreObj = {
+        //     Prototype:{
+        //         list:[...Name],
+        //         default:{
+        //             Name:nativeFunction
+        //         }
+        //     }
+        // }
+
+        if (Object.keys(restoreObject).length == 0) return false;
+
+        Object.entries(restoreObject).forEach(([key, value]) => { //Prototype
+            value.list.forEach(methodName => delete Object.getPrototypeOf(this.summon(key))[methodName]);
+            Object.keys(value.default).forEach(defaultName => delete this.support[key].Default[defaultName]);
+            Object.setPrototypeOf(this.summon(key), Object.assign(Object.getPrototypeOf(this.summon(key)), restoreObject.default));
+        });
+
+        return true;
     }
 
-    sync() {
-        Object.values(this.support).forEach(_E0 => Chain(_E0));
+}
+
+note.set("ChainMethod", new ChainMethod());
+
+[{
+    Prototype: "*",
+    Name: "chain",
+    Function: function (func) {
+        return (...arg) => func.bind(this)(...arg);
+    }
+}, {
+    Prototype: "Array",
+    Name: "delete",
+    Function: function (func) {
+        let delList = this.filter(func);
+        delList.forEach(delElement => this.splice(this.indexOf(delElement)));
+        return delList.length > 0;
+    }
+}, {
+    Prototype: "Array",
+    Name: "equal",
+    Function: function (arr) {
+        return this.every(element => arr.includes(element)) && arr.every(element => this.includes(element));
+    }
+}, {
+    Prototype: "Array",
+    Name: "fullFlat",
+    Function: function () {
+        let A2A = _A0 => _A0.flatMap(_E0 => Array.isArray(_E0) ? A2A(_E0) : _E0);
+        return A2A(this);
+    }
+}, {
+    Prototype: "Array",
+    Name: "pushed",
+    Function: function (add) {
+        this.push(add);
+        return add;
+    }
+}, {
+    Prototype: "Array",
+    Name: "rap",
+    Function: function (time = 1) {
+        let array = this;
+        for (let i = 0; i < time; i++) {
+            array = [array];
+        }
+        return array;
+    }
+}, {
+    Prototype: "Array",
+    Name: "unDup",
+    Function: function (back = false) {
+        return this.filter((x, i, self) => (back ? self.lastIndexOf(x) : self.indexOf(x)) === i);
+    }
+}, {
+    Prototype: "HTMLElement",
+    Name: "addEventTask",
+    Function: function (type, listener, option) {
+        switch (type) {
+            case "scroll":
+                return Tasks({
+                    If: (taskObj) => {
+                        if (!taskObj.nativeState || taskObj.nativeState.x != this.scrollLeft || taskObj.nativeState.y != this.scrollTop) {
+                            taskObj.nativeState = {
+                                x: this.scrollTop,
+                                y: this.scrollLeft
+                            };
+                            if (taskObj.nativeState) return true;
+                        }
+                        return false;
+                    },
+                    Function: listener,
+                    Option: option
+                }).start();
+
+            case "resize":
+                return Tasks({
+                    If: (taskObj) => {
+                        if (!taskObj.nativeState || taskObj.nativeState.width !== parseInt(Chain(this).css("width")) || taskObj.nativeState.height !== parseInt(Chain(this).css("height"))) {
+                            taskObj.nativeState = {
+                                width: parseInt(Chain(this).css("width")),
+                                height: parseInt(Chain(this).css("height"))
+                            };
+                            if (taskObj.nativeState) return true;
+                        }
+                        return false;
+                    },
+                    Function: listener,
+                    Option: option
+                }).start();
+
+            case "classChange":
+                return Tasks({
+                    If: (taskObj) => {
+                        if (!taskObj.nativeState || Chain(taskObj.nativeState).equal(Array.of(this.classList))) {
+                            taskObj.nativeState = Array.of(this.classList);
+                            if (taskObj.nativeState) return true;
+                        }
+                        return false;
+                    },
+                    Function: listener,
+                    Option: option
+                }).start();
+
+            case "touchLong":
+                return Tasks({
+                    If: (taskObj) => {
+                        if (!taskObj.nativeState) {
+                            taskObj.nativeState = {
+                                flag: false,
+                                time: (option || {}).time || note.get("config").EventTask.touchLong
+                            };
+
+                            let counter;
+                            let countStart = () => counter = setTimeout(() => taskObj.nativeState.flag = true, taskObj.nativeState.time);
+                            let countEnd = () => {
+                                clearTimeout(counter);
+                                taskObj.nativeState.flag = false;
+                            };
+
+                            this.addEventListener("touchstart", countStart);
+                            this.addEventListener("touchend", countEnd);
+
+                            taskObj.remove = () => {
+                                countEnd();
+                                this.removeEventListener("touchstart", countStart);
+                                this.removeEventListener("touchend", countEnd);
+                                return TaskObject.remove().call(this);
+                            };
+                        }
+                        return taskObj.nativeState.flag;
+                    },
+                    Function: listener,
+                    Option: Chain(option || {}).define("hold", false)
+                }).start();
+
+            case "touchSlide":
+                return Tasks({
+                    If: (taskObj) => {
+                        if (!taskObj.nativeState) {
+                            taskObj.nativeState = {
+                                mode: (option || {}).mode || note.get("config").EventTask.touchSlide.mode,
+                                flag: false,
+                                criteria: {
+                                    type: ["distance", "vector", "radian"].find((element) => Object.keys(option || {}).includes(element)) || note.get("config").EventTask.touchSlide.type,
+                                    value: undefined //Define as follows
+                                },
+                                coordinate: {
+                                    start: {
+                                        x: undefined,
+                                        y: undefined
+                                    },
+                                    now: {
+                                        x: undefined,
+                                        y: undefined
+                                    }
+                                }
+                            };
+                            taskObj.nativeState.criteria.value = (option || {})[taskObj.nativeState.criteria.type] || note.get("config").EventTask.touchSlide[taskObj.nativeState.criteria.type];
+
+                            let touchStart = (event) => {
+                                if (event.targetTouches.length == 1) {
+                                    taskObj.nativeState.coordinate.start.x = event.targetTouches[0].screenX;
+                                    taskObj.nativeState.coordinate.start.y = event.targetTouches[0].screenY;
+                                }
+                            };
+
+                            let touchMove = (event) => {
+                                if (taskObj.nativeState.mode == 0 && (taskObj.nativeState.coordinate.start.x == undefined || taskObj.nativeState.coordinate.start.y == undefined)) return;
+
+                                event.preventDefault();
+                                let startX = taskObj.nativeState.coordinate.start.x;
+                                let startY = taskObj.nativeState.coordinate.start.y;
+                                let nowX = taskObj.nativeState.coordinate.now.x = event.targetTouches[0].screenX;
+                                let nowY = taskObj.nativeState.coordinate.now.y = event.targetTouches[0].screenY;
+                                let criteria = taskObj.nativeState.criteria;
+
+                                switch (criteria.type) {
+                                    case "distance":
+                                        if (Chain().proto(criteria.value) == "Array") {
+                                            taskObj.nativeState.flag = Math.abs(nowX - startX) >= criteria.value[0] && Math.abs(nowY - startY) >= criteria.value[1];
+                                        } else {
+                                            taskObj.nativeState.flag = Math.sqrt(Math.pow(nowX - startX, 2) + Math.pow(nowY - startY, 2)) >= criteria.value;
+                                        }
+                                        break;
+                                    case "vector":
+                                        taskObj.nativeState.flag = (Math.sign(nowX - startX) == criteria.value.x && Math.abs(nowX - startX) >= Math.abs(criteria.value.x)) && (Math.sign(nowY - startY) == criteria.value.y && Math.abs(nowY - startY) >= Math.abs(criteria.value.y));
+                                        break;
+                                    case "radian":
+                                        if (Math.abs(Chain(Math.atan2(nowY - startY, nowX - startX)).adeg() - criteria.value.angle) <= 90) taskObj.nativeState.flag = Math.sqrt(Math.pow(nowX - startX, 2) + Math.pow(nowY - startY, 2)) >= criteria.value.distance / Math.cos(Math.atan2(nowY - startY, nowX - startX) - Chain(criteria.value.angle).arad());
+                                        break;
+                                }
+                            };
+
+                            let touchEnd = (event) => {
+                                if (event.targetTouches.length == 0) {
+                                    taskObj.nativeState.flag = false;
+                                } else if (event.targetTouches[0].screenX != taskObj.nativeState.coordinate.now.x || event.targetTouches[0].screenY != taskObj.nativeState.coordinate.now.y) {
+                                    if (taskObj.nativeState.mode == 0) {
+                                        taskObj.nativeState.coordinate.startX = undefined;
+                                        taskObj.nativeState.coordinate.startY = undefined;
+                                        taskObj.nativeState.flag = false;
+                                    } else if (taskObj.nativeState.mode == 1) {
+                                        taskObj.nativeState.coordinate.now.x = event.targetTouches[0].screenX;
+                                        taskObj.nativeState.coordinate.now.y = event.targetTouches[0].screenY;
+                                    } else {
+                                        taskObj.nativeState.coordinate.now.x = event.targetTouches[0].screenX;
+                                        taskObj.nativeState.coordinate.now.y = event.targetTouches[0].screenY;
+                                        taskObj.nativeState.coordinate.start.x = event.targetTouches[0].screenX;
+                                        taskObj.nativeState.coordinate.start.y = event.targetTouches[0].screenY;
+                                    }
+                                }
+                            };
+                            let touchCancel = () => taskObj.nativeState.flag = false;
+
+                            this.addEventListener("touchstart", touchStart);
+                            this.addEventListener("touchmove", touchMove, Chain({}).define("passive", false));
+                            this.addEventListener("touchend", touchEnd);
+                            this.addEventListener("touchcancel", touchCancel);
+
+                            taskObj.remove = () => {
+                                touchCancel();
+                                this.removeEventListener("touchstart", touchStart);
+                                this.removeEventListener("touchmove", touchMove, Chain({}).define("passive", false));
+                                this.removeEventListener("touchend", touchEnd);
+                                this.removeEventListener("touchcancel", touchCancel);
+                                return TaskObject.remove().call(this);
+                            };
+                        }
+                        return taskObj.nativeState.flag;
+                    },
+                    Function: listener,
+                    Option: option
+                }).start();
+
+            default:
+                throw type + " isn't supported. / Seifuncs";
+        }
+    }
+}, {
+    Prototype: "HTMLElement",
+    Name: "css",
+    Function: function (prop, value) {
+        if (!value) return window.getComputedStyle(this).getPropertyValue(prop);
+        this.style[prop] = value;
         return this;
+    }
+}, {
+    Prototype: "HTMLElement",
+    Name: "descendantFlat",
+    Function: function () {
+        let E2E = _A0 => _A0.flatMap(_E0 => _E0.hasChildNodes() ? [_E0, ...E2E(Array.from(_E0.children))] : _E0);
+        return E2E([this]);
+    }
+}, {
+    Prototype: "HTMLElement",
+    Name: "square",
+    Function: function (base) {
+        switch (base) {
+            case "x":
+                return Chain(this).css("height", Chain(this).css("width"));
+            case "y":
+                return Chain(this).css("width", Chain(this).css("height"));
+            case "max":
+                return parseInt(Chain(this).css("width")) >= parseInt(Chain(this).css("hegiht")) ? Chain(this).square("x") : Chain(this).square("y");
+            case "min":
+                return parseInt(Chain(this).css("width")) <= parseInt(Chain(this).css("hegiht")) ? Chain(this).square("x") : Chain(this).square("y");
+            default:
+                Chain(this).css("width", parseInt(Chain(this).css("width")) + parseInt(Chain(this).css("hegiht")) / 2 + "px");
+                return Chain(this).css("height", parseInt(Chain(this).css("width")) + parseInt(Chain(this).css("hegiht")) / 2 + "px");
+        }
+    }
+}, {
+    Prototype: "HTMLElement",
+    Name: "textCenter",
+    Function: function () {
+        let adjust = () => {
+            Chain(this).css("lineHeight", (parseInt(["vertical-lr", "vertical-rl"].includes(Chain(this).css("writing-mode")) ? Chain(this).css("width") : Chain(this).css("height")) / (this.innerText.match(/\n/g) ? this.innerText.match(/\n/g).length + 1 : 1)) + "px");
+            Chain(this).css("textAlign", "center");
+        };
+
+        adjust();
+
+        let resizeTask = Chain(this).addEventTask("resize", adjust);
+
+        Chain(this).addEventTask("classChange", (taskObj) => {
+            if (!this.classList.contains("textCenter")) {
+                resizeTask.remove();
+                taskObj.remove();
+            }
+        });
+        return this;
+    }
+}, {
+    Prototype: "HTMLElement",
+    Name: "textContain",
+    Function: function () {
+        let adjust = () => {
+            let rems = Element({
+                tag: "span",
+                innerText: this.innerText,
+                style: {
+                    fontSize: Chain(this).css("font-size"),
+                    writingMode: Chain(this).css("writing-Mode"),
+                    lineHeight: Chain(this).css("line-height"),
+                    fontWeight: Chain(this).css("font-weight"),
+                    visibility: "hidden",
+                    padding: 0,
+                    margin: 0
+                }
+            });
+            Element("body")[0].insertBefore(rems, Element("body")[0].firstChild);
+
+            let [TextW, TextH] = [parseInt(rems.offsetWidth), parseInt(rems.offsetHeight)];
+            let [ElemW, ElemH] = [parseInt(this.offsetWidth) - parseInt(Chain(this).css("padding-left")) - parseInt(Chain(this).css("padding-right")), parseInt(this.offsetHeight) - parseInt(Chain(this).css("padding-top")) - parseInt(Chain(this).css("padding-bottom"))];
+            this.style.fontSize = (ElemW / TextW <= ElemH / TextH ? ElemW / TextW * parseInt(Chain(this).css("font-size")) : ElemH / TextH * parseInt(Chain(this).css("font-size"))) + "px";
+
+            Element("body")[0].removeChild(rems);
+        };
+
+        adjust();
+
+        let resizeTask = Chain(this).addEventTask("resize", adjust);
+
+        Chain(this).addEventTask("classChange", (taskObj) => {
+            if (!this.classList.contains("textContain")) {
+                resizeTask.remove();
+                taskObj.remove();
+            }
+        });
+        return this;
+    }
+}, {
+    Prototype: "Map",
+    Name: "addGet",
+    Function: function (key, value) { //fset + oset
+        if (this.has(key)) return this.get(key);
+        this.set(key, value);
+        return this.get(key);
+    }
+}, {
+    Prototype: "Map",
+    Name: "assign",
+    Function: function (newMap) {
+        newMap.forEach((value, key) => this.set(key, value));
+        return this;
+    }
+}, {
+    Prototype: "Map",
+    Name: "merge",
+    Function: function (newMap) {
+        newMap.forEach((value, key) => {
+            if (!this.has(key)) this.set(key, value);
+        });
+        return this;
+    }
+}, {
+    Prototype: "NodeList",
+    Name: "toArray",
+    Function: function () {
+        return Array.from(this);
+    }
+}, {
+    Prototype: "Number",
+    Name: "adeg",
+    Function: function () {
+        return this * (180 / Math.PI);
+    }
+}, {
+    Prototype: "Number",
+    Name: "arad",
+    Function: function () {
+        return this * (Math.PI / 180);
+    }
+}, {
+    Prototype: "Object",
+    Name: "addGet",
+    Function: function (key, value) {
+        if (this.hasOwnProperty(key)) return this[key];
+        this[key] = value;
+        return this;
+    }
+}, {
+    Prototype: "Object",
+    Name: "cover",
+    Function: function (obj) {
+        return Object.assign(this, Object.fromEntries(Object.entries(obj).filter(entry => !this.hasOwnProperty(entry[0]))));
+    }
+}, {
+    Prototype: "Object",
+    Name: "deepCopy",
+    Function: function () {
+        return Object.fromEntries(Object.entries(this));
+    }
+}, {
+    Prototype: "Object",
+    Name: "delete",
+    Function: function (key) {
+        let Return = this.hasOwnProperty(key);
+        delete this[key];
+        return Return;
+    }
+}, {
+    Prototype: "Object",
+    Name: "define",
+    Function: function (key, value) {
+        // let addObj = {};
+        // addObj[key] = value;
+        // Object.assign(this, addObj);
+
+        // this[key] = value;
+
+        Object.defineProperty(this, key, {
+            value: value,
+            writable: true,
+            enumerable: true,
+            configurable: true
+        });
+
+        return this;
+    }
+}, {
+    Prototype: "String",
+    Name: "comprise",
+    Function: function (string) {
+        return this.match(new RegExp(string.toLowerCase())) !== null ? true : false;
+    }
+}].forEach(obj => Chain().set(obj));
+// if (note.get("config").Chain.sync.auto) Chain().sync(); //Auto sync
+
+//Note sync
+Object.setPrototypeOf(Chain().summon("note"), Object.assign(Object.getPrototypeOf(Chain().summon("note")), Chain().pickup(Chain().summon("map")).Method.reduce((accumulator, currentValue) => Chain(accumulator).define(currentValue.Name, currentValue.Function), {})));
+
+//-Element-----------------------------------------------------------------------------------------
+function Element(arg) {
+    if (Chain().proto(arg) == "String") {
+        return document.querySelectorAll(arg);
+    } else {
+        let element = document.createElement(arg.tag);
+        Object.entries(arg).forEach(([key, value]) => {
+            switch (key) {
+                case "tag":
+                    break;
+                case "addEventListener":
+                    element.addEventListener(value.Type, value.listener, value.Options);
+                    break;
+                case "classList":
+                    [value].flat().forEach(_E0 => element.classList.add(_E0));
+                    break;
+                case "innerText":
+                    element.innerText = value;
+                    break;
+                case "style":
+                    Object.entries(value).forEach(([key1, value1]) => element.style[key1] = value1);
+                    break;
+                default:
+                    element.setAttribute(key, value);
+            }
+        });
+        return element;
     }
 }
 
-note.set("Chainadds", new Chainadds());
-
-export function Chain(input) {
-    return input ? Object.setPrototypeOf(input, Object.assign(Object.getPrototypeOf(input), note.get("Chainadds").get(input))) : note.get("Chainadds");
-    // Chain let you add new methods in dynamic but these isn't sync with prototype till executing Chain.
-    //You haven't to execute Chain after second time if you don't want dynamic sync.
-};
-
-[ //TODO JSONによる選択を可能にする
-    ["Array", "fullFlat", function () {
-        let A2A = _A0 => _A0.flatMap(_E0 => Array.isArray(_E0) ? A2A(_E0) : _E0)
-        return A2A(this);
-    }],
-    ["Array", "unDup", function (back) {
-        return this.filter((x, i, self) => (back ? self.lastIndexOf(x) : self.indexOf(x)) === i);
-    }],
-    ["Array", "to", function (proto) {
-        switch (proto) {
-            case "Object":
-                return Object.fromEntries(this);
-            case "Map":
-                return new Map(this);
-            default:
-                throw "Can't translate this array.";
-        }
-    }],
-    ["Array", "equal", function (check) {
-        return [...this.filter(_E0 => !check.indexOf(_E0) != -1), ...check.filter(_E0 => !this.indexOf(_E0) != -1)].length == 0;
-    }],
-    ["Array", "rap", function () {
-        return [this];
-    }],
-    ["Object", "deepCopy", function () {
-        return Object.fromEntries(Object.entries(this));
-    }],
-    ["Object", "to", function (proto) {
-        switch (proto) {
-            case "Array":
-                return Object.entries(this);
-            case "Map":
-                return new Map(Object.entries(this));
-            default:
-                throw "Can't translate this object.";
-        }
-    }],
-    ["Map", "cset", function (key, value) {
-        if (this.has(key)) throw key + " is already written in this Map.";
-        return this.set(key, value);
-    }],
-    ["Map", "fset", function (key, value) { //TODO fset大幅拡張
-        if (!this.has(key)) this.set(key, value);
-        return this;
-    }],
-    ["Map", "to", function (proto) {
-        switch (proto) {
-            case "Array":
-                return this.entries();
-            case "Object":
-                return Object.fromEntries(this.entries());
-            default:
-                throw "Can't translate this map.";
-        }
-    }],
-    ["String", "comprise", function (string) {
-        return this.match(new RegExp(string.toLowerCase())) !== null ? true : false
-    }],
-    ["String", "potopx", function () {
-        let rems = Elm({
-            tag: "span",
-            style: {
-                width: this,
-                visibility: "hidden",
-                padding: 0,
-                margin: 0
-            }
-        })
-        Elm("body")[0].insertBefore(rems, Elm("body")[0].firstChild);
-
-        let _T0 = parseFloat(rems.css("width"));
-
-        Elm("body")[0].removeChild(rems);
-        return _T0;
-    }],
-    ["Number", "zeroPadding", function (dig) {
-        if (Proto(dig) != "Number" || String(dig).includes(".") || String(this).length > dig) throw "Dig isn't Appropriate.";
-        return "0".repeat(this < 1 ? dig - String(this).length - 1 : dig - String(this).length) + this;
-    }],
-    ["Window", "css", function (prop) {
-        switch (prop) {
-            case "max":
-                return Math.max(this.innerHeight, this.innerWidth);
-            case "min":
-                return Math.min(this.innerHeight, this.innerWidth);
-            case "width":
-                return this.innerWidth;
-            case "height":
-                return this.innerHeight;
-            default:
-                return window[prop];
-        }
-    }],
-    ["HTMLElement", "css", function (prop, value) {
-        if (!value) {
-            switch (prop) {
-                case "max":
-                    return Math.max(this.clientWidth - (parseInt(window.getComputedStyle(this).getPropertyValue("padding-left")) + parseInt(window.getComputedStyle(this).getPropertyValue("padding-right"))), this.clientHeight - (parseInt(window.getComputedStyle(this).getPropertyValue("padding-top")) + parseInt(window.getComputedStyle(this).getPropertyValue("padding-bottom"))));
-                case "min":
-                    return Math.min(this.clientWidth - (parseInt(window.getComputedStyle(this).getPropertyValue("padding-left")) + parseInt(window.getComputedStyle(this).getPropertyValue("padding-right"))), this.clientHeight - (parseInt(window.getComputedStyle(this).getPropertyValue("padding-top")) + parseInt(window.getComputedStyle(this).getPropertyValue("padding-bottom"))));
-                default:
-                    return window.getComputedStyle(this).getPropertyValue(prop);
-            }
-        } else {
-            this.style[prop] = value;
-        }
-        return this;
-    }],
-    ["HTMLElement", "addEventTask", function (type, listener, option) {
-        class EventTasksMember {
-            constructor() {
-                this.func = listener;
-                this.option = option;
-                this.able = true;
-                this.ended = false;
-            }
-
-            start() {
-                this.able = true;
-            }
-
-            stop() {
-                this.able = false;
-            }
-
-            remove() {
-                this.able = false;
-                this.ended = true;
-            }
-
-            call() {
-                this.func(this);
-            }
-        }
-        let _Tm1 = new EventTasksMember();
-
-        note.fset("EventTasks", new Map()).get("EventTasks").fset(type, new Map()) //Target
-
-        let TasksRegister = (Target, If, Start, End) => {
-            if (Target.has(this)) {
-                Target.get(this).list.push(_Tm1);
-                return _Tm1;
-            }
-            Target.set(this, Baser(["state", undefined], ["list", new Array(_Tm1)]).to("Object"));
-            if (Start) Start(Target.get(this));
-            return Tasks((task) => {
-                if (Target.get(this).list.filter(_E0 => !_E0.ended).length == 0) {
-                    if (End) End(Target.get(this));
-                    task.remove();
-                    Target.delete(this);
-                    return false;
-                }
-                return If(Target.get(this));
-            }, () => {
-                Target.get(this).list.filter(_E0 => _E0.able).forEach(_E0 => _E0.call());
-                if (Proto(option) == "Object" && option.once) Target.get(this).list.forEach(_E0 => _E0.remove());
-            });
-        }
-
-        switch (type) {
-            case "scroll":
-                return TasksRegister(note.get("EventTasks").get("scroll"), (target) => {
-                    let _T0 = target.state.x !== this.scrollLeft || target.state.y !== this.scrollTop;
-                    if (_T0) target.state = Baser(["x", this.scrollTop], ["y", this.scrollLeft]).to("Object");
-                    return _T0;
-                }, (target) => {
-                    target.state = Baser(["x", this.scrollTop], ["y", this.scrollLeft]).to("Object");
-                });
-
-            case "resize":
-                return TasksRegister(note.get("EventTasks").get("resize"), (target) => {
-                    let _T0 = target.state.width !== parseInt(this.css("width")) || target.state.height !== parseInt(this.css("height"));
-                    if (_T0) target.state = Baser(["width", parseInt(this.css("width"))], ["height", parseInt(this.css("height"))]).to("Object");
-                    return _T0;
-                }, (target) => {
-                    target.state = Baser(["width", parseInt(this.css("width"))], ["height", parseInt(this.css("height"))]).to("Object");
-                });
-
-            case "classChange":
-                return TasksRegister(note.get("EventTasks").get("classChange"), (target) => {
-                    let _T0 = target.state.equal(Array.from(this.classList));
-                    if (_T0) target.state = Array.from(this.classList);
-                    return _T0;
-                }, (target) => {
-                    target.state = Array.from(this.classList);
-                });
-
-            case "touchlong": //option : time - Number
-                return TasksRegister(note.get("EventTasks").get("touchlong").fset(Proto1("Number", Baser1("time", option).get("time"), note.get("config").Touch.time) + "", new Map()).get(Proto1("Number", Baser1("time", option).get("time"), note.get("config").Touch.time) + ""), (target) => {
-                    return false;
-                }, (target) => {
-                    target.state = {
-                        listener: () => {
-                            let _T0 = setTimeout(() => {
-                                target.list.filter(_E0 => _E0.able).forEach(_E0 => _E0.call());
-                                if (Proto(option) == "Object" && option.once) target.list.forEach(_E0 => _E0.remove());
-                            }, Proto1("Number", Baser1("time", option).get("time"), note.get("config").Touch.time));
-                            this.addEventListener("touchend", () => clearTimeout(_T0), Baser(["once", true]).to("Object"));
-                        }
-                    };
-                    this.addEventListener("touchstart", target.state.list, new Array(["passive", (!option || option.passive == undefined) ? true : option.passive]).to("Object"));
-                }, (target) => {
-                    this.removeEventListener("touchstart", target.state.list, new Array(["passive", (!option || option.passive == undefined) ? true : option.passive]).to("Object"));
-                })
-
-            case "touchslide": //option : direction
-                return TasksRegister(note.get("EventTasks").get("touchslide").fset(Baser1("direction", option).get("direction"), new Map()).get(Baser1("direction", option).get("direction")), (target) => {
-                    return false;
-                }, (target) => {
-                    target.state = {
-                        coordinate: [],
-                        listener: (event) => { //TODO 四捨五入用Round関数
-                            let passive = true;
-                            // event.preventDefault();
-                            target.state.coordinate = [event.changedTouches[0].pageX, event.changedTouches[0].pageY];
-                            let _T0 = (event1) => { //touchmove
-                                if (Math.sqrt(Math.pow(target.state.coordinate[0] - event1.changedTouches[0].pageX, 2) + Math.pow(target.state.coordinate[1] - event1.changedTouches[0].pageY, 2)) >= note.get("config").Touch.slide) {
-                                    if ((() => {
-                                            switch (Proto(option) == "Object " ? option.slide : option) {
-                                                case "x":
-                                                    return Math.abs(target.state.coordinate[0] - event1.changedTouches[0].pageX) > Math.abs(target.state.coordinate[1] - event1.changedTouches[0].pageY) ? true : false;
-                                                case "y":
-                                                    return Math.abs(target.state.coordinate[0] - event1.changedTouches[0].pageX) < Math.abs(target.state.coordinate[1] - event1.changedTouches[0].pageY) ? true : false;
-                                                case "right":
-                                                    return -1 * (target.state.coordinate[0] - event1.changedTouches[0].pageX) > Math.abs(target.state.coordinate[1] - event1.changedTouches[0].pageY) ? true : false;
-                                                case "left":
-                                                    return (target.state.coordinate[0] - event1.changedTouches[0].pageX) > Math.abs(target.state.coordinate[1] - event1.changedTouches[0].pageY) ? true : false;
-                                                case "top":
-                                                    return Math.abs(target.state.coordinate[0] - event1.changedTouches[0].pageX) < (target.state.coordinate[1] - event1.changedTouches[0].pageY) ? true : false;
-                                                case "bottom":
-                                                    return Math.abs(target.state.coordinate[0] - event1.changedTouches[0].pageX) < -1 * (target.state.coordinate[1] - event1.changedTouches[0].pageY) ? true : false;
-                                                default:
-                                                    return true;
-                                            }
-                                        })()) {
-                                        target.list.filter(_E0 => _E0.able).forEach(_E0 => _E0.call())
-                                        if (Proto(option) == "Object" && option.once) target.list.forEach(_E0 => _E0.remove());
-                                    }
-                                    target.state.coordinate = [event1.changedTouches[0].pageX, event1.changedTouches[0].pageY];
-                                }
-                            }
-                            this.addEventListener("touchmove", _T0, new Array(["passive", (!option || option.passive == undefined) ? passive : option.passive]).to("Object"));
-                            this.addEventListener("touchend", () => {
-                                this.removeEventListener("touchmove", _T0, new Array(["passive", (!option || option.passive == undefined) ? passive : option.passive]).to("Object"));
-                                target.state.coordinate = [];
-                                return false;
-                            }, Baser(["once", true]).to("Object"));
-                        }
-                    };
-                    this.addEventListener("touchstart", target.state.list, new Array(["passive", (!option || option.passive == undefined) ? true : option.passive]).to("Object"));
-                }, (target) => {
-                    this.removeEventListener("touchstart", target.state.list, new Array(["passive", (!option || option.passive == undefined) ? true : option.passive]).to("Object"));
-                })
-
-            default:
-                throw type + "isn't supported.";
-        }
-    }],
-    ["HTMLElement", "removeEventTask", function (type, listener, option) {
-        switch (type) {
-            case "scroll":
-                note.get("EventTasks").get("scroll").get(this).list.filter(_E0 => _E0.func == listener && _E0.option == option).forEach(_E0 => _E0.remove());
-                break;
-            case "resize":
-                note.get("EventTasks").get("resize").get(this).list.filter(_E0 => _E0.func == listener && _E0.option == option).forEach(_E0 => _E0.remove());
-                break;
-            case "classChange":
-                note.get("EventTasks").get("classChange").get(this).list.filter(_E0 => _E0.func == listener && _E0.option == option).forEach(_E0 => _E0.remove());
-                break;
-            case "touchlong":
-                note.get("EventTasks").get("touchlong").get(Proto1("Number", Baser1("time", option).get("time"), note.get("config").Touch.time) + "").get(this).list.filter(_E0 => _E0.func == listener && _E0.option == option).forEach(_E0 => _E0.remove());
-                break;
-            case "touchslide":
-                note.get("EventTasks").get("touchslide").get(Baser1("direction", option).get("direction")).get(this).list.filter(_E0 => _E0.func == listener && _E0.option == option).forEach(_E0 => _E0.remove());
-        }
-        return this;
-    }],
-    ["HTMLElement", "descendantFlat", function () {
-        let E2E = _A0 => _A0.flatMap(_E0 => _E0.hasChildNodes() ? [_E0, ...E2E(Array.from(_E0.children))] : _E0);
-        return E2E([this]);
-    }],
-    ["HTMLElement", "textContain", function (Wper, Hper) {
-        note.fset("TextContain", new Map()).get("TextContain").fset(this, Baser(["width", Wper || 100], ["height", Hper || 100]));
-        if (arguments.length == 0) {
-            let _Tm1 = () => {
-                let rems = Elm({
-                    tag: "span",
-                    innerText: this.innerText,
-                    style: {
-                        fontSize: this.css("font-size"),
-                        writingMode: this.css("writing-Mode"),
-                        lineHeight: this.css("line-height"),
-                        fontWeight: this.css("font-weight"),
-                        visibility: "hidden",
-                        padding: 0,
-                        margin: 0
-                    }
-                })
-                Elm("body")[0].insertBefore(rems, Elm("body")[0].firstChild);
-
-                let [_TextW, _TextH] = [parseInt(rems.offsetWidth), parseInt(rems.offsetHeight)];
-                let [_ElemW, _ElemH] = [parseInt(this.offsetWidth) - parseInt(this.css("padding-left")) - parseInt(this.css("padding-right")), parseInt(this.offsetHeight) - parseInt(this.css("padding-top")) - parseInt(this.css("padding-bottom"))];
-                this.style.fontSize = (_ElemW / _TextW <= _ElemH / _TextH ?
-                    _ElemW / _TextW * parseInt(this.css("font-size")) * note.get("TextContain").get(this).get("width") * 0.01 :
-                    _ElemH / _TextH * parseInt(this.css("font-size")) * note.get("TextContain").get(this).get("height") * 0.01) + "px";
-
-                Elm("body")[0].removeChild(rems);
-            }
-
-            _Tm1()
-
-            let _T0 = this.addEventTask("resize", _Tm1)
-
-            let _T1 = this.addEventTask("classChange", () => {
-                if (!this.classList.contains("text-contain")) {
-                    _T0.remove();
-                    _T1.remove();
-                    note.get("TextContain").delete(this);
-                };
-            })
-        } else {
-            [Wper, Hper] = [Wper || Hper, Hper || Wper];
-            note.get("TextContain").set(this, baser(["width", Wper], ["height", Hper]))
-        }
-        return this;
-    }],
-    ["HTMLElement", "textCenter", function () {
-        note.fset("TextCenter", new Array()).get("TextCenter").push(this);
-        let _Tm1 = () => {
-            this.css("lineHeight", (parseInt(["vertical-lr", "vertical-rl"].includes(this.css("writing-mode")) ? this.css("width") : this.css("height")) / (this.innerText.match(/\n/g) ? this.innerText.match(/\n/g).length + 1 : 1)) + "px");
-            this.css("textAlign", "center");
-        }
-
-        _Tm1()
-
-        let _T0 = this.addEventTask("resize", _Tm1);
-
-        let _T1 = this.addEventTask("classChange", () => {
-            if (!this.classList.contains("text-center")) {
-                _T0.remove();
-                _T1.remove();
-                note.get("TextCenter").splice(note.get("TextCenter").indexOf(this), 1);
-            };
-        })
-        return this;
-    }],
-    ["HTMLElement", "squareX", function () {
-        return this.css("height", this.css("width"));
-    }],
-    ["HTMLElement", "squareY", function () {
-        return this.css("width", this.css("height"));
-    }]
-].forEach(_E0 => Chain().set(_E0[0], _E0[1], _E0[2]).sync());
-
-
-//-Bundle-----------------------------------------------------------------------------------------
-//TODO release soon
-class Ringadds {}
-
-export function Ring(input) {}
-
 //-Tasks-------------------------------------------------------------------------------------------
+class TaskObject {
+    constructor(argObj) {
+        this.if = argObj.If;
+        this.func = argObj.Function;
+        this.callDelay = (argObj.Option || {}).hasOwnProperty("callDelay") ? argObj.Option.callDelay : note.get("config").Tasks.exeInterval;
+        this.hold = (argObj.Option || {}).hasOwnProperty("hold") ? argObj.Option.hold : note.get("config").Tasks.exeHold;
+        this.once = (argObj.Option || {}).hasOwnProperty("once") ? argObj.Option.once : note.get("config").Tasks.exeOnce;
+        this.nativeState = (argObj.Option || {}).hasOwnProperty("nativeState") ? argObj.Option.nativeState : undefined;
+        this.state = (argObj.Option || {}).hasOwnProperty("state") ? argObj.Option.state : undefined;
 
-class TasksMember {
-    constructor(If, Func, Arg) {
-        this.if = If;
-        this.func = Func;
-        this.arg = Arg;
-        this.exe = true; //Execute now?
-        this.able = true; // Once Executed?
+        this.able = true;
+        this.wait = false;
     }
 
     start() {
-        this.exe = true;
+        this.able = true;
         this.call();
+        return this;
     }
 
     stop() {
-        this.exe = false;
+        this.able = false;
+        return this;
     }
 
     call() {
-        if (this.exe && this.if(this) && this.able) {
-            this.func(this)
-            if (note.get("config").Tasks.exeOnce) this.able = false;
-        } else if (!this.able && !this.if(this)) {
-            this.able = true;
+        if (this.able && !this.wait && this.if(this)) {
+            if (!this.hold) this.wait = true;
+            this.func(this);
+            if (this.once) return this.remove();
+        } else if (this.wait && !this.if(this)) {
+            this.wait = false;
         }
-        if (this.exe) note.get("config").Tasks.exeInterval == 0 ? window.requestAnimationFrame(this.call.bind(this)) : setTimeout(this.call.bind(this), note.get("config").Tasks.exeInterval);
+        if (this.able) this.callDelay == 0 ? window.requestAnimationFrame(this.call.bind(this)) : setTimeout(this.call.bind(this), this.callDelay);
     }
 
     remove() {
-        note.get("Tasks").splice(note.get("Tasks").indexOf(this), 1);
-        this.exe = false;
+        this.able = false;
     }
 
 }
 
-function Tasks(If, Func, ...Arg) {
-    note.fset("Tasks", new Array());
-    if (arguments.length == 1) {
-        switch (If) {
-            case "start":
-                note.get("Tasks").forEach(_E0 => _E0.start());
-            case "stop":
-                note.get("Tasks").forEach(_E0 => _E0.stop());
-        }
-    } else {
-        let _T0 = new TasksMember(If, Func, Arg);
-        note.get("Tasks").push(_T0);
-        _T0.call();
-        return _T0;
-    }
+function Tasks(argObj) {
+    return new TaskObject(argObj);
 }
 
 //Auto Tasks Register----------------------------
-Tasks(() => true, function () {
-    Array.from(Elm(".text-contain")).filter(_E0 => !note.oget("TextContain", new Map()).has(_E0)).forEach(_E0 => _E0.textContain());
-    Array.from(Elm(".text-center")).filter(_E0 => !note.oget("TextCenter", new Array()).includes(_E0)).forEach(_E0 => _E0.textCenter());
-});
+if (note.get("config").textCenter.autoExe) Tasks({
+    If: (taskObj) => {
+        if (!taskObj.nativeState) taskObj.nativeState = [];
+        return !Chain(taskObj.nativeState).equal(Chain(Element(".textCenter")).toArray());
+    },
+    Function: (taskObj) => {
+        let now = Chain(Element(".textCenter")).toArray();
+        now.filter(element => !taskObj.nativeState.includes(element)).forEach(element => Chain(element).textCenter());
+        taskObj.nativeState = now;
+    }
+}).start();
 
-//-Input-------------------------------------------------------------------------------------------
+if (note.get("config").textContain.autoExe) Tasks({
+    If: (taskObj) => {
+        if (!taskObj.nativeState) taskObj.nativeState = [];
+        return !Chain(taskObj.nativeState).equal(Chain(Element(".textContain")).toArray());
+    },
+    Function: (taskObj) => {
+        let now = Chain(Element(".textContain")).toArray();
+        now.filter(element => !taskObj.nativeState.includes(element)).forEach(element => Chain(element).textContain());
+        taskObj.nativeState = now;
+    }
+}).start();
 
-note.set("Keys", new Map());
-
-function Keys(number) {
-    switch (number) {
-        case "list":
-            return Array.from(note.get("Keys").entries()).filter(_E0 => _E0[1]).map(_E0 => _E0[0]);
-        default:
-            return note.get("Keys").get(number);
+//-Keys--------------------------------------------------------------------------------------------
+class KeysObject {
+    constructor() {
+        this.list = [];
+        this.testFlag = false;
+    }
+    keydown(event) {
+        if (this.testFlag) console.log(event.key);
+        if (!this.list.includes(event.key)) this.list.push(event.key);
+    }
+    keyup(event) {
+        Chain(this.list).delete(element => element == event.key);
+    }
+    check() {
+        this.testFlag = !this.testFlag;
+        return this.testFlag;
+    }
+    entry(key) {
+        return () => key.toLowerCase() == "list" ? this.list : this.list.includes(key);
     }
 }
+
+note.set("Keys", new KeysObject());
 
 window.addEventListener('keydown', (event) => {
-    if (!event.repeat) note.get("Keys").set(event.keyCode, true);
-})
+    if (!event.repeat) note.get("Keys").keydown(event);
+});
 window.addEventListener('keyup', (event) => {
-    if (!event.repeat) note.get("Keys").set(event.keyCode, false);
-})
+    if (!event.repeat) note.get("Keys").keyup(event);
+});
 
-//-Tools-------------------------------------------------------------------------------------------
-
-function Proto(arg) {
-    try {
-        return arg.constructor.name;
-    } catch (e) {
-        return e;
-    }
-}
-
-function Proto1(proto, True, False) {
-    return Proto(True) == proto ? True : False;
-}
-
-function Baser(...args) {
-    if (["Array", "Object", "Map"].indexOf(Proto(args[0])) == -1) throw "args must be Array, Object or Map.";
-    if (args.length == 1) args = args[0];
-    if (Proto(args) == "Object") args = new Map(Object.entries(args))
-    if (Proto(args) == "Array") {
-        try {
-            args = new Map(args);
-        } catch (e) {
-            args = new Map(new Array(args));
-        }
-    }
-    return args;
-}
-
-function Baser1(...args) {
-    if (args.length == 1) args[0];
-    let proto = args.slice(0, args.length / 2);
-    let value = args.slice(args.length / 2, args.length);
-    let map = new Map();
-    proto.forEach((_E0, _E1) => map.set(_E0, value[_E1]));
-    return map;
-}
-
-// TODO Rework before long.
-// function reWindow(Wper, Hper, size) {
-//     return window.open(location.href, "sfWindow", `width=${Chain(size).potopx()}, height=${Hper/Wper*parseInt(size.potopx())+"px"}`);
-// }
-
-function Efal() {
-    return document.addEventListener("load", ...arguments);
-}
-
-//-Test Area-----------------
-console.log();
 
 //-Loaded--------------------
 // console.log("Seifuncs ver.2.0 for JS was completely loaded.");
 if (/^(?=.*Chrome)(?!.*Edge)/.test(window.navigator.userAgent)) {
-    console.log("%c %c Seifuncs for JS / ver.2.0%c \n%c %c Developer : Seizya \n%c %c GitHub : https://github.com/Seizya",
-        "background-color:#165e83;border-bottom:solid #f0f 2px", "border-bottom:solid #f0f 2px", "", "background-color:#165e83", "", "background-color:#165e83", "")
+    console.log("%c %c Seifuncs for JS / ver.3.0.0%c \n%c %c Developer : Seizya \n%c %c GitHub : https://github.com/Seizya",
+        "background-color:#165e83;border-bottom:solid #f0f 2px", "border-bottom:solid #f0f 2px", "", "background-color:#165e83", "", "background-color:#165e83", "");
 } else {
-    console.log("Seifuncs for JS \nDeveloper : Seizya \nGitHub : https://github.com/Seizya")
+    console.log("Seifuncs for JS \nDeveloper : Seizya \nGitHub : https://github.com/Seizya");
 }
-if (/MSIE|Trident|Edge/.test(window.navigator.userAgent)) console.warn("Seifuncs doesn't support IE.")
+if (/MSIE|Trident|Edge/.test(window.navigator.userAgent)) console.warn("Seifuncs doesn't support IE.");
+
+//-Test Area-----------------
+// console.log(note);

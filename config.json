@@ -1,27 +1,43 @@
 {
-    "Tasks": {
-        "exeOnce": true,
-        "exeInterval": 0
-    },
-    "Chain": {
-        "level": 2,
-        "exclude": {
-            "Array": [],
-            "Object": [],
-            "Map": [],
-            "WeakMap": [],
-            "String": [],
-            "Number": [],
-            "Boolean": [],
-            "HTMLElement": [],
-            "Function": [],
-            "RegExp": [],
-            "Date": [],
-            "Window": []
-        }
-    },
-    "Touch": {
-        "time": 500,
-        "slide": 1
+  "Chain": {
+    "sync": {
+      "level": 0,
+      "auto": true
     }
+  },
+  "Note": {
+    "save": {
+      "reastoreLevel": 1
+    },
+    "UDload": {
+      "uploadLevel": 1
+    }
+  },
+  "Tasks": {
+    "exeHold": true,
+    "exeInterval": 0,
+    "exeOnce": false
+  },
+  "EventTask": {
+    "touchLong": 300,
+    "touchSlide": {
+      "mode": 0,
+      "type": "distance",
+      "distance": 1,
+      "vector": {
+        "x": 1,
+        "y": 1
+      },
+      "radian": {
+        "angle": 0,
+        "distance": 1
+      }
+    }
+  },
+  "textCenter": {
+    "autoExe": true
+  },
+  "textContain": {
+    "autoExe": true
+  }
 }
