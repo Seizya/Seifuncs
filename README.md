@@ -29,7 +29,7 @@ ver.4.0.0 以降は TypeScript 対応させる予定。
 # How to use
 
 0. ダウンロードして, 使いたい HTML ファイルが在るところに解凍。
-1. `import Chain from "./main.js"` です。
+1. `import Chain from "./Seifuncs/main.js"` です。
 
 <a id="License"></a>
 
