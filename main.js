@@ -95,11 +95,26 @@ class Note extends Map {
 }
 
 const note = new Note("Seifuncs");
-try {
-    note.set("config", JSON.parse(Note.json("./config.json"))); //for Test.html
-} catch (e) {
-    note.set("config", JSON.parse(Note.json("./Seifuncs/config.json")));
-}
+
+note.set("config", JSON.parse((() => {
+    const url = "./Seifuncs/config.json";
+    const url2 = "./config.json";
+    const request = new XMLHttpRequest();
+
+    if ((() => {
+            request.open("HEAD", url, false);
+            request.send();
+            return request.status == 200;
+        })()) {
+        request.open("GET", url, false);
+    } else {
+        console.info("Seifuncs : Seifuncs is load from Test.html");
+        request.open("GET", url2, false);
+    }
+    request.send();
+
+    return request.response;
+})()));
 
 //-Chain---------------------------------------------------------------------------------------------
 
@@ -147,7 +162,7 @@ class ChainMethod {
     add(obj) {
         if ((obj.Prototype == "*" && Object.values(this.support).flatMap(ptotoObj => ptotoObj.Method).some(methodObj => methodObj.Name == obj.Name)) ||
             (obj.Prototype != "*" && obj.Prototype != "Summon" && this.support[obj.Prototype].Method.some(methodObj => methodObj.Name == obj.Name)))
-            throw obj.Name + " is already used. / Seifuncs";
+            throw "Seifuncs : " + obj.Name + " is already used.";
         return this.set(obj);
     }
 
@@ -515,7 +530,7 @@ note.set("ChainMethod", new ChainMethod());
                 }).start();
 
             default:
-                throw type + " isn't supported. / Seifuncs";
+                throw "Seifuncs : " + type + " isn't supported.";
         }
     }
 }, {
