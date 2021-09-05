@@ -129,6 +129,9 @@ class ChainMethod {
             "Default": {},
             "Method": []
         }]));
+
+        document.querySelectorAll("head")[0].appendChild(document.createElement("header"));
+
         /*
         //this.support =
         {
