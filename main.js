@@ -865,9 +865,8 @@ window.addEventListener('keyup', (event) => {
 
 
 //-Loaded--------------------
-// console.log("Seifuncs ver.2.0 for JS was completely loaded.");
 if (/^(?=.*Chrome)(?!.*Edge)/.test(window.navigator.userAgent)) {
-    console.log("%c %c Seifuncs for JS / ver.3.0.0%c \n%c %c Developer : Seizya \n%c %c GitHub : https://github.com/Seizya",
+    console.log("%c %c Seifuncs for JS / ver.3.0.1%c \n%c %c Developer : Seizya \n%c %c GitHub : https://github.com/Seizya",
         "background-color:#165e83;border-bottom:solid #f0f 2px", "border-bottom:solid #f0f 2px", "", "background-color:#165e83", "", "background-color:#165e83", "");
 } else {
     console.log("Seifuncs for JS \nDeveloper : Seizya \nGitHub : https://github.com/Seizya");
