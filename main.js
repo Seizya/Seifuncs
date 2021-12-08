@@ -273,7 +273,7 @@ class ChainMethod {
 
             accumulator[currentKey] = {};
             accumulator[currentKey].list = restoreMethods;
-            accumulator[currentKey].default = restoreMethods.reduce((methodAcc, methodCur) => currentValue.Default.hasOwnProperty(methodCur) ? Chain(methodAcc).define(methodCur, currentValue.Default[methodAcc]) : methodAcc, {});
+            accumulator[currentKey].default = restoreMethods.reduce((methodAcc, methodCur) => currentValue.Default.hasOwnProperty(methodCur) ? Chain(methodAcc).define(methodCur, currentValue.Default[methodCur]) : methodAcc, {});
 
             return accumulator;
         }, {});
@@ -292,7 +292,7 @@ class ChainMethod {
         Object.entries(restoreObject).forEach(([key, value]) => { //Prototype
             value.list.forEach(methodName => delete Object.getPrototypeOf(this.summon(key))[methodName]);
             Object.keys(value.default).forEach(defaultName => delete this.support[key].Default[defaultName]);
-            Object.setPrototypeOf(this.summon(key), Object.assign(Object.getPrototypeOf(this.summon(key)), restoreObject.default));
+            Object.setPrototypeOf(this.summon(key), Object.assign(Object.getPrototypeOf(this.summon(key)), value.default));
         });
 
         return true;
@@ -867,7 +867,7 @@ window.addEventListener('keyup', (event) => {
 
 //-Loaded--------------------
 if (/^(?=.*Chrome)(?!.*Edge)/.test(window.navigator.userAgent)) {
-    console.log("%c %c Seifuncs for JS / ver.3.0.1%c \n%c %c Developer : Seizya \n%c %c GitHub : https://github.com/Seizya",
+    console.log("%c %c Seifuncs for JS / ver.3.0.2%c \n%c %c Developer : Seizya \n%c %c GitHub : https://github.com/Seizya",
         "background-color:#165e83;border-bottom:solid #f0f 2px", "border-bottom:solid #f0f 2px", "", "background-color:#165e83", "", "background-color:#165e83", "");
 } else {
     console.log("Seifuncs for JS \nDeveloper : Seizya \nGitHub : https://github.com/Seizya");

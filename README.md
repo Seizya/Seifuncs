@@ -454,8 +454,9 @@ Z : 小さなアップデート。互換切りしない。</br>
 |  1.4.2  |      usability update      | 2019/09/17 |
 |  1.6.0  |   Usability Huge Update    | 2019/11/17 |
 |  1.6.1  |        Aom UpGrade         | 2019/12/05 |
-|  1.7.β  | Change the How to Use Note | 2020/02/19 |
+|  1.7.β  | Change the How to Use Note | 2020/02/18 |
 |  1.8.β  |      Module Test Use       | 2020/02/19 |
 |  2.0.0  |           Rework           | 2020/09/24 |
 |  3.0.0  |          Rework 2          | 2021/08/26 |
 |  3.0.1  |         Debug load         | 2021/09/17 |
+|  3.0.2  |     Sync Restore Debug     | 2021/12/08 |
