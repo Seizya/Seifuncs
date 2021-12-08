@@ -278,8 +278,6 @@ class ChainMethod {
             return accumulator;
         }, {});
 
-        console.log(this.support, restoreObject);
-
         // restoreObj = {
         //     Prototype:{
         //         list:[...Name],
