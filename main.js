@@ -170,6 +170,7 @@ class ChainMethod {
     }
 
     delete(obj) {
+        // this.restore(obj);
         let delList;
         switch (obj.Prototype) {
             case "*":
@@ -246,7 +247,7 @@ class ChainMethod {
         let syncObject = Object.entries(this.support).reduce((accumulator, [currentKey, currentValue]) => {
             if (!obj || !obj.Prototype || obj.Prototype == "*" ? false : currentKey != obj.Prototype) return accumulator;
             let syncMethods = currentValue.Method.filter(methodObj => !obj || !obj.Name || obj.Name == "*" ? true : methodObj.Name == obj.Name);
-            if (note.get("config").Chain.sync.level == 0) syncMethods = syncMethods.filter(methodObj => !Object.getPrototypeOf(this.summon(currentKey)).hasOwnProperty(methodObj.Name));
+            if (note.get("config").Chain.sync.level == 1) syncMethods = syncMethods.filter(methodObj => !Object.getPrototypeOf(this.summon(currentKey)).hasOwnProperty(methodObj.Name));
             if (syncMethods.length >= 1) accumulator[currentKey] = syncMethods;
             return accumulator;
         }, {});
@@ -272,10 +273,12 @@ class ChainMethod {
 
             accumulator[currentKey] = {};
             accumulator[currentKey].list = restoreMethods;
-            accumulator[currentKey].default = restoreMethods.reduce((methodAcc, methodCur) => currentValue.Default.hasOwnProperty(methodCur) ? Chain(methodAcc).define(methodCur, currentValue.Default[methodsAcc]) : methodAcc, {});
+            accumulator[currentKey].default = restoreMethods.reduce((methodAcc, methodCur) => currentValue.Default.hasOwnProperty(methodCur) ? Chain(methodAcc).define(methodCur, currentValue.Default[methodAcc]) : methodAcc, {});
 
             return accumulator;
         }, {});
+
+        console.log(this.support, restoreObject);
 
         // restoreObj = {
         //     Prototype:{
